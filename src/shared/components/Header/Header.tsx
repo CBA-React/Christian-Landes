@@ -16,14 +16,14 @@ export const Header = (): JSX.Element => {
                     className="flex flex-row px-6 items-center gap-6 rounded-[5px] h-[61px]"
                     style={{
                         background:
-                            'linear-gradient(90deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.175) 100%)',
+                            'linear-gradient(90deg, rgba(0, 14, 61, 0.2) 0%, rgba(43, 43, 43, 0.4) 100%)',
                         backdropFilter: 'blur(20px)',
                     }}
                 >
                     {MAIN_NAVIGATION.map((item) => (
                         <li className="max-h-[21px]" key={item.route}>
                             <Link
-                                className="font-medium text-[16px] leading-[100%] align-top"
+                                className="font-medium text-white text-[16px] leading-[100%] align-top"
                                 href={item.route}
                             >
                                 {item.name}
