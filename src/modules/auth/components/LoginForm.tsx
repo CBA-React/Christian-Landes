@@ -18,7 +18,6 @@ export const LoginForm = () => {
     const dispatch = useDispatch();
 
     const onSubmit = (data: LoginFormValues) => {
-        // Замість фейкового токена буде реальний з API
         const fakeToken = 'example-token';
         sessionStorage.setItem('token', fakeToken);
         dispatch(login({ token: fakeToken, email: data.email }));
