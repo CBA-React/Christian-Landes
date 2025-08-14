@@ -5,7 +5,7 @@ import { MAIN_NAVIGATION } from '@/shared/constants/navigation';
 
 import { HeaderActions } from './HeaderActions';
 
-import Logo from 'public/logo.svg';
+import Logo from 'public/logo-white.svg';
 
 export const Header = (): JSX.Element => {
     return (
