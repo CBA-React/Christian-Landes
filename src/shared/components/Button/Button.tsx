@@ -13,6 +13,7 @@ interface ButtonProps {
     variant?: Variant;
     color?: Color;
     type?: 'button' | 'submit' | 'reset';
+    disabled?: boolean;
 }
 
 export const Button = ({
@@ -24,6 +25,7 @@ export const Button = ({
     variant = 'solid',
     color = 'primary',
     type = 'button',
+    disabled = false,
 }: ButtonProps): JSX.Element => {
     const baseStyles =
         'flex flex-row items-center cursor-pointer gap-[5px] rounded-full px-[14px] py-2 font-medium transition-all text-[16px] leading-[100%] tracking-normal align-middle';
@@ -46,7 +48,8 @@ export const Button = ({
         },
     };
 
-    const finalClass = `${baseStyles} ${variantColorStyles[variant][color]} ${className}`;
+    const disabledStyles = 'opacity-50 cursor-not-allowed hover:none';
+    const finalClass = `${baseStyles} ${variantColorStyles[variant][color]} ${disabled ? disabledStyles : ''} ${className}`;
 
     return (
         <button className={finalClass} onClick={onClick} type={type}>
