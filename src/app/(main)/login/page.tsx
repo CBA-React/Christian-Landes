@@ -10,7 +10,7 @@ export default function Home(): JSX.Element {
                 backgroundImage: "url('/images/login-hero.png')",
             }}
         >
-            <LoginSection />/
+            <LoginSection />
         </main>
     );
 }

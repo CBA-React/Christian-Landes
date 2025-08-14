@@ -13,7 +13,7 @@ import LogoWhite from 'public/logo-white.svg';
 export const Footer = (): JSX.Element => {
     return (
         <footer className="w-full bg-[#003BFF] text-white pt-[100px]">
-            <div className="max-w-[1240px] px-4 pb-20 mx-auto">
+            <div className="max-w-[1240px] pb-20 mx-auto">
                 <section className="mx-auto flex justify-between">
                     <article className="w-[350px] flex flex-col gap-[27px]">
                         <LogoWhite />
@@ -76,7 +76,7 @@ export const Footer = (): JSX.Element => {
                 </section>
             </div>
             <div className="w-full flex items-center bg-[#242424] h-[45px]">
-                <p className="max-w-[1240px] px-4 mx-auto w-full">
+                <p className="max-w-[1240px] mx-auto w-full">
                     Copyright ©2025
                 </p>
             </div>

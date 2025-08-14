@@ -1,14 +1,12 @@
 import { JSX } from 'react';
 import Link from 'next/link';
 
-import AppleLogin from 'public/icons/apple-login.svg';
 import FacebookLogin from 'public/icons/facebook-login.svg';
 import GoogleLogin from 'public/icons/google-login.svg';
-import MicrosoftLogin from 'public/icons/microsoft-login.svg';
 
 export const LoginSection = (): JSX.Element => {
     return (
-        <div className="max-w-[1240px] mb-[122px] px-4 mx-auto w-full flex justify-end mt-[161px]">
+        <div className="max-w-[1240px] mb-[122px] mx-auto w-full flex justify-end mt-[161px]">
             <section className="p-16 rounded-[20px] max-w-[578px] w-full bg-[#FFFFFFD9] backdrop-blur-[20px]">
                 <article className="flex flex-col gap-4">
                     <h1 className="font-medium text-[84px] text-[#242424]">
@@ -30,12 +28,6 @@ export const LoginSection = (): JSX.Element => {
                         </Link>
                         <Link href="#">
                             <FacebookLogin />
-                        </Link>
-                        <Link href="#">
-                            <AppleLogin />
-                        </Link>
-                        <Link href="#">
-                            <MicrosoftLogin />
                         </Link>
                     </div>
                     <p className="text-sm text-[#242424] text-center">
