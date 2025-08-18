@@ -1,0 +1,25 @@
+<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2205_2018)">
+<g clip-path="url(#clip1_2205_2018)">
+<g clip-path="url(#clip2_2205_2018)">
+<mask id="mask0_2205_2018" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="17" height="17">
+<path d="M0.700276 8.38615L8.41455 0.671875L16.1288 8.38615L8.41455 16.1004L0.700276 8.38615Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_2205_2018)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M9.8237 2.08103L7.09572 1.9907L0.700276 8.38615L7.04154 14.7274L9.87327 14.6417L6.73289 11.5013C5.96851 10.7369 5.26844 10.052 4.6314 9.44664L14.8302 9.39846L14.7349 7.27245L4.53637 7.32085C5.15926 6.72993 5.84792 6.05681 6.60256 5.30217L9.8237 2.08103Z" fill="white"/>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_2205_2018">
+<rect width="10.9096" height="10.9096" fill="white" transform="matrix(-0.707107 0.707107 0.707107 0.707107 8.41455 0.671875)"/>
+</clipPath>
+<clipPath id="clip1_2205_2018">
+<rect width="10.9096" height="10.9096" fill="white" transform="matrix(-0.707107 0.707107 0.707107 0.707107 8.41455 0.671875)"/>
+</clipPath>
+<clipPath id="clip2_2205_2018">
+<rect width="10.9096" height="10.9096" fill="white" transform="matrix(-0.707107 0.707107 0.707107 0.707107 8.41455 0.671875)"/>
+</clipPath>
+</defs>
+</svg>
