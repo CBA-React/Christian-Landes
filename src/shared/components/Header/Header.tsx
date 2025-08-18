@@ -5,13 +5,15 @@ import { MAIN_NAVIGATION } from '@/shared/constants/navigation';
 
 import { HeaderActions } from './HeaderActions';
 
+import CollapsedMenuIcon from 'public/icons/collapsed-menu.svg';
+import LogoBlack from 'public/logo-black.svg';
 import Logo from 'public/logo-white.svg';
 
 export const Header = (): JSX.Element => {
     return (
         <header className="w-full absolute">
-            <div className="mx-auto max-w-[1240px] flex flex-row mt-5 items-center justify-between">
-                <Logo />
+            <div className="mx-auto max-w-[1240px] flex flex-row mt-5 items-center lg:justify-between justify-center">
+                <Logo className={'hidden lg:block'} />
                 <ul
                     className="flex flex-row px-6 items-center gap-6 rounded-[5px] h-[61px]"
                     style={{
@@ -20,8 +22,12 @@ export const Header = (): JSX.Element => {
                         backdropFilter: 'blur(20px)',
                     }}
                 >
+                    <LogoBlack className="block lg:hidden" />
                     {MAIN_NAVIGATION.map((item) => (
-                        <li className="max-h-[21px]" key={item.route}>
+                        <li
+                            className="max-h-[21px] hidden lg:block"
+                            key={item.route}
+                        >
                             <Link
                                 className="font-medium text-white text-[16px] leading-[100%] align-top"
                                 href={item.route}
@@ -30,6 +36,9 @@ export const Header = (): JSX.Element => {
                             </Link>
                         </li>
                     ))}
+                    <div className="block lg:hidden cursor-pointer">
+                        <CollapsedMenuIcon />
+                    </div>
                 </ul>
                 <HeaderActions />
             </div>
