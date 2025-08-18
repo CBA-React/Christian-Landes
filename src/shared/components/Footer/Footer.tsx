@@ -8,16 +8,18 @@ import { NewsletterForm } from './NewsletterForm';
 import FacebookLogo from 'public/icons/facebook-logo.svg';
 import InstgramLogo from 'public/icons/instagram-logo.svg';
 import TwitterLogo from 'public/icons/twitter-logo.svg';
-import LogoWhite from 'public/logo-white.svg';
+import LogoWhite from 'public/logo-white-footer.svg';
 
 export const Footer = (): JSX.Element => {
     return (
-        <footer className="w-full bg-[#003BFF] text-white pt-[100px]">
+        <footer className="w-full bg-[#003BFF] text-white pt-[40px] lg:pt-[100px]">
             <div className="max-w-[1240px] pb-20 mx-auto">
-                <section className="mx-auto flex justify-between">
+                <section className="mx-auto flex justify-between flex-col lg:flex-row items-center lg:items-start">
                     <article className="w-[350px] flex flex-col gap-[27px]">
-                        <LogoWhite />
-                        <div className="flex space-x-3 items-center">
+                        <div className={'flex justify-center lg:justify-start'}>
+                            <LogoWhite />
+                        </div>
+                        <div className="flex space-x-3 items-center justify-center lg:justify-start">
                             <p className="text-base">Follow our socials</p>
                             <div className="h-[21px] w-[1px] bg-[#FFFFFF40]"></div>
                             <div className="flex items-center space-x-4">
@@ -34,7 +36,7 @@ export const Footer = (): JSX.Element => {
                         </div>
                         <NewsletterForm />
                     </article>
-                    <section className="flex gap-20">
+                    <section className="flex gap-20 pt-6 px-3 md:px-6 lg:px-0 lg:pt-0 flex-wrap justify-center">
                         <article>
                             <h4 className="mb-3 text-2xl">Website</h4>
                             <ul className="space-y-1">

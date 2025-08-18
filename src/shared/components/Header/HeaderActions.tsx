@@ -17,7 +17,7 @@ export const HeaderActions = (): JSX.Element => {
     const isLoggedIn = false;
 
     return (
-        <div className="flex items-center gap-3">
+        <div className="hidden items-center gap-3 lg:flex">
             <Button
                 icon={<ArrowIconWhite />}
                 iconPosition="right"
