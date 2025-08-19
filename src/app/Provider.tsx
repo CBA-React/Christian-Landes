@@ -9,15 +9,15 @@ import { store } from '@/store/store';
 const queryClient = new QueryClient();
 
 export const AppProvider = ({
-    children,
+	children,
 }: {
-    children: ReactNode;
+	children: ReactNode;
 }): JSX.Element => {
-    return (
-        <Provider store={store}>
-            <QueryClientProvider client={queryClient}>
-                {children}
-            </QueryClientProvider>
-        </Provider>
-    );
+	return (
+		<Provider store={store}>
+			<QueryClientProvider client={queryClient}>
+				{children}
+			</QueryClientProvider>
+		</Provider>
+	);
 };

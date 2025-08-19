@@ -8,14 +8,14 @@ import { HomeWhyChoose } from '@/modules/home/HomeWhyChoose';
 import { HowItWorks } from '@/modules/home/HowItWorks';
 
 export default function Home(): JSX.Element {
-    return (
-        <main className="mb-[120px]">
-            <HomeHero />
-            <HomeSimplify />
-            <HowItWorks />
-            <HomeWhyChoose />
-            <HomeContractors />
-            <HomeReviews />
-        </main>
-    );
+	return (
+		<main className="mb-[120px]">
+			<HomeHero />
+			<HomeSimplify />
+			<HowItWorks />
+			<HomeWhyChoose />
+			<HomeContractors />
+			<HomeReviews />
+		</main>
+	);
 }

@@ -3,24 +3,24 @@ import { JSX } from 'react';
 import CategoryMockIcon from 'public/icons/categoryMock.svg';
 
 interface CategoryItemProps {
-    id: number;
-    name: string;
+	id: number;
+	name: string;
 }
 
 export const CategoryItem = ({ id, name }: CategoryItemProps): JSX.Element => {
-    return (
-        <div
-            key={id}
-            className="bg-[#F1F3F6] rounded-[10px] p-8 group w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)] min-w-[200px] max-w-[400px] flex-shrink-0"
-        >
-            <div className="flex flex-col items-start justify-start text-left h-full">
-                <div
-                    className={`w-12 h-12 mb-4 flex items-center justify-center`}
-                >
-                    <CategoryMockIcon />
-                </div>
-                <h3 className="text-gray-800 font-medium text-lg">{name}</h3>
-            </div>
-        </div>
-    );
+	return (
+		<div
+			key={id}
+			className="group w-full max-w-[400px] min-w-[200px] flex-shrink-0 rounded-[10px] bg-[#F1F3F6] p-8 sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)]"
+		>
+			<div className="flex h-full flex-col items-start justify-start text-left">
+				<div
+					className={`mb-4 flex h-12 w-12 items-center justify-center`}
+				>
+					<CategoryMockIcon />
+				</div>
+				<h3 className="text-lg font-medium text-gray-800">{name}</h3>
+			</div>
+		</div>
+	);
 };

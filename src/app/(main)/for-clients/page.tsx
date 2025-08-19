@@ -7,20 +7,20 @@ import { WhyUs } from '@/modules/ForClients/WhyUs';
 import { DescriptionBanner } from '@/shared/components/DescriptionBanner/DescriptionBanner';
 
 export default function ForClients(): JSX.Element {
-    return (
-        <main>
-            <DescriptionBanner
-                title={'Find and hire trusted local contractors in minutes'}
-                description={
-                    'Post your request, receive bids, and get the job done quickly and safely.'
-                }
-                buttonText={'Post a Job'}
-                buttonLink={'#'}
-            />
-            <PointsDescription />
-            <ProjectCategories />
-            <WhyUs />
-            <HowWorks />
-        </main>
-    );
+	return (
+		<main>
+			<DescriptionBanner
+				title={'Find and hire trusted local contractors in minutes'}
+				description={
+					'Post your request, receive bids, and get the job done quickly and safely.'
+				}
+				buttonText={'Post a Job'}
+				buttonLink={'#'}
+			/>
+			<PointsDescription />
+			<ProjectCategories />
+			<WhyUs />
+			<HowWorks />
+		</main>
+	);
 }

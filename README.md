@@ -86,7 +86,8 @@ src/
 }
 ```
 
-##  AWS Pipeline
+## AWS Pipeline
+
 This repo has a pipeline that:
 
 - Deploys AWS EC2 Instance with own VPC and static Elastic IP

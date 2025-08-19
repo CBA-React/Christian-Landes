@@ -6,20 +6,20 @@ import type { Metadata } from 'next';
 import { AppProvider } from './Provider';
 
 export const metadata: Metadata = {
-    title: 'CBA Project setup',
-    description: 'Custom setup by CBA',
+	title: 'CBA Project setup',
+	description: 'Custom setup by CBA',
 };
 
 export default function RootLayout({
-    children,
+	children,
 }: Readonly<{
-    children: React.ReactNode;
+	children: React.ReactNode;
 }>): ReactNode | Promise<ReactNode> {
-    return (
-        <html lang="en">
-            <body>
-                <AppProvider>{children}</AppProvider>
-            </body>
-        </html>
-    );
+	return (
+		<html lang="en">
+			<body>
+				<AppProvider>{children}</AppProvider>
+			</body>
+		</html>
+	);
 }

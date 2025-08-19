@@ -1,5 +1,5 @@
 describe('Test Page', () => {
-    it('test', () => {
-        cy.visit('/');
-    });
+	it('test', () => {
+		cy.visit('/');
+	});
 });
