@@ -33,7 +33,7 @@ export const Button = ({
 	const variantColorStyles: Record<Variant, Record<Color, string>> = {
 		solid: {
 			primary: 'bg-blue-600 text-white hover:bg-blue-700',
-			dark: 'bg-black text-white hover:bg-zinc-800',
+			dark: 'bg-[#242424] text-white hover:bg-zinc-800',
 			light: 'bg-zinc-100 text-black hover:bg-zinc-200',
 		},
 		outline: {
@@ -54,7 +54,7 @@ export const Button = ({
 	return (
 		<button className={finalClass} onClick={onClick} type={type}>
 			{icon && iconPosition === 'left' && icon}
-			<p className="h-[19px]">{children}</p>
+			<p className="h-[19px] leading-[19px]">{children}</p>
 			{icon && iconPosition === 'right' && icon}
 		</button>
 	);
