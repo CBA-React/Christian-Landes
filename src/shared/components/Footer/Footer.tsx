@@ -56,12 +56,18 @@ export const Footer = (): JSX.Element => {
 							<h4 className="mb-3 text-2xl">Privacy</h4>
 							<ul className="space-y-1">
 								<li>
-									<Link className="text-base" href="#">
+									<Link
+										className="text-base"
+										href="/terms-service"
+									>
 										Terms of Service
 									</Link>
 								</li>
 								<li>
-									<Link className="text-base" href="#">
+									<Link
+										className="text-base"
+										href="/privacy-policy"
+									>
 										Privacy Policy
 									</Link>
 								</li>
