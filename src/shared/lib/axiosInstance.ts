@@ -9,20 +9,12 @@ axiosInstance.interceptors.request.use(
 	(config) => {
 		const token =
 			typeof window !== 'undefined'
-				? localStorage.getItem('token')
+				? localStorage.getItem('access_token')
 				: null;
 
-		if (!config.headers) {
-			config.headers = {};
-		}
-
-		if (token) {
-			config.headers.Authorization = `Bearer ${token}`;
-		}
-
+		config.headers = config.headers ?? {};
+		if (token) config.headers.Authorization = `Bearer ${token}`;
 		return config;
 	},
-	(error) => {
-		return Promise.reject(error);
-	},
+	(error) => Promise.reject(error),
 );
