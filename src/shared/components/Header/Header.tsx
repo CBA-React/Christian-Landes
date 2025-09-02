@@ -2,20 +2,20 @@
 
 import { JSX } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { MAIN_NAVIGATION } from '@/shared/constants/navigation';
+import { cn } from '@/shared/lib/cn';
 
 import { HeaderActions } from './HeaderActions';
+import { routes } from './RouteStyles';
 
 import CollapsedMenu from 'public/icons/collapsed-menu.svg';
 import CollapsedMenuWhine from 'public/icons/collapsed-menu-white.svg';
-import LogoMobile from 'public/logo-white-mobile.svg';
 import LogoBlack from 'public/logo-black.svg';
-import Logo from 'public/logo-white.svg';
 import LogoColor from 'public/logo-color.svg';
-import { usePathname } from 'next/navigation';
-import { routes } from './RouteStyles';
-import { cn } from '@/shared/lib/cn';
+import Logo from 'public/logo-white.svg';
+import LogoMobile from 'public/logo-white-mobile.svg';
 
 export const Header = (): JSX.Element => {
 	const pathname = usePathname();

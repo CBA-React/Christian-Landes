@@ -5,15 +5,15 @@ export const MAIN_NAVIGATION = [
 	},
 	{
 		name: 'For Clients',
-		route: '/clients',
+		route: '/for-clients',
 	},
 	{
 		name: 'For Contractors',
-		route: '/contractors',
+		route: '/for-contractors',
 	},
 	{
 		name: 'About',
-		route: '/about',
+		route: '#',
 	},
 	{
 		name: 'Pricing',
