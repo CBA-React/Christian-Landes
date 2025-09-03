@@ -7,7 +7,7 @@ import SquareV3Icon from '../../../public/icons/square-v3.svg';
 
 export const HomeWhyChoose: React.FC = () => {
 	return (
-		<section className="mb-[120px] flex w-full justify-between">
+		<section className="mb-[120px] flex w-full flex-col justify-between">
 			<div className="mx-auto mt-[120px] max-w-[590px]">
 				<div className="flex flex-col gap-3 text-[#242424] md:max-w-[385px]">
 					<h3 className="text-[48px] leading-[48px] font-[500]">
@@ -68,3 +68,4 @@ export const HomeWhyChoose: React.FC = () => {
 		</section>
 	);
 };
+
