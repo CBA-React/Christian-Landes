@@ -73,7 +73,7 @@ export const PointDescriptionItem = ({
 						{number}
 					</text>
 				</svg>
-				<div className={'text-center'}>
+				<div className={'text-center mt-2'}>
 					<p
 						className={`text-[24px] tracking-[-1px] ${backgroundColor === '#242424' ? 'text-white' : 'text-black'}`}
 					>

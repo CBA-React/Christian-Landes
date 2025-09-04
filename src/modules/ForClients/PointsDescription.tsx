@@ -5,7 +5,7 @@ import { PointDescriptionItem } from '@/shared/components/PointDescriptionItem/P
 export const PointsDescription = (): JSX.Element => {
 	return (
 		<article className="mx-auto mt-[80px] max-w-[1240px] px-4 sm:px-6 lg:px-0">
-			<h1 className={'text-[36px] lg:text-[48px]'}>
+			<h1 className={'text-center text-[36px] lg:text-[48px]'}>
 				How ServiceBridge Works
 			</h1>
 			<div className="mt-[64px] flex flex-col gap-5 lg:flex-row">
