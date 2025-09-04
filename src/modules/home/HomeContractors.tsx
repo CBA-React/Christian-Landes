@@ -6,20 +6,23 @@ import { Button } from '@/shared/components/Button/Button';
 export const HomeContractors: React.FC = () => {
 	return (
 		<section
-			className="mx-auto mt-[120px] grid h-[647px] max-w-[1240px] grid-cols-2"
+			className="relative mx-auto mt-[56px] flex h-[691px] max-w-[1240px] flex-col px-[20px] md:mt-[120px] md:grid md:h-[647px] md:grid-cols-2 md:px-0"
 			aria-label="For Contractors - Promote your services"
 		>
-			<div className="flex flex-col justify-between rounded-l-[10px] bg-[#CFEDD9] py-[48px] pr-[130px] pl-[48px]">
+			<div className="flex flex-col justify-between rounded-t-[10px] bg-[#CFEDD9] px-[20px] pt-[40px] pb-[85px] md:rounded-t-[0px] md:rounded-l-[10px] md:py-[48px] md:pr-[130px] md:pl-[48px]">
 				<div>
-					<header className="mb-[24px] flex flex-col gap-3">
+					<header className="mb-[6px] flex flex-col gap-[3px] md:mb-[24px] md:gap-3">
 						<p className="text-[16px] font-[400]">
 							For Contractors
 						</p>
-						<h2 className="text-[48px] leading-[48px] font-[500]">
+						<h2 className="text-[34px] leading-[41px] font-[400] md:text-[48px] md:leading-[48px] md:font-[500]">
 							Work in home services? Get clients effortlessly.
 						</h2>
 					</header>
-					<nav className="mb-8" aria-label="Call to action">
+					<nav
+						className="absolute top-[375px] mb-8 md:block"
+						aria-label="Call to action"
+					>
 						<Link href="#">
 							<Button
 								type="button"
@@ -35,7 +38,7 @@ export const HomeContractors: React.FC = () => {
 					</nav>
 				</div>
 				<ul
-					className="list-disc text-[16px] leading-[155%] font-[400] text-[#242424]"
+					className="ml-[29px] flex list-disc flex-col gap-[6px] text-[16px] leading-[155%] font-[400] text-[#242424] md:ml-0 md:block"
 					aria-label="Benefits for contractors"
 				>
 					<li>Access real client requests in your area</li>
@@ -44,7 +47,16 @@ export const HomeContractors: React.FC = () => {
 				</ul>
 			</div>
 			<div
-				className="flex rounded-r-[10px] bg-cover"
+				className="flex h-[250px] rounded-b-[10px] bg-cover md:hidden"
+				style={{
+					backgroundImage:
+						"url('/images/for-contractors-mobile.png')",
+				}}
+				role="img"
+				aria-label="A contractor working at home"
+			/>
+			<div
+				className="hidden rounded-r-[10px] bg-cover md:flex"
 				style={{
 					backgroundImage: "url('/images/for-contractors.png')",
 				}}
@@ -54,3 +66,4 @@ export const HomeContractors: React.FC = () => {
 		</section>
 	);
 };
+
