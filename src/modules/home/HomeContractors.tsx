@@ -20,7 +20,7 @@ export const HomeContractors: React.FC = () => {
 						</h2>
 					</header>
 					<nav
-						className="absolute top-[375px] mb-8 md:block"
+						className="absolute top-[375px] mb-8 md:relative md:top-0 md:block"
 						aria-label="Call to action"
 					>
 						<Link href="#">
@@ -38,7 +38,7 @@ export const HomeContractors: React.FC = () => {
 					</nav>
 				</div>
 				<ul
-					className="ml-[29px] flex list-disc flex-col gap-[6px] text-[16px] leading-[155%] font-[400] text-[#242424] md:ml-0 md:block"
+					className="ml-[29px] flex list-disc flex-col gap-[6px] text-[16px] leading-[155%] font-[400] text-[#242424] md:block md:leading-[27px]"
 					aria-label="Benefits for contractors"
 				>
 					<li>Access real client requests in your area</li>

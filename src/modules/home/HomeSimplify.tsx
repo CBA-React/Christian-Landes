@@ -2,8 +2,8 @@ import React from 'react';
 
 export const HomeSimplify: React.FC = () => {
 	return (
-		<section className="m-auto mt-[56px] flex w-full max-w-[1240px] flex-1 flex-col pr-[20px] pl-[20px] md:mt-10 md:pr-[0px] md:pl-[20px]">
-			<p className="w-[335px] text-[24px] leading-[31px] font-[400] text-[#242424] md:w-[831px] md:text-[28px] md:leading-[100%]">
+		<section className="m-auto mt-[56px] flex w-full max-w-[1240px] flex-1 flex-col px-[20px] md:mt-10 md:px-0">
+			<p className="w-[335px] text-[24px] leading-[31px] font-[400] text-[#242424] md:w-[831px] md:text-[28px] md:leading-[35px]">
 				At BuildConnect, we’re on a mission to simplify how people get
 				home projects done. Whether it’s a small repair or a full
 				renovation, our platform connects clients with trusted local

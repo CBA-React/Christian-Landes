@@ -7,12 +7,12 @@ import SquareV3Icon from '../../../public/icons/square-v3.svg';
 
 export const HomeWhyChoose: React.FC = () => {
 	return (
-		<section className="flex w-full flex-col justify-between md:mb-[120px]">
-			<div className="mx-auto mt-[56px] max-w-[590px] px-[20px] md:mt-[120px] md:px-0">
+		<section className="flex w-full flex-col justify-between md:mb-[120px] md:flex-row">
+			<div className="mx-auto mt-[56px] max-w-[590px] px-[20px] md:mt-[120px] md:ml-[100px] md:px-0">
 				<div className="flex flex-col gap-[1px] text-[#242424] md:max-w-[385px] md:gap-3">
-					<h3 className="text-[36px] leading-[48px] font-[400] md:text-[48px] md:font-[500]">
+					<h3 className="text-[36px] leading-[48px] font-[400] md:text-[48px] md:leading-[50px] md:font-[500]">
 						Why Choose
-						<br className="md:hidden" /> Our Platform?
+						<br /> Our Platform?
 					</h3>
 					<p className="pr-[5px] text-[16px] font-[400] md:pr-0">
 						Our goal is to make it easy for homeowners to connect
@@ -20,7 +20,7 @@ export const HomeWhyChoose: React.FC = () => {
 						of endless calls or hidden fees.
 					</p>
 				</div>
-				<div className="mt-[24px] flex flex-col gap-[20px] md:mt-[64px] md:ml-[120px] md:gap-10">
+				<div className="mt-[24px] flex flex-col gap-[20px] md:mt-[64px] md:ml-[120px] md:gap-[35px]">
 					<div className="flex items-start gap-6">
 						<SquareV1Icon className="h-[36px] w-[36px] md:h-[46px] md:w-[46px]" />
 						<div className="flex max-w-[275px] flex-col gap-[4px] text-[#242424] md:max-w-[380px] md:gap-3">
