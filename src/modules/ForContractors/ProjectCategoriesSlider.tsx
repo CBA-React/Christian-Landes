@@ -47,7 +47,7 @@ export const ProjectCategoriesSlider = () => {
 					{categoriesData.map((category) => (
 						<div
 							key={category.id}
-							className="embla__slide w-[80vw] flex-none "
+							className="embla__slide !w-[80vw] !flex-none"
 						>
 							<CategoryItem
 								name={category.name}
