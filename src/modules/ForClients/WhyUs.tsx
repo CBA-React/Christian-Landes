@@ -16,20 +16,22 @@ const points = [
 
 export const WhyUs = (): JSX.Element => {
 	return (
-		<div className="mx-auto mt-[120px] max-w-[1240px] px-4 sm:px-6 lg:px-0">
+		<div className="mx-auto mt-[60px] max-w-[1240px] px-4 sm:px-6 lg:mt-[120px] lg:px-0">
 			<article className="flex min-h-[620px] flex-col overflow-hidden rounded-[10px] lg:flex-row">
-				<section className="flex w-full flex-col justify-between bg-[#CFEDD9] p-12 lg:w-1/2">
+				<section className="flex w-full flex-col justify-between bg-[#CFEDD9] px-6 py-8 lg:w-1/2 lg:p-12">
 					<div>
 						<p>Why Us?</p>
-						<h1 className="mt-3 text-[32px] leading-[48px] lg:text-[48px]">
-							Why Us? Why clients love ConnectBuildHub
+						<h1 className="mt-3 text-[32px] leading-[38px] lg:text-[48px] lg:leading-[48px]">
+							Why clients love ConnectBuildHub
 						</h1>
 					</div>
-					<ul className="space-y-4 pt-3 text-[16px] md:pt-3 lg:pt-0 lg:text-[24px]">
+					<ul className="space-y-2 pt-3 text-[16px] lg:ml-4 lg:space-y-4 lg:pt-0 lg:text-[24px]">
 						{points.map((point, index) => (
-							<li key={index} className="flex items-center gap-2">
-								<CursiveArrowRightIcon className="h-[14px] w-auto lg:h-[18px]" />
-
+							<li
+								key={index}
+								className="flex items-baseline gap-2 leading-[20px] lg:items-center lg:leading-[38px]"
+							>
+								<CursiveArrowRightIcon className="h-[18px] w-[18px] flex-shrink-0 pt-1 lg:h-[24px] lg:w-[24px] lg:pt-0" />
 								{point}
 							</li>
 						))}
@@ -41,7 +43,7 @@ export const WhyUs = (): JSX.Element => {
 							color="primary"
 							icon={<ArrowRightIcon aria-hidden="true" />}
 							iconPosition="right"
-							className="mt-3 !h-[58px] !w-full justify-between !rounded-none !bg-[#003BFF] !px-6 !py-3 !text-[20px] !font-[400] md:mt-3 lg:mt-0 lg:!w-[209px]"
+							className="mt-4 !h-[58px] !w-full justify-between !rounded-none !bg-[#003BFF] !px-6 !py-3 !text-[20px] !font-[400] md:mt-3 lg:mt-0 lg:!w-[209px]"
 							aria-label="Post a Job"
 						>
 							Post a Job
@@ -50,7 +52,7 @@ export const WhyUs = (): JSX.Element => {
 				</section>
 
 				<section
-					className="min-h-[500px] w-full bg-cover bg-center lg:w-1/2"
+					className="min-h-[350px] w-full bg-cover bg-center lg:min-h-[500px] lg:w-1/2"
 					style={{ backgroundImage: "url('/images/whyUs.png')" }}
 				></section>
 			</article>
