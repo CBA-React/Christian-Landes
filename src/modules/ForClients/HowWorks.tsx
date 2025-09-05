@@ -13,7 +13,7 @@ const howWorksItems = [
 	},
 	{
 		num: '02',
-		title: 'Receive Bids',
+		title: 'How do I know which contractor to choose?',
 		description:
 			"After you submit your job, all qualified contractors will see your bid and bid on your job order. You can also view the contractor's profile and view their previous work that meets your standards",
 	},
@@ -47,15 +47,15 @@ export const HowWorks = (): JSX.Element => {
 		);
 	};
 	return (
-		<section className="relative mt-[120px] min-h-[800px] w-full overflow-visible">
+		<section className="relative mt-[60px] min-h-[800px] w-full overflow-visible lg:mt-[120px]">
 			<div className="relative z-10 mx-auto flex h-full max-w-[1240px] flex-col gap-6 lg:flex-row">
 				<div className="h-full w-full px-4 sm:px-6 lg:w-1/2 lg:px-0">
 					<div className={'w-[100%] sm:mx-auto sm:w-[95%]'}>
-						<h1 className="mt-[40px] text-[32px] md:mt-[60px] md:text-[40px] lg:mt-[80px] lg:text-[48px]">
+						<h1 className="text-[32px] leading-[38px] md:mt-[60px] md:text-[40px] lg:mt-[80px] lg:text-[48px]">
 							How ServiceBridge Works
 						</h1>
 					</div>
-					<div className="mt-[40px] w-[100%] sm:mx-auto sm:w-[95%] md:mt-[60px] lg:mt-[84px]">
+					<div className="mt-[25px] w-[100%] sm:mx-auto sm:w-[95%] md:mt-[60px] lg:mt-[84px] lg:mb-[120px]">
 						{howWorksItems.map((work, index, array) => {
 							const isOpen = openItems.includes(work.num);
 							return (
@@ -70,7 +70,7 @@ export const HowWorks = (): JSX.Element => {
 										>
 											<div
 												className={
-													'flex cursor-pointer items-center justify-between max-lg:w-[100%]'
+													'flex cursor-pointer items-start justify-between max-lg:w-[100%] lg:items-center'
 												}
 												onClick={() =>
 													toggleItem(work.num)
@@ -82,7 +82,7 @@ export const HowWorks = (): JSX.Element => {
 												<div
 													className={`transform transition-transform duration-300 ${
 														isOpen
-															? 'rotate-0'
+															? 'rotate-0'	
 															: 'rotate-180'
 													}`}
 												>
@@ -92,7 +92,7 @@ export const HowWorks = (): JSX.Element => {
 											<div
 												className={`overflow-hidden transition-all duration-300 ${
 													isOpen
-														? 'mt-3 max-h-96 opacity-100'
+														? 'mt-3 max-h-96 opacity-100 lg:mt-1'
 														: 'max-h-0 opacity-0'
 												}`}
 											>
@@ -115,15 +115,15 @@ export const HowWorks = (): JSX.Element => {
 			</div>
 
 			<div
-				className="absolute inset-y-0 right-0 left-1/2 hidden bg-cover bg-right lg:block"
+				className="absolute inset-y-0 right-0 left-1/2 mb-[180px] hidden bg-cover bg-right lg:block"
 				style={{
 					backgroundImage: "url('/images/howWorks.png')",
 				}}
 			></div>
 
-			<div className="relative mt-8 block px-4 lg:hidden">
+			<div className="relative mt-8 block lg:hidden">
 				<div
-					className="h-[300px] w-full rounded-lg bg-cover bg-center md:h-[400px]"
+					className="h-[300px] w-full bg-cover bg-center md:h-[400px]"
 					style={{
 						backgroundImage: "url('/images/howWorks.png')",
 					}}
