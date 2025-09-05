@@ -19,16 +19,12 @@ export const DescriptionBanner = ({
 	description,
 	buttonText,
 	buttonLink,
-	height = '700px',
 	buttonIcon = <ArrowRightIcon aria-hidden="true" />,
 }: BannerProps): JSX.Element => {
 	return (
-		<article
-			className="light-background w-full bg-[#F1F3F6]"
-			style={{ height }}
-		>
+		<article className="light-background h-[550px] w-full bg-[#F1F3F6] lg:h-[700px]">
 			<section className="flex h-full flex-col items-center justify-center px-4 text-center md:px-6 lg:px-0">
-				<h1 className="max-w-[755px] text-[48px] leading-[64px] lg:text-[64px]">
+				<h1 className="max-w-[811px] text-[48px] leading-[48px] font-medium lg:text-[64px] lg:leading-[64px]">
 					{title}
 				</h1>
 				<p className="mt-[20px] mb-[28px] max-w-[453px] leading-[150%]">
