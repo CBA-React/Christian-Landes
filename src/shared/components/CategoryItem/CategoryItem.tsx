@@ -11,7 +11,7 @@ export const CategoryItem = ({ id, name }: CategoryItemProps): JSX.Element => {
 	return (
 		<div
 			key={id}
-			className="group w-full max-w-[400px] min-w-[200px] flex-shrink-0 rounded-[10px] bg-[#F1F3F6] p-8 sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)]"
+			className="group w-full max-w-[400px] min-w-[200px] flex-shrink-0 rounded-[10px] bg-[#F1F3F6] p-5 sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)]"
 		>
 			<div className="flex h-full flex-col items-start justify-start text-left">
 				<div

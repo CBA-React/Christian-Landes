@@ -57,8 +57,12 @@ export const ProjectCategories = (): JSX.Element => {
 						'mt-[56px] flex items-center justify-between lg:mt-[120px]'
 					}
 				>
-					<h1 className={'text-[32px] lg:text-[48px]'}>
-						Popular Projects Categories
+					<h1
+						className={
+							'text-[32px] leading-16 font-medium lg:text-[48px]'
+						}
+					>
+						Popular Projects <br /> Categories
 					</h1>
 					<Link href={'#'}>
 						<Button
