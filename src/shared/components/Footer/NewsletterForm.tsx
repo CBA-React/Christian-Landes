@@ -27,9 +27,9 @@ export const NewsletterForm = (): JSX.Element => {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="relative mt-3 flex w-full flex-col gap-6 lg:mt-[53px]"
+			className="relative mt-[10px] flex w-full flex-col gap-[10px] md:mt-3 md:gap-6 lg:mt-[53px]"
 		>
-			<h3 className="text-center text-2xl font-medium lg:text-left">
+			<h3 className="text-center text-[22px] font-medium md:text-2xl lg:text-left">
 				Sign up for our newsletter
 			</h3>
 			<div className="relative w-full">
@@ -65,3 +65,4 @@ export const NewsletterForm = (): JSX.Element => {
 		</form>
 	);
 };
+
