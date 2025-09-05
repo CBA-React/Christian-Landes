@@ -36,44 +36,46 @@ export const Footer = (): JSX.Element => {
 						</div>
 						<NewsletterForm />
 					</article>
-					<section className="flex flex-wrap justify-center gap-20 px-3 pt-6 md:px-6 lg:px-0 lg:pt-0">
-						<article>
-							<h4 className="mb-3 text-2xl">Website</h4>
-							<ul className="space-y-1">
-								{MAIN_NAVIGATION.map((item) => (
-									<li key={item.route}>
+					<section className="grid grid-cols-1 gap-4 px-3 pt-6 md:flex md:flex-wrap md:justify-center md:gap-20 md:px-6 lg:px-0 lg:pt-0">
+						<div className="grid grid-cols-2 gap-20 md:contents">
+							<article>
+								<h4 className="mb-3 text-2xl">Website</h4>
+								<ul className="space-y-1">
+									{MAIN_NAVIGATION.map((item) => (
+										<li key={item.route}>
+											<Link
+												className="text-base"
+												href={item.route}
+											>
+												{item.name}
+											</Link>
+										</li>
+									))}
+								</ul>
+							</article>
+							<article>
+								<h4 className="mb-3 text-2xl">Privacy</h4>
+								<ul className="space-y-1">
+									<li>
 										<Link
 											className="text-base"
-											href={item.route}
+											href="/terms-service"
 										>
-											{item.name}
+											Terms of Service
 										</Link>
 									</li>
-								))}
-							</ul>
-						</article>
-						<article>
-							<h4 className="mb-3 text-2xl">Privacy</h4>
-							<ul className="space-y-1">
-								<li>
-									<Link
-										className="text-base"
-										href="/terms-service"
-									>
-										Terms of Service
-									</Link>
-								</li>
-								<li>
-									<Link
-										className="text-base"
-										href="/privacy-policy"
-									>
-										Privacy Policy
-									</Link>
-								</li>
-							</ul>
-						</article>
-						<article>
+									<li>
+										<Link
+											className="text-base"
+											href="/privacy-policy"
+										>
+											Privacy Policy
+										</Link>
+									</li>
+								</ul>
+							</article>
+						</div>
+						<article className="mt-4 md:mt-0">
 							<h4 className="mb-3 text-2xl">Contacts</h4>
 							<p className="mb-1 text-base">
 								info@theloremiipsum
