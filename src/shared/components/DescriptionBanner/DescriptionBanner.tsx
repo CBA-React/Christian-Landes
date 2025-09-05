@@ -24,14 +24,13 @@ export const DescriptionBanner = ({
 }: BannerProps): JSX.Element => {
 	return (
 		<article
-			className="light-background w-full bg-[#F1F3F6]"
-			style={{ height }}
+			className={`light-background h-[522px] w-full bg-[#F1F3F6] md:h-${height}`}
 		>
-			<section className="flex h-full flex-col items-center justify-center px-4 text-center md:px-6 lg:px-0">
-				<h1 className="max-w-[755px] text-[48px] leading-[64px] lg:text-[64px]">
+			<section className="flex h-[522px] flex-col items-center justify-center px-4 text-center md:h-full md:px-6 lg:px-0">
+				<h1 className="mt-[50px] max-w-[755px] text-[48px] leading-[48px] md:mt-0 md:leading-[64px] lg:text-[64px]">
 					{title}
 				</h1>
-				<p className="mt-[20px] mb-[28px] max-w-[453px] leading-[150%]">
+				<p className="mt-[12px] mb-[22px] max-w-[453px] leading-[150%] md:mt-[20px] md:mb-[28px]">
 					{description}
 				</p>
 
@@ -54,3 +53,4 @@ export const DescriptionBanner = ({
 		</article>
 	);
 };
+

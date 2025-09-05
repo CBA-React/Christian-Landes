@@ -5,11 +5,13 @@ import React, { JSX } from 'react';
 export const ApplyNowButton = (): JSX.Element => {
 	return (
 		<button
-			className={`group relative cursor-pointer overflow-hidden bg-[#003BFF] px-[20px] py-[20px] font-semibold text-white`}
+			className={`group relative h-full w-full cursor-pointer overflow-hidden bg-[#003BFF] px-[20px] py-[20px] font-semibold text-white`}
 		>
-			<div className="relative z-10">
-				<div className="mb-20 flex items-center justify-between gap-6">
-					<h2 className="text-2xl font-bold">Apply Now</h2>
+			<div className="relative z-10 h-full">
+				<div className="mb-[100px] flex items-center justify-between gap-6 md:mb-20">
+					<h2 className="text-[28px] leading-[48px] font-bold md:text-2xl">
+						Apply Now
+					</h2>
 					<div>
 						<svg
 							className="h-8 w-8"
@@ -26,10 +28,9 @@ export const ApplyNowButton = (): JSX.Element => {
 						</svg>
 					</div>
 				</div>
-				<p className="text-left text-sm leading-relaxed text-blue-100">
-					Tell us what you need — we&#39;ll match you
-					<br />
-					with a trusted pro
+				<p className="text-left text-[16px] text-blue-100 md:text-sm md:leading-relaxed">
+					Tell us what you need — we&#39;ll match you with a trusted
+					pro
 				</p>
 			</div>
 		</button>
@@ -37,3 +38,4 @@ export const ApplyNowButton = (): JSX.Element => {
 };
 
 export default ApplyNowButton;
+

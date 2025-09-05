@@ -47,7 +47,8 @@ export const ProjectCategoriesSlider = (): JSX.Element => {
 		const container = scrollRef.current;
 		if (!container) return;
 
-		const cardWidth = 400 + 16;
+		const cardWidth =
+			document.documentElement.clientWidth < 768 ? 300 + 16 : 400 + 16;
 		const scrollAmount = cardWidth;
 
 		let targetScrollPosition;
@@ -92,10 +93,10 @@ export const ProjectCategoriesSlider = (): JSX.Element => {
 	const canScrollLeft = scrollPosition > 0;
 
 	return (
-		<div className="relative mt-[120px] overflow-x-hidden">
+		<div className="relative mt-[56px] overflow-x-hidden md:mt-[120px]">
 			<div className="mx-auto max-w-[1240px] px-6">
 				<div className="mb-6 flex items-center justify-between">
-					<h2 className="text-[36px] font-bold lg:max-w-[440px] lg:text-[48px]">
+					<h2 className="text-[36px] leading-[120%] lg:max-w-[440px] lg:text-[48px] lg:font-bold">
 						Popular Projects Categories
 					</h2>
 					<div className="gap-2 max-sm:hidden sm:hidden md:flex lg:flex">
@@ -128,7 +129,7 @@ export const ProjectCategoriesSlider = (): JSX.Element => {
 			<div className="relative">
 				<div
 					ref={scrollRef}
-					className="scrollbar-hide flex gap-4 overflow-x-auto pb-4"
+					className="scrollbar-hide flex h-[144px] gap-4 overflow-x-auto pb-4 md:h-auto"
 					onScroll={updateScrollState}
 					style={{
 						paddingLeft: 'max(calc((100vw - 1240px) / 2), 1rem)',
@@ -146,7 +147,7 @@ export const ProjectCategoriesSlider = (): JSX.Element => {
 					))}
 				</div>
 			</div>
-			<div className="mx-auto mt-4 flex max-w-[1240px] gap-4 px-6 md:hidden">
+			<div className="mx-auto mt-3 flex max-w-[1240px] gap-4 px-6 md:mt-4 md:hidden">
 				<button
 					onClick={() => scroll('left')}
 					disabled={!canScrollLeft}
@@ -173,3 +174,4 @@ export const ProjectCategoriesSlider = (): JSX.Element => {
 		</div>
 	);
 };
+
