@@ -50,9 +50,9 @@ export const HomeReviews: React.FC = () => {
 				className="embla md:bm-0 mb-[24px] px-[20px] md:px-0"
 			>
 				<div className="embla__container gap-[20px] md:grid md:h-[440px] md:grid-cols-3 md:items-start md:gap-5">
-					<div className="embla__slide flex h-[350px] flex-col rounded-[20px] bg-[#F1F3F6] p-[24px] text-[#242424] md:h-[363px] md:w-[400px] md:self-start md:p-8">
+					<div className="embla__slide flex min-h-[350px] flex-col rounded-[20px] bg-[#F1F3F6] p-[24px] text-[#242424] md:h-full md:w-[400px] md:self-start md:p-8 lg:h-[363px]">
 						<div className="flex h-full flex-1 flex-col justify-between">
-							<p className="text-[20px] leading-[26px] font-[400] md:text-[24px] md:leading-[30px]">
+							<p className="text-[20px] leading-[26px] font-[400] md:text-[18px] md:leading-[30px] xl:text-[24px]">
 								This platform made it so easy to find a great
 								contractor. I submitted one request and had
 								three offers within hours.
@@ -64,9 +64,9 @@ export const HomeReviews: React.FC = () => {
 						</div>
 					</div>
 
-					<div className="embla__slide flex h-[350px] flex-col rounded-[20px] bg-[#7EA2AD] p-[24px] text-[#FFFFFF] md:h-[363px] md:self-end md:p-8">
+					<div className="embla__slide flex min-h-[350px] flex-col rounded-[20px] bg-[#7EA2AD] p-[24px] text-[#FFFFFF] md:h-full md:p-8 lg:h-[363px] lg:self-end">
 						<div className="flex h-full flex-1 flex-col justify-between">
-							<p className="text-[20px] leading-[26px] font-[400] md:text-[24px] md:leading-[30px]">
+							<p className="text-[20px] leading-[26px] font-[400] md:text-[18px] md:leading-[30px] xl:text-[24px]">
 								I hired a handyman to fix a few things in the
 								kitchen — he arrived on time and did everything
 								neatly. It’s super convenient to find verified
@@ -79,9 +79,9 @@ export const HomeReviews: React.FC = () => {
 						</div>
 					</div>
 
-					<div className="embla__slide flex h-[350px] flex-col rounded-[20px] bg-[#CFEDD9] p-[24px] text-[#242424] md:h-[363px] md:self-start md:p-8">
+					<div className="embla__slide flex min-h-[350px] flex-col rounded-[20px] bg-[#CFEDD9] p-[24px] text-[#242424] md:h-full md:self-start md:p-8 lg:h-[363px]">
 						<div className="flex h-full flex-1 flex-col justify-between">
-							<p className="text-[20px] leading-[26px] font-[400] md:text-[24px] md:leading-[30px]">
+							<p className="text-[20px] leading-[26px] font-[400] md:text-[18px] md:leading-[30px] xl:text-[24px]">
 								Needed an electrician urgently and the site
 								really saved the day. Found someone within 15
 								minutes, and everything was fixed the next day.

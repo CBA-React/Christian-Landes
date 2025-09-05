@@ -9,7 +9,7 @@ export const HomeContractors: React.FC = () => {
 			className="relative mx-auto mt-[56px] flex h-[691px] max-w-[1240px] flex-col px-[20px] md:mt-[120px] md:grid md:h-[647px] md:grid-cols-2 md:px-0"
 			aria-label="For Contractors - Promote your services"
 		>
-			<div className="flex flex-col justify-between rounded-t-[10px] bg-[#CFEDD9] px-[20px] pt-[40px] pb-[85px] md:rounded-t-[0px] md:rounded-l-[10px] md:py-[48px] md:pr-[130px] md:pl-[48px]">
+			<div className="flex flex-col justify-between rounded-t-[10px] bg-[#CFEDD9] px-[20px] pt-[40px] pb-[25px] md:rounded-t-[0px] md:rounded-l-[10px] md:py-[48px] md:pr-[130px] md:pl-[48px]">
 				<div>
 					<header className="mb-[6px] flex flex-col gap-[3px] md:mb-[24px] md:gap-3">
 						<p className="text-[16px] font-[400]">
@@ -20,7 +20,7 @@ export const HomeContractors: React.FC = () => {
 						</h2>
 					</header>
 					<nav
-						className="absolute top-[375px] mb-8 md:relative md:top-0 md:block"
+						className="mb-8 hidden md:relative md:top-0 md:block"
 						aria-label="Call to action"
 					>
 						<Link href="#">
@@ -45,6 +45,23 @@ export const HomeContractors: React.FC = () => {
 					<li>No commissions — just a monthly subscription</li>
 					<li>Flexible plans: Local, Regional, or Statewide</li>
 				</ul>
+				<nav
+					className="mt-4 md:relative md:top-0 md:hidden"
+					aria-label="Call to action"
+				>
+					<Link href="#">
+						<Button
+							type="button"
+							variant="solid"
+							color="dark"
+							iconPosition="right"
+							className="!h-[43px] !w-max !bg-[#242424] !px-6 !py-3 !text-[16px] !font-[500]"
+							aria-label="Subscribe as Contractor"
+						>
+							Subscribe Now
+						</Button>
+					</Link>
+				</nav>
 			</div>
 			<div
 				className="flex h-[250px] rounded-b-[10px] bg-cover md:hidden"
