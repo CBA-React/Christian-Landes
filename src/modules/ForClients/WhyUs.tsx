@@ -50,7 +50,6 @@ export const WhyUs = (): JSX.Element => {
 						</Button>
 					</Link>
 				</section>
-
 				<section
 					className="min-h-[250px] w-full bg-cover bg-center lg:min-h-[500px] lg:w-1/2"
 					style={{ backgroundImage: "url('/images/whyUs.webp')" }}

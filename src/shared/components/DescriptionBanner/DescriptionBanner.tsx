@@ -19,11 +19,14 @@ export const DescriptionBanner = ({
 	description,
 	buttonText,
 	buttonLink,
+	height,
 	buttonIcon = <ArrowRightIcon aria-hidden="true" />,
 }: BannerProps): JSX.Element => {
 	return (
-		<article className="light-background h-[550px] w-full bg-[#F1F3F6] lg:h-[700px]">
-			<section className="flex h-full flex-col items-center justify-center px-4 text-center md:px-6 lg:px-0">
+		<article
+			className={`light-background h-[${height}] w-full bg-[#F1F3F6] lg:h-[700px]`}
+		>
+			<section className="flex h-full flex-col items-center justify-start px-4 pt-30 text-center sm:justify-center md:px-6 md:pt-0 lg:px-0">
 				<h1 className="max-w-[811px] text-[48px] leading-[48px] font-medium lg:text-[64px] lg:leading-[64px]">
 					{title}
 				</h1>
@@ -31,7 +34,7 @@ export const DescriptionBanner = ({
 					{description}
 				</p>
 
-				<div className="w-full md:w-auto lg:w-auto">
+				<div className="w-full sm:w-auto lg:w-auto">
 					<Link href={buttonLink}>
 						<Button
 							type="button"
@@ -39,7 +42,7 @@ export const DescriptionBanner = ({
 							color="primary"
 							icon={buttonIcon}
 							iconPosition="right"
-							className="!h-[58px] w-full justify-between !rounded-none !bg-[#003BFF] !px-6 !py-3 !text-[20px] !font-[400] md:!w-[209px] lg:!w-[209px]"
+							className="!h-[58px] w-full justify-between !rounded-none !bg-[#003BFF] !px-6 !py-3 !text-[20px] !font-[400] sm:!w-[209px] lg:!w-[209px]"
 							aria-label={buttonText}
 						>
 							{buttonText}
