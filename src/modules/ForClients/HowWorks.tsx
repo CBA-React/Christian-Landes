@@ -70,7 +70,7 @@ export const HowWorks = (): JSX.Element => {
 										>
 											<div
 												className={
-													'flex cursor-pointer items-start justify-between max-lg:w-[100%] lg:items-center'
+													'flex cursor-pointer items-start justify-between gap-3 max-lg:w-[100%] lg:items-center'
 												}
 												onClick={() =>
 													toggleItem(work.num)
