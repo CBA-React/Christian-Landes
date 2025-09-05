@@ -26,7 +26,7 @@ export const DescriptionBanner = ({
 		<article
 			className={`light-background h-[${height}] w-full bg-[#F1F3F6] lg:h-[700px]`}
 		>
-			<section className="flex h-full flex-col items-center justify-start px-4 pt-30 text-center sm:justify-center md:px-6 md:pt-0 lg:px-0">
+			<section className="flex h-full flex-col items-center justify-start px-4 pt-30 text-center sm:justify-center md:px-6 sm:pt-0 lg:px-0">
 				<h1 className="max-w-[811px] text-[48px] leading-[48px] font-medium lg:text-[64px] lg:leading-[64px]">
 					{title}
 				</h1>

@@ -47,7 +47,7 @@ export const HowWorks = (): JSX.Element => {
 		);
 	};
 	return (
-		<section className="relative mt-[60px] min-h-[800px] w-full overflow-visible lg:mt-[120px]">
+		<section className="relative mt-[60px] min-h-[600px] w-full overflow-visible lg:mt-[120px]">
 			<div className="relative z-10 mx-auto flex h-full max-w-[1240px] flex-col gap-6 lg:flex-row">
 				<div className="h-full w-full px-4 sm:px-6 lg:w-1/2 lg:px-0">
 					<div className={'w-[100%] sm:mx-auto sm:w-[95%]'}>

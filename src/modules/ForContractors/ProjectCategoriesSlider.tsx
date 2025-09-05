@@ -1,7 +1,7 @@
 'use client';
 
 import { CategoryItem } from '@/shared/components/CategoryItem/CategoryItem';
-import { categoriesData } from '@/shared/constants/categories'; 
+import { categoriesData } from '@/shared/constants/categories';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
 import ArrowLeftHorizontal from 'public/icons/arrow-left-horizontal.svg';
@@ -38,19 +38,21 @@ export const ProjectCategoriesSlider = () => {
 
 	return (
 		<div className="mt-[60px]">
-			<h2 className="mb-6 text-[36px] leading-12">Popular Projects Categories</h2>
+			<h2 className="mb-6 text-[36px] leading-12">
+				Popular Projects Categories
+			</h2>
 
 			<div className="embla overflow-hidden" ref={emblaRef}>
 				<div className="embla__container flex gap-4">
 					{categoriesData.map((category) => (
 						<div
 							key={category.id}
-							className="embla__slide w-[80vw] flex-none"
+							className="embla__slide w-[80vw] flex-none "
 						>
 							<CategoryItem
 								name={category.name}
 								id={category.id}
-								icon={category.icon} 
+								icon={category.icon}
 							/>
 						</div>
 					))}
