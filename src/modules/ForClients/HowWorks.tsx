@@ -82,7 +82,7 @@ export const HowWorks = (): JSX.Element => {
 												<div
 													className={`transform transition-transform duration-300 ${
 														isOpen
-															? 'rotate-0'	
+															? 'rotate-0'
 															: 'rotate-180'
 													}`}
 												>
@@ -92,7 +92,7 @@ export const HowWorks = (): JSX.Element => {
 											<div
 												className={`overflow-hidden transition-all duration-300 ${
 													isOpen
-														? 'mt-3 max-h-96 opacity-100 lg:mt-1'
+														? 'mt-3 max-h-96 opacity-100'
 														: 'max-h-0 opacity-0'
 												}`}
 											>
@@ -121,9 +121,9 @@ export const HowWorks = (): JSX.Element => {
 				}}
 			></div>
 
-			<div className="relative mt-8 block lg:hidden">
+			<div className="relative mt-8 block justify-end lg:hidden">
 				<div
-					className="h-[300px] w-full bg-cover bg-center md:h-[400px]"
+					className="h-[350px] w-full bg-cover bg-center md:h-[400px]"
 					style={{
 						backgroundImage: "url('/images/howWorks.png')",
 					}}
