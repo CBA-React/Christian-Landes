@@ -35,7 +35,7 @@ export const PointDescriptionItem = ({
 								? 'white'
 								: 'black'
 						}
-						stroke-width="8"
+						strokeWidth="8"
 						mask="url(#path-1-inside-1_2205_2156)"
 					/>
 					<mask id="path-2-inside-2_2205_2156" fill="white">
@@ -49,7 +49,7 @@ export const PointDescriptionItem = ({
 								? 'white'
 								: 'black'
 						}
-						stroke-width="8"
+						strokeWidth="8"
 						mask="url(#path-2-inside-2_2205_2156)"
 					/>
 					<mask id="path-3-inside-3_2205_2156" fill="white">
@@ -63,7 +63,7 @@ export const PointDescriptionItem = ({
 								? 'white'
 								: 'black'
 						}
-						stroke-width="8"
+						strokeWidth="8"
 						mask="url(#path-3-inside-3_2205_2156)"
 					/>
 					<mask id="path-4-inside-4_2205_2156" fill="white">
@@ -77,7 +77,7 @@ export const PointDescriptionItem = ({
 								? 'white'
 								: 'black'
 						}
-						stroke-width="8"
+						strokeWidth="8"
 						mask="url(#path-4-inside-4_2205_2156)"
 					/>
 
