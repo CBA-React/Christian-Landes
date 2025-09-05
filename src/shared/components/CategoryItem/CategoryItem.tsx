@@ -1,13 +1,18 @@
-import { JSX } from 'react';
+import { JSX, ReactNode } from 'react';
 
 import CategoryMockIcon from 'public/icons/categoryMock.svg';
 
 interface CategoryItemProps {
 	id: number;
 	name: string;
+	icon: ReactNode;
 }
 
-export const CategoryItem = ({ id, name }: CategoryItemProps): JSX.Element => {
+export const CategoryItem = ({
+	id,
+	name,
+	icon,
+}: CategoryItemProps): JSX.Element => {
 	return (
 		<div
 			key={id}
@@ -17,7 +22,7 @@ export const CategoryItem = ({ id, name }: CategoryItemProps): JSX.Element => {
 				<div
 					className={`mb-4 flex h-12 w-12 items-center justify-center`}
 				>
-					<CategoryMockIcon />
+					{icon}
 				</div>
 				<h3 className="text-lg font-medium text-gray-800">{name}</h3>
 			</div>

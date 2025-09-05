@@ -6,47 +6,9 @@ import Link from 'next/link';
 import { ProjectCategoriesSlider } from '@/modules/ForContractors/ProjectCategoriesSlider';
 import { Button } from '@/shared/components/Button/Button';
 import { CategoryItem } from '@/shared/components/CategoryItem/CategoryItem';
+import { categoriesData } from '@/shared/constants/categories';
 
 import ArrowRightIcon from '../../../public/icons/arrow-up-right-white-big.svg';
-
-const servicesData = [
-	{
-		id: 1,
-		name: 'Handyperson',
-	},
-	{
-		id: 2,
-		name: 'Landscaping',
-	},
-	{
-		id: 3,
-		name: 'Plumbing',
-	},
-	{
-		id: 4,
-		name: 'Remodeling',
-	},
-	{
-		id: 5,
-		name: 'Electrical',
-	},
-	{
-		id: 6,
-		name: 'Painting',
-	},
-	{
-		id: 7,
-		name: 'Window',
-	},
-	{
-		id: 8,
-		name: 'Cleaning',
-	},
-	{
-		id: 9,
-		name: 'Concrete',
-	},
-];
 
 export const ProjectCategories = (): JSX.Element => {
 	return (
@@ -79,12 +41,13 @@ export const ProjectCategories = (): JSX.Element => {
 					</Link>
 				</div>
 				<div className="mt-[40px] flex flex-wrap justify-center gap-4">
-					{servicesData.map((category) => {
+					{categoriesData.map((category) => {
 						return (
 							<CategoryItem
 								name={category.name}
 								id={category.id}
 								key={category.id}
+								icon={category.icon}
 							/>
 						);
 					})}
