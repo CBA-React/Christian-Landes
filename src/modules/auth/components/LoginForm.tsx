@@ -57,7 +57,7 @@ export const LoginForm = (): JSX.Element => {
 	return (
 		<form
 			onSubmit={handleSubmit(onSubmit)}
-			className="mt-6 mb-5 flex flex-col space-y-5"
+			className="mt-5 mb-5 flex flex-col space-y-5 md:mt-6"
 		>
 			{serverError && (
 				<div className="rounded border border-red-300 bg-red-50 p-2 text-sm text-red-700">
@@ -79,7 +79,7 @@ export const LoginForm = (): JSX.Element => {
 					<input
 						placeholder="Enter your password"
 						type="password"
-						className="w-full border border-[#242424] p-2 focus:outline-none"
+						className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none"
 						{...register('password', {
 							required: 'Password is required',
 						})}
@@ -90,11 +90,16 @@ export const LoginForm = (): JSX.Element => {
 						</p>
 					)}
 				</div>
-				<Link href="/forgot-password">Forgot your password?</Link>
+				<Link
+					className="text-[14px] font-semibold text-[#242424]"
+					href="/forgot-password"
+				>
+					Forgot your password?
+				</Link>
 			</div>
 
 			<Button
-				className="flex flex-row justify-center !gap-4"
+				className="flex flex-row justify-center !gap-4 py-3"
 				icon={<ArrowIconWhite />}
 				iconPosition="right"
 				type="submit"
