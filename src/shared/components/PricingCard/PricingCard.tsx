@@ -97,7 +97,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 			<Link
 				href={button.href}
 				aria-label={button.label}
-				className="w-full justify-self-start"
+				className="w-full"
 			>
 				<Button
 					type="button"

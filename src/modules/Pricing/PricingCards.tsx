@@ -10,7 +10,7 @@ export const PricingCards: React.FC = () => {
 	const { selectedIndex } = useCarouselDot(emblaApi);
 
 	return (
-		<section className="mx-auto my-[53px] flex w-full max-w-[1240px] flex-col md:mt-[90px] md:mb-[95px]">
+		<section className="mx-auto my-[53px] flex w-full max-w-[1240px] flex-col md:mt-[110px] md:mb-[95px]">
 			<div className="px-[20px] text-[#242424] xl:px-0">
 				<h3 className="text-[36px] font-[400] md:text-[48px] md:font-[500]">
 					Available Plans
