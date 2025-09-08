@@ -8,8 +8,8 @@ export const ApplyNowButton = (): JSX.Element => {
 			className={`group relative h-full w-full cursor-pointer overflow-hidden bg-[#003BFF] px-[20px] py-[20px] font-semibold text-white`}
 		>
 			<div className="relative z-10 h-full">
-				<div className="mb-[100px] flex items-center justify-between gap-6 md:mb-20">
-					<h2 className="text-[28px] leading-[48px] font-bold md:text-2xl">
+				<div className="mb-[100px] flex items-center justify-between gap-6 md:mb-[100px]">
+					<h2 className="text-[28px] leading-[48px] md:text-[32px]">
 						Apply Now
 					</h2>
 					<div>
@@ -28,7 +28,7 @@ export const ApplyNowButton = (): JSX.Element => {
 						</svg>
 					</div>
 				</div>
-				<p className="text-left text-[16px] text-blue-100 md:text-sm md:leading-relaxed">
+				<p className="text-left text-[16px] font-[400] text-blue-100 md:leading-relaxed">
 					Tell us what you need — we&#39;ll match you with a trusted
 					pro
 				</p>

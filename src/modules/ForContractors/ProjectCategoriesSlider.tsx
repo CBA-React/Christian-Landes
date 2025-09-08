@@ -93,17 +93,17 @@ export const ProjectCategoriesSlider = (): JSX.Element => {
 	const canScrollLeft = scrollPosition > 0;
 
 	return (
-		<div className="relative mt-[56px] overflow-x-hidden md:mt-[120px]">
-			<div className="mx-auto max-w-[1240px] px-6">
-				<div className="mb-6 flex items-center justify-between">
+		<div className="relative mt-[56px] overflow-x-hidden md:mt-[122px]">
+			<div className="mx-auto max-w-[1240px] px-6 xl:px-0">
+				<div className="mb-7 flex items-center justify-between md:mb-9">
 					<h2 className="text-[36px] leading-[120%] lg:max-w-[440px] lg:text-[48px] lg:font-bold">
 						Popular Projects Categories
 					</h2>
-					<div className="gap-2 max-sm:hidden sm:hidden md:flex lg:flex">
+					<div className="gap-2 self-end max-sm:hidden sm:hidden md:flex lg:flex">
 						<button
 							onClick={() => scroll('left')}
 							disabled={!canScrollLeft}
-							className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
+							className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
 								canScrollLeft
 									? 'bg-gray-900 text-white hover:bg-gray-600'
 									: 'cursor-not-allowed bg-gray-700 text-gray-600'
@@ -114,7 +114,7 @@ export const ProjectCategoriesSlider = (): JSX.Element => {
 						<button
 							onClick={() => scroll('right')}
 							disabled={!canScrollRight}
-							className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
+							className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
 								canScrollRight
 									? 'bg-gray-900 text-white hover:bg-gray-600'
 									: 'cursor-not-allowed bg-gray-700 text-gray-600'
@@ -147,11 +147,11 @@ export const ProjectCategoriesSlider = (): JSX.Element => {
 					))}
 				</div>
 			</div>
-			<div className="mx-auto mt-3 flex max-w-[1240px] gap-4 px-6 md:mt-4 md:hidden">
+			<div className="mt-2 flex max-w-[1240px] gap-2 px-[20px] md:hidden">
 				<button
 					onClick={() => scroll('left')}
 					disabled={!canScrollLeft}
-					className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
+					className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
 						canScrollLeft
 							? 'bg-gray-900 text-white hover:bg-gray-600'
 							: 'cursor-not-allowed bg-gray-700 text-gray-600'
@@ -162,7 +162,7 @@ export const ProjectCategoriesSlider = (): JSX.Element => {
 				<button
 					onClick={() => scroll('right')}
 					disabled={!canScrollRight}
-					className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
+					className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
 						canScrollRight
 							? 'bg-gray-900 text-white hover:bg-gray-600'
 							: 'cursor-not-allowed bg-gray-700 text-gray-600'

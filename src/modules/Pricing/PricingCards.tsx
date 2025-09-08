@@ -10,8 +10,8 @@ export const PricingCards: React.FC = () => {
 	const { selectedIndex } = useCarouselDot(emblaApi);
 
 	return (
-		<section className="mx-auto my-[56px] flex w-full max-w-[1240px] flex-col md:my-[120px]">
-			<div className="px-[20px] text-[#242424] md:px-0">
+		<section className="mx-auto my-[53px] flex w-full max-w-[1240px] flex-col md:mt-[90px] md:mb-[95px]">
+			<div className="px-[20px] text-[#242424] xl:px-0">
 				<h3 className="text-[36px] font-[400] md:text-[48px] md:font-[500]">
 					Available Plans
 				</h3>
@@ -21,14 +21,14 @@ export const PricingCards: React.FC = () => {
 			</div>
 			<div
 				ref={emblaRef}
-				className="embla mt-[24px] px-[20px] md:mt-0 md:h-[702px] md:px-0"
+				className="embla_for_contractors mt-[24px] px-[20px] lg:mt-0 lg:h-[702px] xl:px-0"
 			>
-				<div className="embla__container gap-[20px] md:flex-row">
-					<div className="embla__slide h-[453px]">
+				<div className="embla__container gap-[20px] md:flex-row lg:mt-[-27px] lg:h-full">
+					<div className="embla__slide_contractors h-[453px] self-end md:h-[542px]">
 						<PricingCard
 							id="plan-local"
 							title="Perfect for local contractors"
-							price="$20"
+							price="$25"
 							features={[
 								'25-mile service radius',
 								'Unlimited job bidding',
@@ -49,18 +49,18 @@ export const PricingCards: React.FC = () => {
 						/>
 					</div>
 
-					<div className="embla__slide h-[453px]">
+					<div className="embla__slide_contractors h-[453px] self-center md:h-[542px]">
 						<PricingCard
 							id="plan-regional"
-							title="Best for growing teams"
-							price="$49"
+							title="Regional Expand your reach"
+							price="$50"
 							features={[
-								'Statewide service radius',
-								'Priority placement',
-								'Team seats',
-								'Direct messaging',
-								'Mobile & web app',
-								'Priority support',
+								'75-mile service radius',
+								'Unlimited job bidding',
+								'Featured profile listing',
+								'Priority job notifications',
+								'Advanced analytics',
+								'Phone & email support',
 							]}
 							bgClass="bg-[#7EA2AD]"
 							textClass="text-white"
@@ -76,19 +76,20 @@ export const PricingCards: React.FC = () => {
 						/>
 					</div>
 
-					<div className="embla__slide h-[453px]">
+					<div className="embla__slide_contractors h-[453px] self-start md:h-[542px]">
 						<PricingCard
 							id="plan-enterprise"
-							title="For statewide pros"
-							price="$99"
+							title="State-wide coverage"
+							price="$200"
 							features={[
-								'Multi-state coverage',
-								'Dedicated success manager',
-								'Custom branding',
-								'API access',
-								'SLA support',
-								'Quarterly reviews',
+								'Statewide coverage',
+								'Unlimited job bidding',
+								'Premium profile placement',
+								'Instant job alerts',
+								'Dedicated account manager',
+								'24/7 priority support',
 							]}
+							period="per state/month"
 							bgClass="bg-[#CFEDD9]"
 							textClass="text-[#242424]"
 							checkIconSrc="/icons/symbols_check-black.svg"
@@ -102,7 +103,7 @@ export const PricingCards: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<div className="mt-6 flex justify-center gap-[5px] md:hidden">
+			<div className="mt-6 flex justify-center gap-[5px] lg:hidden">
 				<div
 					className={`${selectedIndex === 0 ? 'bg-[#242424]' : 'bg-[#F1F3F6]'} h-[10px] w-[10px] rounded-full`}
 				/>

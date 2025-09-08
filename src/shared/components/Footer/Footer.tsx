@@ -13,7 +13,7 @@ import LogoWhite from 'public/logo-white-footer.svg';
 export const Footer = (): JSX.Element => {
 	return (
 		<footer className="w-full bg-[#003BFF] pt-[40px] text-white lg:pt-[100px]">
-			<div className="mx-auto max-w-[1240px] px-[20px] pb-[40px] md:px-0 md:pb-20">
+			<div className="mx-auto max-w-[1240px] px-[20px] pb-[40px] md:pb-20 xl:px-0">
 				<section className="mx-auto flex flex-col items-center justify-between lg:flex-row lg:items-start">
 					<article className="flex w-[350px] flex-col gap-[11px] md:gap-[27px]">
 						<div className={'flex justify-center lg:justify-start'}>

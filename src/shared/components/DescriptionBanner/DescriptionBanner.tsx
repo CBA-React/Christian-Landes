@@ -10,7 +10,6 @@ interface BannerProps {
 	description: string;
 	buttonText: string;
 	buttonLink: string;
-	height?: string;
 	buttonIcon?: ReactNode;
 }
 
@@ -19,18 +18,19 @@ export const DescriptionBanner = ({
 	description,
 	buttonText,
 	buttonLink,
-	height = '700px',
 	buttonIcon = <ArrowRightIcon aria-hidden="true" />,
 }: BannerProps): JSX.Element => {
 	return (
 		<article
-			className={`light-background h-[522px] w-full bg-[#F1F3F6] md:h-${height}`}
+			className={
+				'light-background h-[522px] w-full bg-[#F1F3F6] lg:h-[700px]'
+			}
 		>
 			<section className="flex h-[522px] flex-col items-center justify-center px-4 text-center md:h-full md:px-6 lg:px-0">
 				<h1 className="mt-[50px] max-w-[755px] text-[48px] leading-[48px] md:mt-0 md:leading-[64px] lg:text-[64px]">
 					{title}
 				</h1>
-				<p className="mt-[12px] mb-[22px] max-w-[453px] leading-[150%] md:mt-[20px] md:mb-[28px]">
+				<p className="mt-[12px] mb-[22px] max-w-[449px] leading-[150%] md:mt-[20px] md:mb-[28px]">
 					{description}
 				</p>
 

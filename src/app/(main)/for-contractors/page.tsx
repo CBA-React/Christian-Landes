@@ -10,10 +10,9 @@ export default function ForContractors(): JSX.Element {
 		<main>
 			<DescriptionBanner
 				title="Expand your business opportunities with us"
-				description="Work on your own terms, get stable orders, and forget finding clients — we’ll take care of the rest."
+				description="Work on your own terms, get stable orders, and forget about finding clients — we’ll take care of the rest."
 				buttonText="Find Work"
 				buttonLink="#"
-				height="700px"
 			/>
 
 			<HowWorks />
@@ -22,3 +21,4 @@ export default function ForContractors(): JSX.Element {
 		</main>
 	);
 }
+

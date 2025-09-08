@@ -51,12 +51,12 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 	return (
 		<article
 			aria-labelledby={id}
-			className={`p-[24px] md:p-10 ${bgClass} flex h-full w-full max-w-[400px] flex-col gap-6 rounded-[10px] ${selfClass} ${className}`}
+			className={`mx-auto p-[24px] md:p-10 lg:mx-0 ${bgClass} flex h-full w-full max-w-[400px] flex-col gap-6 rounded-[10px] md:gap-7 ${selfClass} ${className}`}
 		>
 			<div>
 				<h3
 					id={id}
-					className={`mb-4 text-[24px] leading-[120%] font-[400] tracking-[2px] md:text-[32px] md:leading-[100%] md:font-[500] md:tracking-[-1px] ${textClass}`}
+					className={`mb-[16px] text-[24px] leading-[120%] font-[400] md:mb-6 md:text-[32px] md:leading-[120%] md:font-[500] md:tracking-[-1px] ${textClass}`}
 				>
 					{title}
 				</h3>
@@ -65,7 +65,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 					className={`flex items-end gap-3 ${textClass}`}
 					aria-label="Price"
 				>
-					<span className="text-[48px] leading-[100%] font-[700] tracking-[-1px] md:text-[64px]">
+					<span className="text-[48px] leading-[100%] font-[700] tracking-[-1px] xl:text-[64px]">
 						{price}
 					</span>
 					<span className="text-[16px] font-[500] opacity-90 md:text-[20px]">
@@ -97,7 +97,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 			<Link
 				href={button.href}
 				aria-label={button.label}
-				className="w-full"
+				className="w-full justify-self-start"
 			>
 				<Button
 					type="button"
