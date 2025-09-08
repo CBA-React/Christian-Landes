@@ -4,5 +4,8 @@ export interface LoginPayload {
 }
 
 export interface RegisterPayload extends LoginPayload {
-	name: string;
+	full_name: string;
+	phone: string;
+	location: string;
+	role: '1' | '2' | '3';
 }

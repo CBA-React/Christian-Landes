@@ -83,7 +83,7 @@ export const LoginForm = (): JSX.Element => {
 						})}
 					/>
 					{errors.password && (
-						<p className="text-sm text-red-500">
+						<p className="mt-1 text-sm text-red-500">
 							{errors.password.message}
 						</p>
 					)}

@@ -33,7 +33,7 @@ export default function SignUp(): JSX.Element {
 						aria-label="Choose role"
 					>
 						<Link
-							href="/sign-up/next-step"
+							href="/sign-up/homeowner"
 							className="w-full justify-center"
 						>
 							<Button
@@ -49,7 +49,7 @@ export default function SignUp(): JSX.Element {
 							</Button>
 						</Link>
 						<Link
-							href="/sign-up/next-step"
+							href="/sign-up/contractor"
 							className="w-full justify-center"
 						>
 							<Button

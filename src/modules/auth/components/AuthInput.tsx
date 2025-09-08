@@ -27,7 +27,9 @@ export const AuthInput = ({
 				className={`w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none`}
 				{...register}
 			/>
-			{error && <p className="text-sm text-red-500">{error.message}</p>}
+			{error && (
+				<p className="mt-1 text-sm text-red-500">{error.message}</p>
+			)}
 		</div>
 	);
 };
