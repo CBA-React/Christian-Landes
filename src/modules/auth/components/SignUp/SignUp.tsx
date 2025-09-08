@@ -247,7 +247,7 @@ export const SignUp = (): JSX.Element => {
 						iconPosition="right"
 						type="submit"
 						disabled={isSubmitting}
-						className="!w-full justify-center !bg-[#003BFF] !px-6 !py-3"
+						className="font-chalet-1960 !w-full justify-center !bg-[#003BFF] !px-6 !py-3"
 					>
 						Create Account
 					</Button>

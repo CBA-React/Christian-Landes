@@ -16,6 +16,10 @@ export class AuthApi {
 		await axiosInstance.post<void>('auth/register', data);
 	}
 
+	static async recoveryPassword(email: string): Promise<void> {
+		await axiosInstance.post<void>('auth/recoveryPassword', { email });
+	}
+
 	static logout(): void {
 		localStorage.removeItem('access_token');
 		localStorage.removeItem('refresh_token');

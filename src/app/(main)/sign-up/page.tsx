@@ -42,7 +42,7 @@ export default function SignUp(): JSX.Element {
 								color="primary"
 								icon={<HomeIcon />}
 								iconPosition="left"
-								className="!h-[44px] !w-full justify-center !bg-[#003BFF] !px-6 !py-3"
+								className="font-chalet-1960 !h-[44px] !w-full justify-center !bg-[#003BFF] !px-6 !py-3"
 								aria-label="Sign up as Homeowner"
 							>
 								I’m Homeowner
@@ -58,7 +58,7 @@ export default function SignUp(): JSX.Element {
 								color="primary"
 								icon={<ToolIcon />}
 								iconPosition="left"
-								className="!h-[44px] !w-full justify-center !border-[#003BFF] !px-6 !py-3 !text-[#003BFF]"
+								className="font-chalet-1960 !h-[44px] !w-full justify-center !border-[#003BFF] !px-6 !py-3 !text-[#003BFF]"
 								aria-label="Sign up as Contractor"
 							>
 								I’m Contractor

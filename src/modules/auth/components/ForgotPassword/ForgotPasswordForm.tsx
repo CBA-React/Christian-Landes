@@ -1,9 +1,11 @@
 import { JSX } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/shared/components/Button/Button';
+import { AuthInput } from '../AuthInput';
 
 const forgotPasswordSchema = z.object({
 	email: z.string().min(1, 'Email is required'),
@@ -26,37 +28,36 @@ export const ForgotPasswordForm = ({
 		resolver: zodResolver(forgotPasswordSchema),
 	});
 
-	const onSubmit = async (data: ForgotPasswordFormValues) => {
+	const router = useRouter();
+
+	const onSubmit = async (data: ForgotPasswordFormValues): Promise<void> => {
 		console.log('Forgot password data:', data);
 		onSuccess(data.email);
 	};
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
-			<label htmlFor="">Email</label>
-			<input
-				{...register('email')}
-				type="text"
-				className="mt-[10px] w-full border border-[#24242480] p-[6px] placeholder:text-[#242424]"
-				placeholder={'Enter your email'}
+			<AuthInput
+				label="Email"
+				type="email"
+				placeholder="Enter your email"
+				register={register('email', { required: 'Email is required' })}
+				error={errors.email}
 			/>
-			{errors.email && (
-				<p className="mt-1 text-sm text-red-600">
-					{errors.email.message}
-				</p>
-			)}
-			<div className="mt-[20px] flex w-full flex-col gap-4">
+			<div className="mt-[20px] flex w-full flex-col gap-3">
 				<Button
-					className="justify-center px-6 py-3"
-					type={'submit'}
+					className="font-chalet-1960 justify-center px-6 py-3 text-[16px] font-medium"
+					type="submit"
 					disabled={isSubmitting}
 				>
 					Continue
 				</Button>
 				<Button
-					className="justify-center px-6 py-3"
-					color={'light'}
-					variant={'ghost'}
+					className="font-chalet-1960 justify-center bg-[#DBDBDB] px-6 py-3 text-[16px] font-medium"
+					color="light"
+					variant="ghost"
+					type="button"
+					onClick={() => router.push('/login')}
 				>
 					Back to Sign In
 				</Button>

@@ -10,7 +10,7 @@ export default function Home(): JSX.Element {
 				backgroundImage: "url('/images/forgot-password-hero.png')",
 			}}
 		>
-			<ForgotPasswordSection />/
+			<ForgotPasswordSection />
 		</main>
 	);
 }
