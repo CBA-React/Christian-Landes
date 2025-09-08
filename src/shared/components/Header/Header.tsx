@@ -46,12 +46,12 @@ export const Header = (): JSX.Element => {
 
 					{MAIN_NAVIGATION.map((item) => (
 						<li
-							className="hidden max-h-[21px] lg:block"
+							className="hidden h-[61px] items-center lg:flex"
 							key={item.route}
 						>
 							<Link
 								className={cn(
-									'align-top text-[16px] leading-[100%] font-medium',
+									'text-[16px] leading-[100%] font-medium',
 									isActive ? 'text-white' : 'text-[#242424]',
 								)}
 								href={item.route}
