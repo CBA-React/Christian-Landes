@@ -47,7 +47,7 @@ export const ForgotPasswordSection = (): JSX.Element => {
 		}
 	}
 	return (
-		<div className="mx-auto mt-[161px] mb-[122px] flex w-full max-w-[1240px] justify-end px-4">
+		<div className="mx-5 mt-[109px] mb-[56px] flex w-full max-w-[1240px] justify-end md:mt-[161px] md:mb-[122px] xl:mx-auto">
 			<section className="h-fit w-full max-w-[578px] rounded-[20px] bg-[#FFFFFFD9] p-16 backdrop-blur-[20px]">
 				<article className="flex flex-col gap-4">
 					<h1 className="text-[84px] leading-[84px] font-medium text-[#242424]">

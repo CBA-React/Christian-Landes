@@ -226,11 +226,11 @@ export const SignUp = (): JSX.Element => {
 					/>
 					<label htmlFor="termsAccepted">
 						I agree to the{' '}
-						<a href="/terms" className="font-semibold">
+						<a href="/terms-service" className="font-semibold">
 							Terms of Service
 						</a>{' '}
 						and{' '}
-						<a href="/privacy" className="font-semibold">
+						<a href="/privacy-policy" className="font-semibold">
 							Privacy Policy
 						</a>
 					</label>
