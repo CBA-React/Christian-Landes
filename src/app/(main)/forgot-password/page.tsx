@@ -5,12 +5,12 @@ import { ForgotPasswordSection } from '@/modules/auth/components/ForgotPassword/
 export default function Home(): JSX.Element {
 	return (
 		<main
-			className="flex h-[984px] justify-end bg-cover"
+			className="flex justify-end bg-cover sm:h-[490px] md:h-[945px]"
 			style={{
 				backgroundImage: "url('/images/forgot-password-hero.png')",
 			}}
 		>
-			<ForgotPasswordSection />/
+			<ForgotPasswordSection />
 		</main>
 	);
 }

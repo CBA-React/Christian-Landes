@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
 import { Button } from '@/shared/components/Button/Button';
+import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 import { AuthApi } from '../services/AuthApi';
 import { login } from '../slices/authSlice';
 
@@ -43,11 +44,8 @@ export const LoginForm = (): JSX.Element => {
 			dispatch(login({ token: res.access_token, email: data.email }));
 
 			router.push('/');
-		} catch (e: any) {
-			const msg =
-				e?.response?.data?.message ||
-				e?.response?.data?.error ||
-				'Invalid email or password';
+		} catch (err: unknown) {
+			const msg = getErrorMessage(err, 'Invalid email or password');
 			setServerError(msg);
 			setError('email', { type: 'server', message: '' });
 			setError('password', { type: 'server', message: '' });
@@ -57,7 +55,7 @@ export const LoginForm = (): JSX.Element => {
 	return (
 		<form
 			onSubmit={handleSubmit(onSubmit)}
-			className="mt-6 mb-5 flex flex-col space-y-5"
+			className="mt-5 mb-5 flex flex-col space-y-5 md:mt-6"
 		>
 			{serverError && (
 				<div className="rounded border border-red-300 bg-red-50 p-2 text-sm text-red-700">
@@ -79,22 +77,27 @@ export const LoginForm = (): JSX.Element => {
 					<input
 						placeholder="Enter your password"
 						type="password"
-						className="w-full border border-[#242424] p-2 focus:outline-none"
+						className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none"
 						{...register('password', {
 							required: 'Password is required',
 						})}
 					/>
 					{errors.password && (
-						<p className="text-sm text-red-500">
+						<p className="mt-1 text-sm text-red-500">
 							{errors.password.message}
 						</p>
 					)}
 				</div>
-				<Link href="/forgot-password">Forgot your password?</Link>
+				<Link
+					className="text-[14px] font-semibold text-[#242424]"
+					href="/forgot-password"
+				>
+					Forgot your password?
+				</Link>
 			</div>
 
 			<Button
-				className="flex flex-row justify-center !gap-4"
+				className="font-chalet-1960 flex flex-row justify-center !gap-4 py-3"
 				icon={<ArrowIconWhite />}
 				iconPosition="right"
 				type="submit"

@@ -3,6 +3,7 @@ export const routes = [
 	'/login',
 	'/sign-up',
 	'/next-step',
-	'/sign-up/next-step',
+	'/sign-up/homeowner',
+	'/sign-up/contractor',
 	'/',
 ];

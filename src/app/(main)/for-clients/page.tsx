@@ -14,6 +14,7 @@ export default function ForClients(): JSX.Element {
 				description={
 					'Post your request, receive bids, and get the job done quickly and safely.'
 				}
+				height={'530px'}
 				buttonText={'Post a Job'}
 				buttonLink={'#'}
 			/>

@@ -1,7 +1,7 @@
 export function getTitle(step: number): string {
 	switch (step) {
 		case 1:
-			return 'Forgot password';
+			return 'Forgot Password?';
 		case 2:
 			return 'Verification Code';
 		case 3:

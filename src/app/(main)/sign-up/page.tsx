@@ -9,16 +9,18 @@ import ToolIcon from 'public/icons/tabler_tool.svg';
 export default function SignUp(): JSX.Element {
 	return (
 		<main
-			className="flex h-[890px] justify-end bg-cover"
+			className="flex justify-end bg-cover sm:h-[490px] md:h-[890px]"
 			style={{
 				backgroundImage: "url('/images/login-hero.png')",
 			}}
 		>
-			<div className="mx-auto mt-[192px] flex w-full max-w-[1240px] justify-end">
-				<section className="flex h-max w-[578px] flex-col gap-5 rounded-[20px] bg-[#FFFFFF] p-16">
-					<div className="flex flex-col gap-4 text-[#242424]">
-						<h1 className="text-[84px] font-[500]">Sign Up</h1>
-						<p className="text-[20px] font-[400]">
+			<div className="mx-5 mt-[110px] mb-[56px] flex w-full max-w-[1240px] justify-end md:mt-[192px] xl:mx-auto">
+				<section className="flex h-max w-full max-w-[578px] flex-col gap-5 rounded-[20px] bg-[#ffffffbf] px-6 py-10 backdrop-blur-[20px] md:p-16">
+					<div className="flex flex-col gap-2 text-[#242424] md:gap-4">
+						<h1 className="font-chalet-1960 text-[48px] leading-[58px] font-medium text-[#242424] md:text-[84px] md:leading-[100%]">
+							Sign Up
+						</h1>
+						<p className="text-base text-[#242424] md:text-xl">
 							Choose your role to get started:
 							<br />
 							Homeowner – post your project and find trusted
@@ -26,9 +28,12 @@ export default function SignUp(): JSX.Element {
 							connect with homeowners.
 						</p>
 					</div>
-					<nav className="mt-6 flex gap-4" aria-label="Choose role">
+					<nav
+						className="flex flex-col gap-3 sm:flex-row sm:gap-4"
+						aria-label="Choose role"
+					>
 						<Link
-							href="/sign-up/next-step"
+							href="/sign-up/homeowner"
 							className="w-full justify-center"
 						>
 							<Button
@@ -37,14 +42,14 @@ export default function SignUp(): JSX.Element {
 								color="primary"
 								icon={<HomeIcon />}
 								iconPosition="left"
-								className="!h-[44px] !w-full justify-center !bg-[#003BFF] !px-6 !py-3"
+								className="font-chalet-1960 !h-[44px] !w-full justify-center !bg-[#003BFF] !px-6 !py-3"
 								aria-label="Sign up as Homeowner"
 							>
 								I’m Homeowner
 							</Button>
 						</Link>
 						<Link
-							href="/sign-up/next-step"
+							href="/sign-up/contractor"
 							className="w-full justify-center"
 						>
 							<Button
@@ -53,7 +58,7 @@ export default function SignUp(): JSX.Element {
 								color="primary"
 								icon={<ToolIcon />}
 								iconPosition="left"
-								className="!h-[44px] !w-full justify-center !border-[#003BFF] !px-6 !py-3 !text-[#003BFF]"
+								className="font-chalet-1960 !h-[44px] !w-full justify-center !border-[#003BFF] !px-6 !py-3 !text-[#003BFF]"
 								aria-label="Sign up as Contractor"
 							>
 								I’m Contractor
