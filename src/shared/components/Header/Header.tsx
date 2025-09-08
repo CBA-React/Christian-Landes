@@ -24,7 +24,7 @@ export const Header = (): JSX.Element => {
 
 	return (
 		<header className="absolute w-full">
-			<div className="mx-auto mt-5 flex max-w-[1240px] flex-row items-center justify-center px-5 lg:justify-between xl:px-0">
+			<div className="mx-5 mt-5 flex max-w-[1240px] flex-row items-center justify-center lg:justify-between xl:mx-auto">
 				{isActive ? (
 					<Logo className="hidden lg:block" />
 				) : (

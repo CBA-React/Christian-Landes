@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
 import { Button } from '@/shared/components/Button/Button';
+import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 import { AuthApi } from '../services/AuthApi';
 import { login } from '../slices/authSlice';
 
@@ -43,11 +44,8 @@ export const LoginForm = (): JSX.Element => {
 			dispatch(login({ token: res.access_token, email: data.email }));
 
 			router.push('/');
-		} catch (e: any) {
-			const msg =
-				e?.response?.data?.message ||
-				e?.response?.data?.error ||
-				'Invalid email or password';
+		} catch (err: unknown) {
+			const msg = getErrorMessage(err, 'Invalid email or password');
 			setServerError(msg);
 			setError('email', { type: 'server', message: '' });
 			setError('password', { type: 'server', message: '' });

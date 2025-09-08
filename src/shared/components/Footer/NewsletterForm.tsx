@@ -27,9 +27,9 @@ export const NewsletterForm = (): JSX.Element => {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="relative mt-[10px] flex w-full flex-col gap-[10px] md:mt-3 md:gap-6 lg:mt-[53px]"
+			className="relative flex w-full flex-col gap-[16px] md:gap-6"
 		>
-			<h3 className="text-center text-[22px] font-medium md:text-2xl lg:text-left">
+			<h3 className="text-center text-[22px] leading-[100%] md:text-2xl lg:text-left">
 				Sign up for our newsletter
 			</h3>
 			<div className="relative w-full">
@@ -39,12 +39,12 @@ export const NewsletterForm = (): JSX.Element => {
 					onChange={(e) => setEmail(e.target.value)}
 					placeholder="Enter your email"
 					required
-					className="h-[57px] w-full flex-1 rounded-full bg-white px-6 py-4.5 text-black focus:outline-none"
+					className="h-[57px] w-full rounded-full bg-white px-6 py-4.5 text-black placeholder:text-[#24242480] focus:outline-none"
 				/>
 				<button
 					type="submit"
 					disabled={status === 'loading'}
-					className="absolute top-[50%] right-[6px] grid h-[45px] w-[101px] -translate-y-1/2 transform place-items-center rounded-full border-none bg-[#003BFF] text-base leading-none font-semibold text-white transition"
+					className="absolute top-[50%] right-[6px] grid h-[45px] w-[101px] -translate-y-1/2 transform place-items-center rounded-full border-none bg-[#003BFF] text-base leading-none text-white transition"
 				>
 					<p>{status === 'loading' ? 'Sending...' : 'Submit'}</p>
 				</button>
@@ -65,4 +65,3 @@ export const NewsletterForm = (): JSX.Element => {
 		</form>
 	);
 };
-

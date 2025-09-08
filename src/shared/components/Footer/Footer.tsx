@@ -13,13 +13,13 @@ import LogoWhite from 'public/logo-white-footer.svg';
 export const Footer = (): JSX.Element => {
 	return (
 		<footer className="w-full bg-[#003BFF] pt-[40px] text-white lg:pt-[100px]">
-			<div className="mx-auto max-w-[1240px] px-[20px] pb-[40px] md:px-0 md:pb-20">
+			<div className="mx-5 max-w-[1240px] pb-[40px] lg:pb-20 xl:mx-auto">
 				<section className="mx-auto flex flex-col items-center justify-between lg:flex-row lg:items-start">
-					<article className="flex w-[350px] flex-col gap-[11px] md:gap-[27px]">
+					<article className="flex w-[350px] flex-col">
 						<div className={'flex justify-center lg:justify-start'}>
 							<LogoWhite />
 						</div>
-						<div className="flex items-center justify-center space-x-3 lg:justify-start">
+						<div className="mt-3 mb-6 flex items-center justify-center space-x-3 lg:mt-[27px] lg:mb-20 lg:justify-start">
 							<p className="text-base">Follow our socials</p>
 							<div className="h-[21px] w-[1px] bg-[#FFFFFF40]"></div>
 							<div className="flex items-center space-x-4">
@@ -90,11 +90,10 @@ export const Footer = (): JSX.Element => {
 				</section>
 			</div>
 			<div className="flex h-[42px] w-full items-center bg-[#242424] md:h-[45px]">
-				<p className="mx-auto w-full max-w-[1240px] text-center text-[14px] md:text-left">
+				<p className="mx-5 w-full max-w-[1240px] text-center text-[14px] md:text-left xl:mx-auto">
 					Copyright ©2025
 				</p>
 			</div>
 		</footer>
 	);
 };
-
