@@ -15,7 +15,7 @@ import { Button } from '@/shared/components/Button/Button';
 export const ForgotPasswordSection = (): JSX.Element => {
 	const router = useRouter();
 
-	const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+	const [step, setStep] = useState<1 | 2 | 3 | 4>(3);
 	const [email, setEmail] = useState<string>('');
 	const [serverError, setServerError] = useState<string | null>(null);
 
@@ -40,7 +40,14 @@ export const ForgotPasswordSection = (): JSX.Element => {
 					/>
 				);
 			case 3:
-				return <ResetPasswordForm onSuccess={() => setStep(4)} />;
+				return (
+					<ResetPasswordForm
+						serverError={serverError}
+						setServerError={setServerError}
+						email={email}
+						onSuccess={() => setStep(4)}
+					/>
+				);
 			case 4:
 				return (
 					<Button
@@ -67,7 +74,9 @@ export const ForgotPasswordSection = (): JSX.Element => {
 						</p>
 					)}
 				</article>
-				<article className="mt-6">{renderStepForm(step)}</article>
+				<article className="mt-5 md:mt-6">
+					{renderStepForm(step)}
+				</article>
 			</section>
 		</div>
 	);

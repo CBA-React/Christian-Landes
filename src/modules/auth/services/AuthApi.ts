@@ -27,6 +27,17 @@ export class AuthApi {
 		});
 	}
 
+	static async recoveryPasswordChangePassword(params: {
+		email: string;
+		new_password: string;
+		confirm_password: string;
+	}): Promise<void> {
+		await axiosInstance.post<void>(
+			'auth/recoveryPasswordChangePassword',
+			params,
+		);
+	}
+
 	static logout(): void {
 		localStorage.removeItem('access_token');
 		localStorage.removeItem('refresh_token');
