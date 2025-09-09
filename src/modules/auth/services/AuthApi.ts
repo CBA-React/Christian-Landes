@@ -20,6 +20,13 @@ export class AuthApi {
 		await axiosInstance.post<void>('auth/recoveryPassword', { email });
 	}
 
+	static async verifyOtp(email: string, otp: string): Promise<void> {
+		await axiosInstance.post<void>('auth/recoveryPasswordCheckOtp', {
+			email,
+			otp,
+		});
+	}
+
 	static logout(): void {
 		localStorage.removeItem('access_token');
 		localStorage.removeItem('refresh_token');

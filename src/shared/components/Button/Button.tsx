@@ -48,7 +48,7 @@ export const Button = ({
 		},
 	};
 
-	const disabledStyles = 'opacity-50 cursor-not-allowed hover:none';
+	const disabledStyles = 'opacity-50 !cursor-not-allowed hover:none';
 	const finalClass = `${baseStyles} ${variantColorStyles[variant][color]} ${disabled ? disabledStyles : ''} ${className}`;
 
 	return (
