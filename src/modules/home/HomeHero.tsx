@@ -8,7 +8,7 @@ import ArrowRightIcon from 'public/icons/arrow-up-right-white-big.svg';
 export const HomeHero: React.FC = () => {
 	return (
 		<section
-			className="bg-size-[200% auto] flex h-[659px] flex-col gap-4 bg-no-repeat md:h-[800px] md:justify-between md:gap-[0] md:bg-cover md:!bg-[position:0]"
+			className="bg-size-[200% auto] flex h-[659px] flex-col gap-4 overflow-hidden bg-no-repeat md:h-[800px] md:justify-between md:gap-[0] md:bg-cover md:!bg-[position:0]"
 			style={{
 				backgroundImage: "url('/images/home-hero.png')",
 				backgroundPositionX: '90%',
@@ -16,7 +16,7 @@ export const HomeHero: React.FC = () => {
 			}}
 			aria-label="Hero section with call to action"
 		>
-			<div className="mx-5 mt-[120px] flex w-full max-w-[1240px] md:mt-[30px] md:flex-1 md:items-center xl:m-auto">
+			<div className="mt-[109px] flex w-full max-w-[1240px] px-5 md:items-center lg:mt-[237px] xl:m-auto xl:p-0">
 				<div className="flex flex-col items-start gap-3 text-white">
 					<h1 className="font-chalet-1960 text-[67px] leading-[69px] font-[400] tracking-[-1px] md:text-[72px] md:leading-none md:font-[500]">
 						Find a contractor.
