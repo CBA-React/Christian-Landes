@@ -1,4 +1,5 @@
 import { JSX } from 'react';
+import Link from 'next/link';
 
 export default function PrivacyPolicy(): JSX.Element {
 	return (
@@ -233,9 +234,9 @@ export default function PrivacyPolicy(): JSX.Element {
 							</li>
 							<li>
 								In Case of a Business Transfer: If{' '}
-								<a className="text-[#003BFF]">
+								<Link href="/" className="text-[#003BFF]">
 									ConnectBuildHub.com
-								</a>{' '}
+								</Link>{' '}
 								is involved in a merger, acquisition, or sale of
 								all or a portion of its assets, your information
 								may be transferred as part of that transaction.
@@ -282,7 +283,10 @@ export default function PrivacyPolicy(): JSX.Element {
 						</ul>
 						<p className="mt-3 text-[16px] leading-[155%] font-[400] text-[#242424]">
 							To exercise these rights, please contact us at{' '}
-							<a className="text-[#003BFF]">
+							<a
+								className="text-[#003BFF]"
+								href="mailto:privacy@connectbuildhub.com"
+							>
 								privacy@connectbuildhub.com
 							</a>
 							.

@@ -117,9 +117,12 @@ export default function TermsService(): JSX.Element {
 							</li>
 							<li>
 								Security: Notify us immediately at{' '}
-								<a className="text-[#003BFF]">
+								<a
+									href="mailto:support@connectbuildhub.com"
+									className="text-[#003BFF]"
+								>
 									support@connectbuildhub.com
-								</a>{' '}
+								</a>
 								if you suspect unauthorized use of your account.
 							</li>
 							<li>
@@ -546,7 +549,10 @@ export default function TermsService(): JSX.Element {
 						<ul className="mt-1 list-outside list-disc space-y-2 pl-4 text-[16px] leading-[155%] font-[400] text-[#242424]">
 							<li>
 								Email:{' '}
-								<a className="text-[#003BFF]">
+								<a
+									href="mailto:support@connectbuildhub.com"
+									className="text-[#003BFF]"
+								>
 									support@connectbuildhub.com
 								</a>
 							</li>
