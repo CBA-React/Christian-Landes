@@ -45,7 +45,7 @@ export const Connections = (): JSX.Element => {
 						className="embla__slide ml-[20px] h-[343px] w-[335px] rounded-xl bg-cover lg:ml-0 lg:h-[230px] lg:w-[292px]"
 						style={{
 							backgroundImage:
-								"url('/images/about_connections1.png')",
+								"url('/images/about-connections1.png')",
 						}}
 					/>
 
@@ -53,7 +53,7 @@ export const Connections = (): JSX.Element => {
 						className="embla__slide ml-[20px] h-[343px] w-[335px] rounded-xl bg-cover lg:ml-0 lg:w-[292px]"
 						style={{
 							backgroundImage:
-								"url('/images/about_connections2.png')",
+								"url('/images/about-connections2.png')",
 						}}
 					/>
 
@@ -61,7 +61,7 @@ export const Connections = (): JSX.Element => {
 						className="embla__slide ml-[20px] h-[343px] w-[335px] rounded-xl bg-cover lg:ml-0 lg:h-[230px] lg:w-[292px]"
 						style={{
 							backgroundImage:
-								"url('/images/about_connections3.png')",
+								"url('/images/about-connections3.png')",
 						}}
 					/>
 
@@ -69,7 +69,7 @@ export const Connections = (): JSX.Element => {
 						className="embla__slide ml-[20px] h-[343px] w-[335px] rounded-xl bg-cover lg:ml-0 lg:h-[230] lg:w-[292px] lg:self-end"
 						style={{
 							backgroundImage:
-								"url('/images/about_connections4.png')",
+								"url('/images/about-connections4.png')",
 						}}
 					/>
 				</div>

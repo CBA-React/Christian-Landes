@@ -6,7 +6,7 @@ export const Advantages = (): JSX.Element => {
 			<div
 				className="h-[350px] bg-cover lg:h-auto lg:w-1/2"
 				style={{
-					backgroundImage: "url('/images/about_advantages.png')",
+					backgroundImage: "url('/images/about-advantages.png')",
 				}}
 			></div>
 			<div className="flex flex-col bg-[#CFEDD9] px-[20px] py-[40px] lg:w-1/2 lg:px-0 lg:pt-[80px] lg:pr-[80px] lg:pb-[36px] lg:pl-[40px]">
