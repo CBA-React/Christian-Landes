@@ -20,3 +20,4 @@ export const MAIN_NAVIGATION = [
 		route: '/pricing',
 	},
 ];
+
