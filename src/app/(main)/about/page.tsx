@@ -17,7 +17,7 @@ export default function About(): JSX.Element {
 					}
 					buttonText={'Connect Now'}
 					buttonLink={'#'}
-					descriptionStyles="w-full lg:w-[755px] "
+					descriptionStyles="w-full lg:w-[755px]"
 				/>
 			</div>
 			<Advantages />

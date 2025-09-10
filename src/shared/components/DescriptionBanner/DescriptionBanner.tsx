@@ -12,6 +12,7 @@ interface BannerProps {
 	buttonLink: string;
 	buttonIcon?: ReactNode;
 	descriptionStyles?: string;
+	sectionStyles?: string;
 }
 
 export const DescriptionBanner = ({
@@ -21,15 +22,16 @@ export const DescriptionBanner = ({
 	buttonLink,
 	buttonIcon = <ArrowRightIcon aria-hidden="true" />,
 	descriptionStyles,
+	sectionStyles,
 }: BannerProps): JSX.Element => {
 	return (
 		<article className={'light-background h-full w-full bg-[#F1F3F6]'}>
-			<section className="flex h-full flex-col items-center justify-start px-4 pt-28 text-center sm:justify-center sm:pt-0 md:px-6 lg:px-0">
-				<h1 className="max-w-[811px] text-[48px] leading-[48px] font-medium lg:text-[64px] lg:leading-[64px]">
+			<section className="flex h-full flex-col items-center justify-start px-5 pt-[109px] text-center sm:justify-center sm:pt-0 md:px-5 lg:px-0">
+				<h1 className="font-chalet-1960 max-w-[811px] text-[48px] leading-[48px] font-medium lg:text-[64px] lg:leading-[64px]">
 					{title}
 				</h1>
 				<p
-					className={`mt-[12px] mb-[22px] ${descriptionStyles} leading-[150%] md:mt-[20px] md:mb-[28px]`}
+					className={`mt-[12px] mb-[22px] ${descriptionStyles} leading-[155%] md:mt-[20px] md:mb-[28px]`}
 				>
 					{description}
 				</p>
@@ -42,7 +44,7 @@ export const DescriptionBanner = ({
 							color="primary"
 							icon={buttonIcon}
 							iconPosition="right"
-							className="!h-[58px] w-full justify-between !rounded-none !bg-[#003BFF] !px-6 !py-3 !text-[20px] !font-[400] sm:!w-[209px] lg:!w-[209px]"
+							className="!h-[58px] w-full justify-between !rounded-none !bg-[#003BFF] !px-6 !py-3 !text-[20px] !font-[400] sm:!w-[209px] lg:!w-[226px]"
 							aria-label={buttonText}
 						>
 							{buttonText}
