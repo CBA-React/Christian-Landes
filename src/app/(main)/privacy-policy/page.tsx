@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 export default function PrivacyPolicy(): JSX.Element {
 	return (
-		<main className="py mx-auto flex w-full max-w-[1240px] flex-col items-center bg-[#FFFFFF] px-10 pt-[109px] pb-[56px] lg:px-0 lg:py-[190px]">
+		<main className="mx-auto flex w-full max-w-[1240px] flex-col items-center bg-[#FFFFFF] px-5 pt-[109px] pb-[56px] lg:px-0 lg:pt-[208px] lg:pb-[120px]">
 			<section className="w-full justify-center text-center">
 				<h1 className="font-chalet-1960 mb-3 text-[48px] leading-[48px] font-[500] text-[#242424] lg:mb-5 lg:text-[64px] lg:leading-[64px]">
 					Privacy Policy
@@ -12,7 +12,7 @@ export default function PrivacyPolicy(): JSX.Element {
 				</p>
 			</section>
 			<section className="mt-6 w-full max-w-[650px] justify-center text-start lg:mt-20">
-				<ul className="flex flex-col gap-10">
+				<ul className="flex flex-col gap-6 lg:gap-10">
 					<li>
 						<h2 className="font-chalet-1960 text-[24px] font-[500] text-[#242424] lg:text-[32px]">
 							01. Introduction
