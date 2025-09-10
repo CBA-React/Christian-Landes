@@ -20,7 +20,8 @@ import LogoMobile from 'public/logo-white-mobile.svg';
 export const Header = (): JSX.Element => {
 	const pathname = usePathname();
 
-	const isForContractorsView = pathname.includes('contractors');
+	const isNavLight =
+		pathname.includes('contractors') || pathname.includes('about');
 	const isActive = routes.includes(pathname);
 
 	return (
@@ -34,7 +35,7 @@ export const Header = (): JSX.Element => {
 				<ul
 					className="flex h-[61px] w-full flex-row items-center justify-between gap-6 rounded-[5px] px-6 lg:w-auto lg:justify-start"
 					style={{
-						background: `${isForContractorsView ? 'linear-gradient(90deg, rgba(225, 225, 225, 1) 0%, rgba(225, 225, 225, 0.25) 100%)' : 'linear-gradient(90deg, rgba(0, 14, 61, 0.2) 0%, rgba(43, 43, 43, 0.4) 100%)'}`,
+						background: `${isNavLight ? 'linear-gradient(90deg, rgba(225, 225, 225, 1) 0%, rgba(225, 225, 225, 0.25) 100%)' : 'linear-gradient(90deg, rgba(0, 14, 61, 0.2) 0%, rgba(43, 43, 43, 0.4) 100%)'}`,
 						backdropFilter: 'blur(20px)',
 					}}
 				>
@@ -69,3 +70,4 @@ export const Header = (): JSX.Element => {
 		</header>
 	);
 };
+
