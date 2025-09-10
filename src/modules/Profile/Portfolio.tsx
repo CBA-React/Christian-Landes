@@ -33,13 +33,14 @@ export const Portfolio = (): JSX.Element => {
 	};
 
 	return (
-		<div className="mb-30 rounded-lg bg-[#F1F3F6] p-10">
-			<div className="mb-6 flex items-center justify-between">
+		<div className="mb-6 rounded-lg bg-[#F1F3F6] p-6 md:mb-30 md:p-10">
+			{/* Header section */}
+			<div className="mb-6 flex flex-col gap-6 md:mb-6 md:flex-row md:items-center md:justify-between md:gap-0">
 				<div>
 					<h2 className="font-chalet-1960 text-[40px] tracking-[-1px] text-[#242424]">
 						Portfolio
 					</h2>
-					<p className="font-chalet-1960 text-[14px] text-[#242424]/50">
+					<p className="font-chalet-1960 text-[16px] text-[#242424]/50">
 						Showcase your best work to attract new clients
 					</p>
 				</div>
@@ -49,22 +50,23 @@ export const Portfolio = (): JSX.Element => {
 					color="dark"
 					iconPosition="left"
 					icon={<Plus />}
-					className="font-chalet-1960 h-[48px] w-[165px] !gap-3 !px-6"
+					className="font-chalet-1960 h-[48px] w-full justify-center !gap-3 !px-6 md:w-[165px]"
 				>
 					Add Project
 				</Button>
 			</div>
 
-			<div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+			{/* Portfolio grid - single column on mobile, two columns on desktop */}
+			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6">
 				{portfolioData.map((item) => (
 					<div key={item.id} className="group">
-						<div className="relative h-[260px] w-[430px] cursor-pointer overflow-hidden">
+						<div className="relative h-[180px] w-full cursor-pointer overflow-hidden md:h-[260px]">
 							<Image
 								src={item.imageUrl}
 								alt={item.title}
 								fill
 								className="object-cover"
-								sizes="(max-width: 640px) 100vw, 50vw"
+								sizes="(max-width: 768px) 100vw, 50vw"
 							/>
 
 							<div className="absolute inset-0 bg-gradient-to-b from-[#2B2B2B]/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -77,7 +79,7 @@ export const Portfolio = (): JSX.Element => {
 							</button>
 						</div>
 
-						<div className="mt-4">
+						<div className="mt-3 md:mt-4">
 							<h3 className="font-chalet-1960 text-[20px] text-[#242424]">
 								{item.title}
 							</h3>
