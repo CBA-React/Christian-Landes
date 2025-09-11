@@ -6,7 +6,7 @@ import { Button } from '@/shared/components/Button/Button';
 import ArrowRightIcon from 'public/icons/arrow-up-right-white-big.svg';
 
 interface BannerProps {
-	title: string;
+	title: string | ReactNode;
 	description: string;
 	buttonText: string;
 	buttonLink: string;
@@ -31,7 +31,7 @@ export const DescriptionBanner = ({
 	return (
 		<article className={'light-background h-full w-full bg-[#F1F3F6]'}>
 			<section
-				className={`flex h-full flex-col items-center justify-start px-4 pt-28 text-center sm:justify-center sm:pt-0 md:px-6 lg:px-0 ${sectionStyles}`}
+				className={`font-chalet-1960 flex h-full flex-col items-center justify-start px-5 pt-28 text-center sm:justify-center sm:pt-0 md:px-6 lg:px-0 ${sectionStyles}`}
 			>
 				<h1
 					className={`max-w-[811px] ${titleStyles} text-[48px] leading-[48px] font-medium lg:text-[64px] lg:leading-[64px]`}

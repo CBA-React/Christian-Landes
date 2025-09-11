@@ -20,13 +20,13 @@ export const ContactInput = ({
 	register,
 }: Props): JSX.Element => {
 	return (
-		<div className="relative mb-5 flex flex-col gap-[8px] text-[#242424]">
+		<div className="relative mb-[19px] flex flex-col gap-[8px] text-[#242424] lg:mb-5">
 			<label htmlFor={id}>{label}</label>
 			{isTextArea ? (
 				<textarea
 					id={id}
 					placeholder={placeholder}
-					className="h-[97px] w-full border border-[#24242480] px-[16px] py-[3px] placeholder:text-[#24242480] focus:outline-none"
+					className="mb-1 h-[97px] w-full border border-[#24242480] px-[16px] py-[3px] placeholder:text-[#24242480] focus:outline-none lg:mb-3"
 					{...register}
 				/>
 			) : (

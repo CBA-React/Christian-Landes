@@ -3,17 +3,20 @@
 import React, { JSX, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
+import useEmblaCarousel from 'embla-carousel-react';
+
+import { Button } from '@/shared/components/Button/Button';
+import { useCarouselDot } from '@/shared/hooks/useCarouselDot';
+import { getErrorMessage } from '@/shared/lib/getErrorMessage';
+import { sendContact } from '../services/sendContactApi';
+import { ContactInput } from './ContactInput';
 
 import EmailIcon from '../../../../public/icons/email.svg';
 import PhoneIcon from '../../../../public/icons/phone.svg';
 import AddressIcon from '../../../../public/icons/address.svg';
 import ArrowIconWhite from 'public/icons/arrow-up-right-white-big.svg';
 import CheckIcon from 'public/icons/symbols_check-white.svg';
-import { Button } from '@/shared/components/Button/Button';
-
-import { getErrorMessage } from '@/shared/lib/getErrorMessage';
-import { sendContact } from '../services/sendContactApi';
-import { ContactInput } from './ContactInput';
+import { ContactItem } from './ContactItem';
 
 export interface ContactFormValues {
 	name: string;
@@ -25,6 +28,8 @@ export interface ContactFormValues {
 export const ContactForm = (): JSX.Element => {
 	const [serverError, setServerError] = useState<string | null>(null);
 	const [isSuccess, setIsSuccess] = useState<boolean>(false);
+	const [emblaRef, emblaApi] = useEmblaCarousel();
+	const { selectedIndex } = useCarouselDot(emblaApi);
 	const mutation = useMutation({
 		mutationFn: (data: ContactFormValues) => sendContact(data),
 		onSuccess: () => {
@@ -65,55 +70,49 @@ export const ContactForm = (): JSX.Element => {
 	}, [isSuccess]);
 
 	return (
-		<section className="mx-auto rounded-[10px] bg-[#CFEDD9] lg:mt-[-78px] lg:mb-[120px] lg:max-w-[1240px] lg:p-[48px]">
-			<ul className="mb-23 flex gap-[40px]">
-				<li className="rounded-[10px] border-1 border-[rgba(0,0,0,0.3)] p-[24px]">
-					<EmailIcon className="mb-3" />
-					<p className="mb-3 text-[20px]">Support Email</p>
-					<p className="mb-5 text-[16px]">info.example@gmai.com</p>
-					<Button
-						type="button"
-						variant="solid"
-						color="primary"
-						aria-label="Email Us"
-						className="!h-[43px] w-[306px] justify-center text-[16px] !font-[400]"
-					>
-						Email Us
-					</Button>
-				</li>
-				<li className="rounded-[10px] border-1 border-[rgba(0,0,0,0.3)] p-[24px]">
-					<PhoneIcon className="mb-3" />
-					<p className="mb-3 text-[20px]">Phone Number</p>
-					<p className="mb-5 text-[16px]">1800-000-0000</p>
-					<Button
-						type="button"
-						variant="solid"
-						color="primary"
-						aria-label="Call Us"
-						className="!h-[43px] w-[306px] justify-center text-[16px] !font-[400]"
-					>
-						Call Us
-					</Button>
-				</li>
-				<li className="rounded-[10px] border-1 border-[rgba(0,0,0,0.3)] p-[24px]">
-					<AddressIcon className="mb-3" />
-					<p className="mb-3 text-[20px]">Headquarters</p>
-					<p className="mb-5 text-[16px]">
-						12 Cherry Street, NJ, 10384
-					</p>
-					<Button
-						type="button"
-						variant="solid"
-						color="primary"
-						aria-label="Visit Us"
-						className="!h-[43px] w-[306px] justify-center text-[16px] !font-[400]"
-					>
-						Visit Us
-					</Button>
-				</li>
-			</ul>
-			<div className="flex gap-[86px]">
-				<form onSubmit={handleSubmit(onSubmit)} className="w-[450px]">
+		<section className="mx-5 mt-[-32px] rounded-[10px] bg-[#CFEDD9] p-6 lg:mx-auto lg:mt-[-78px] lg:mb-[120px] lg:max-w-[1240px] lg:p-[48px]">
+			<div
+				ref={emblaRef}
+				className="mb-10 overflow-hidden lg:mb-23 lg:overflow-visible"
+			>
+				<ul className="mb-6 flex gap-[40px]">
+					<ContactItem
+						icon={<EmailIcon className="mb-[5px] lg:mb-3" />}
+						title="Support Email"
+						contact="info.example@gmai.com"
+						buttonLabel="Email Us"
+					/>
+					<ContactItem
+						icon={<PhoneIcon className="mb-[5px] lg:mb-3" />}
+						title="Phone Number"
+						contact="1800-000-0000"
+						buttonLabel="Call Us"
+					/>
+					<ContactItem
+						icon={<AddressIcon className="mb-[5px] lg:mb-3" />}
+						title="Headquarters"
+						contact="12 Cherry Street, NJ, 10384"
+						buttonLabel="Visit Us"
+					/>
+				</ul>
+				<div className="flex justify-center gap-[5px] md:hidden">
+					<div
+						className={`${selectedIndex === 0 ? 'bg-[#242424]' : 'bg-[#F1F3F6]'} h-[10px] w-[10px] rounded-full`}
+					/>
+					<div
+						className={`${selectedIndex === 1 ? 'bg-[#242424]' : 'bg-[#F1F3F6]'} h-[10px] w-[10px] rounded-full`}
+					/>
+					<div
+						className={`${selectedIndex === 2 ? 'bg-[#242424]' : 'bg-[#F1F3F6]'} h-[10px] w-[10px] rounded-full`}
+					/>
+				</div>
+			</div>
+
+			<div className="flex flex-col gap-6 lg:flex-row lg:gap-[86px]">
+				<form
+					onSubmit={handleSubmit(onSubmit)}
+					className="w-full lg:w-[450px]"
+				>
 					{serverError && (
 						<div className="rounded border border-red-300 bg-red-50 p-2 text-sm text-red-700">
 							{serverError}
@@ -140,7 +139,6 @@ export const ContactForm = (): JSX.Element => {
 							},
 						})}
 					/>
-
 					<ContactInput
 						label="Email Address"
 						id="email"
@@ -158,7 +156,6 @@ export const ContactForm = (): JSX.Element => {
 							},
 						})}
 					/>
-
 					<ContactInput
 						label="Phone Number"
 						id="phone"
@@ -172,10 +169,10 @@ export const ContactForm = (): JSX.Element => {
 							},
 						})}
 					/>
-
 					<ContactInput
 						label="Message"
 						id="message"
+						isTextArea
 						placeholder="Your message goes here"
 						error={errors.message}
 						register={register('message', {
@@ -192,7 +189,6 @@ export const ContactForm = (): JSX.Element => {
 							},
 						})}
 					/>
-
 					<Button
 						className="flex h-[58px] w-full justify-center gap-[40px] !rounded-none text-[20px]"
 						icon={isSuccess ? <CheckIcon /> : <ArrowIconWhite />}
@@ -208,7 +204,7 @@ export const ContactForm = (): JSX.Element => {
 					</Button>
 				</form>
 				<div
-					className="mt-[-12px] h-[536px] w-[606px] bg-cover"
+					className="mt-0 h-[287px] w-[287px] bg-cover lg:mt-[-12px] lg:h-[536px] lg:w-[606px]"
 					style={{
 						backgroundImage: "url('/images/contact-us-map.png')",
 					}}
