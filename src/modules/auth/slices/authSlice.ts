@@ -1,15 +1,41 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { jwtDecode } from 'jwt-decode';
 
 interface AuthState {
 	token: string | null;
 	email: string | null;
+	role: '1' | '2' | '3' | null;
 }
 
+interface JWTPayload {
+	role: '1' | '2' | '3';
+	email: string;
+	sub: string;
+	exp: number;
+}
+
+const getRoleFromToken = (token: string): '1' | '2' | '3' | null => {
+	try {
+		const decoded = jwtDecode<JWTPayload>(token);
+		return decoded.role;
+	} catch (error) {
+		console.error('Error decoding token:', error);
+		return null;
+	}
+};
+
 const getStoredAuth = (): AuthState => {
-	if (typeof window === 'undefined') return { token: null, email: null };
+	if (typeof window === 'undefined')
+		return { token: null, email: null, role: null };
+
+	const token = localStorage.getItem('access_token');
+	const email = localStorage.getItem('email');
+	const role = token ? getRoleFromToken(token) : null;
+
 	return {
-		token: localStorage.getItem('access_token'),
-		email: localStorage.getItem('email'),
+		token,
+		email,
+		role,
 	};
 };
 
@@ -23,17 +49,24 @@ const authSlice = createSlice({
 			state,
 			action: PayloadAction<{ token: string; email: string }>,
 		) => {
-			state.token = action.payload.token;
-			state.email = action.payload.email;
+			const { token, email } = action.payload;
+			const role = getRoleFromToken(token);
+
+			state.token = token;
+			state.email = email;
+			state.role = role;
+
 			if (typeof window !== 'undefined') {
-				localStorage.setItem('access_token', action.payload.token);
-				localStorage.setItem('email', action.payload.email);
-				document.cookie = `token=${action.payload.token}; path=/; SameSite=Lax`;
+				localStorage.setItem('access_token', token);
+				localStorage.setItem('email', email);
+				document.cookie = `token=${token}; path=/; SameSite=Lax`;
 			}
 		},
 		logout: (state) => {
 			state.token = null;
 			state.email = null;
+			state.role = null;
+
 			if (typeof window !== 'undefined') {
 				localStorage.removeItem('access_token');
 				localStorage.removeItem('refresh_token');

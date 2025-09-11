@@ -9,6 +9,7 @@ import { ProfileData } from './types';
 import StarIcon from '../../../public/icons/profile/star.svg';
 import DollarIcon from '../../../public/icons/profile/dollar-for-button.svg';
 import EditIcon from '../../../public/icons/profile/edit.svg';
+import PostIcon from '../../../public/icons/profile/plus-white.svg';
 
 interface ProfileHeaderProps {
 	profileData: ProfileData;
@@ -16,6 +17,10 @@ interface ProfileHeaderProps {
 
 const handleViewEarnings = () => {
 	console.log('View Earnings clicked');
+};
+
+const handlePostRequest = () => {
+	console.log('Post New Request clicked');
 };
 
 const handleEditProfile = () => {
@@ -40,25 +45,20 @@ export const ProfileHeader = ({
 
 				{/* Profile Info */}
 				<div className="flex flex-1 flex-col items-center gap-2 text-center md:items-start md:self-center md:text-left">
-					{/* Rating */}
-					{profileData.rating && (
-						<div className="flex items-center gap-2">
-							<div className="inline-flex items-center gap-1.5 bg-[#CFEDD9] px-3 py-1">
-								<StarIcon width={14} height={14} />
-								<span className="text-[14px] font-normal">
-									{profileData.rating}
-								</span>
-							</div>
-
-							{profileData.reviewsCount && (
-								<span className="text-[14px] font-normal text-[#747474]">
-									{profileData.reviewsCount} reviews
-								</span>
-							)}
+					<div className="flex items-center gap-2">
+						<div className="inline-flex items-center gap-1.5 bg-[#CFEDD9] px-3 py-1">
+							<StarIcon width={14} height={14} />
+							<span className="text-[14px] font-normal">
+								{profileData.rating}
+							</span>
 						</div>
-					)}
 
-					{/* Name - адаптивный размер шрифта */}
+						<span className="text-[14px] font-normal text-[#747474]">
+							{profileData.reviewsCount} reviews
+						</span>
+					</div>
+
+					{/* Name */}
 					<div className="flex items-center gap-2">
 						<h1 className="font-chalet-1960 text-[36px] leading-[38px] text-gray-900 md:text-[48px] md:leading-[64px]">
 							{profileData.name}
@@ -72,19 +72,32 @@ export const ProfileHeader = ({
 				</div>
 
 				<div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:gap-0">
-					{/* View Earnings Button */}
-					<Button
-						variant="solid"
-						color="primary"
-						icon={<DollarIcon />}
-						iconPosition="right"
-						className="flex h-[60px] w-full justify-between rounded-none !px-5 !py-3 text-[20px] font-normal md:w-[240px]"
-						onClick={handleViewEarnings}
-					>
-						View Earnings
-					</Button>
+					{/* Primary Button*/}
+					{profileData.role === 'contractor' ? (
+						<Button
+							variant="solid"
+							color="primary"
+							icon={<DollarIcon />}
+							iconPosition="right"
+							className="flex h-[60px] w-full justify-between rounded-none !px-5 !py-3 text-[20px] font-normal md:w-[240px]"
+							onClick={handleViewEarnings}
+						>
+							View Earnings
+						</Button>
+					) : (
+						<Button
+							variant="solid"
+							color="primary"
+							icon={<PostIcon />}
+							iconPosition="right"
+							className="flex h-[60px] w-full justify-between rounded-none !px-5 !py-3 text-[20px] font-normal md:w-[240px]"
+							onClick={handlePostRequest}
+						>
+							Post New Request
+						</Button>
+					)}
 
-					{/* Edit Profile Button */}
+					{/* Edit Profile Button*/}
 					<Button
 						variant="solid"
 						color="dark"

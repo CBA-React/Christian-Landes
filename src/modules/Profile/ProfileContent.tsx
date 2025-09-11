@@ -2,59 +2,140 @@
 
 import { JSX, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { ProfileData, ProfileStats } from './types';
+import { ProfileData, StatItem } from './types';
+import { ProfileSection } from './constants';
+import { NAVIGATION_CONFIG } from './navigationConfig';
 import { ProfileSidebar } from './ProfileSidebar';
 import { StatsCards } from './StatsCards';
-import { BusinessInformation } from './BusinessInformation';
+import { Information } from './Information';
 import { Portfolio } from './Portfolio';
-import { useCarouselDot } from '@/shared/hooks/useCarouselDot';
-
-// Импорты иконок
-import OverviewIcon from '../../../public/icons/profile/overview.svg';
-import ProjectsIcon from '../../../public/icons/profile/plus.svg';
-import MyBidsIcon from '../../../public/icons/profile/my-bids.svg';
-import ReviewsIcon from '../../../public/icons/profile/reviews.svg';
-import PriceIcon from '../../../public/icons/profile/dollar-icon.svg';
+import { RecentProjects } from './RecentProjects';
 
 interface ProfileContentProps {
 	profileData: ProfileData;
-	stats?: ProfileStats;
+	stats: StatItem[];
 }
 
-export const ProfileContent = ({ stats }: ProfileContentProps): JSX.Element => {
-	const [activeSection, setActiveSection] = useState('overview');
+export const ProfileContent = ({
+	profileData,
+	stats,
+}: ProfileContentProps): JSX.Element => {
+	const [activeSection, setActiveSection] = useState<ProfileSection>(
+		ProfileSection.OVERVIEW,
+	);
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({
 		align: 'start',
 		dragFree: true,
 	});
 
-	const { selectedIndex } = useCarouselDot(emblaApi);
+	const navigationItems = NAVIGATION_CONFIG[profileData.role];
 
-	const navigationItems = [
-		{ id: 'overview', label: 'Overview', icon: <OverviewIcon /> },
-		{
-			id: 'available-projects',
-			label: 'Available Projects',
-			icon: <ProjectsIcon />,
-		},
-		{ id: 'my-bids', label: 'My Bids', icon: <MyBidsIcon /> },
-		{ id: 'reviews', label: 'Reviews', icon: <ReviewsIcon /> },
-		{ id: 'pricing-plan', label: 'Pricing Plan', icon: <PriceIcon /> },
-	];
+	const renderSectionContent = () => {
+		switch (activeSection) {
+			case ProfileSection.OVERVIEW:
+				return (
+					<>
+						<StatsCards stats={stats} />
+						<Information profileData={profileData} />
+						{profileData.role === 'contractor' ? (
+							<Portfolio />
+						) : (
+							<RecentProjects />
+						)}
+					</>
+				);
+
+			case ProfileSection.AVAILABLE_PROJECTS:
+				return (
+					<div className="rounded-lg bg-[#F1F3F6] p-4 shadow-sm md:p-6">
+						<h2 className="text-lg font-semibold text-[#242424]">
+							Available Projects
+						</h2>
+						<p className="mt-2 text-[#242424] opacity-70">
+							Browse and bid on new projects...
+						</p>
+					</div>
+				);
+
+			case ProfileSection.MY_BIDS:
+				return (
+					<div className="rounded-lg bg-white p-4 shadow-sm md:p-6">
+						<h2 className="text-lg font-semibold text-[#242424]">
+							My Bids
+						</h2>
+						<p className="mt-2 text-[#242424] opacity-70">
+							Track your submitted bids...
+						</p>
+					</div>
+				);
+
+			case ProfileSection.MY_REQUESTS:
+				return (
+					<div className="rounded-lg bg-[#F1F3F6] p-4 shadow-sm md:p-6">
+						<h2 className="text-lg font-semibold text-[#242424]">
+							My Requests
+						</h2>
+						<p className="mt-2 text-[#242424] opacity-70">
+							Manage your posted project requests...
+						</p>
+					</div>
+				);
+
+			case ProfileSection.CONTRACTORS:
+				return (
+					<div className="rounded-lg bg-[#F1F3F6] p-4 shadow-sm md:p-6">
+						<h2 className="text-lg font-semibold text-[#242424]">
+							Contractors
+						</h2>
+						<p className="mt-2 text-[#242424] opacity-70">
+							Browse and contact contractors...
+						</p>
+					</div>
+				);
+
+			case ProfileSection.REVIEWS:
+				return (
+					<div className="rounded-lg bg-white p-4 shadow-sm md:p-6">
+						<h2 className="text-lg font-semibold text-[#242424]">
+							Reviews
+						</h2>
+						<p className="mt-2 text-[#242424] opacity-70">
+							{profileData.role === 'contractor'
+								? 'Reviews from clients...'
+								: 'Reviews of contractors...'}
+						</p>
+					</div>
+				);
+
+			case ProfileSection.PRICING_PLAN:
+				return (
+					<div className="rounded-lg bg-white p-4 shadow-sm md:p-6">
+						<h2 className="text-lg font-semibold text-[#242424]">
+							Pricing Plan
+						</h2>
+						<p className="mt-2 text-[#242424] opacity-70">
+							Manage your subscription...
+						</p>
+					</div>
+				);
+
+			default:
+				return null;
+		}
+	};
 
 	return (
 		<div className="px-5 md:px-0">
 			<div className="flex flex-col gap-6 pt-6 md:flex-row md:gap-10 md:pt-10">
-				{/* Desktop Sidebar*/}
 				<div className="hidden md:block">
 					<ProfileSidebar
 						activeSection={activeSection}
 						onSectionChange={setActiveSection}
+						navigationItems={navigationItems}
 					/>
 				</div>
 
-				{/* Mobile Navigation*/}
 				<div className="block md:hidden">
 					<div className="embla overflow-hidden" ref={emblaRef}>
 						<div className="embla__container flex gap-6">
@@ -88,61 +169,8 @@ export const ProfileContent = ({ stats }: ProfileContentProps): JSX.Element => {
 					</div>
 				</div>
 
-				{/* Main Content */}
 				<div className="flex-1 space-y-6 md:space-y-10">
-					{activeSection === 'overview' && (
-						<>
-							{stats && <StatsCards stats={stats} />}
-
-							<BusinessInformation />
-
-							<Portfolio />
-						</>
-					)}
-
-					{activeSection === 'available-projects' && (
-						<div className="rounded-lg bg-[#F1F3F6] p-4 shadow-sm md:p-6">
-							<h2 className="text-lg font-semibold text-[#242424]">
-								Available Projects
-							</h2>
-							<p className="mt-2 text-[#242424] opacity-70">
-								Projects content will be here...
-							</p>
-						</div>
-					)}
-
-					{activeSection === 'my-bids' && (
-						<div className="rounded-lg bg-white p-4 shadow-sm md:p-6">
-							<h2 className="text-lg font-semibold text-[#242424]">
-								My Bids
-							</h2>
-							<p className="mt-2 text-[#242424] opacity-70">
-								Bids content will be here...
-							</p>
-						</div>
-					)}
-
-					{activeSection === 'reviews' && (
-						<div className="rounded-lg bg-white p-4 shadow-sm md:p-6">
-							<h2 className="text-lg font-semibold text-[#242424]">
-								Reviews
-							</h2>
-							<p className="mt-2 text-[#242424] opacity-70">
-								Reviews content will be here...
-							</p>
-						</div>
-					)}
-
-					{activeSection === 'pricing-plan' && (
-						<div className="rounded-lg bg-white p-4 shadow-sm md:p-6">
-							<h2 className="text-lg font-semibold text-[#242424]">
-								Pricing Plan
-							</h2>
-							<p className="mt-2 text-[#242424] opacity-70">
-								Pricing plan content will be here...
-							</p>
-						</div>
-					)}
+					{renderSectionContent()}
 				</div>
 			</div>
 		</div>

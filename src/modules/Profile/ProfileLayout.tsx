@@ -1,12 +1,12 @@
 import { JSX } from 'react';
 
-import { ProfileData, ProfileStats } from './types';
+import { ProfileData, StatItem } from './types'; 
 import { ProfileHeader } from './ProfileHeader';
 import { ProfileContent } from './ProfileContent';
 
 interface ProfileLayoutProps {
 	profileData: ProfileData;
-	stats?: ProfileStats;
+	stats: StatItem[]; 
 }
 
 export const ProfileLayout = ({
