@@ -1,5 +1,3 @@
-'use client';
-
 import React, { JSX, ReactNode } from 'react';
 
 import { Button } from '@/shared/components/Button/Button';

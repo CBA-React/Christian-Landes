@@ -6,7 +6,7 @@ export async function sendContact(data: ContactFormValues): Promise<any> {
 		full_name: data.name,
 		...data,
 	});
-	// throw 'iternal server error';
+
 	return res.data;
 }
 
