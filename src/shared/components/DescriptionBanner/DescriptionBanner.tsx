@@ -15,6 +15,7 @@ interface BannerProps {
 	titleStyles?: string;
 	sectionStyles?: string;
 	descriptionStyles?: string;
+	sectionStyles?: string;
 }
 
 export const DescriptionBanner = ({
@@ -27,6 +28,7 @@ export const DescriptionBanner = ({
 	titleStyles,
 	sectionStyles,
 	descriptionStyles,
+	sectionStyles,
 }: BannerProps): JSX.Element => {
 	return (
 		<article className={'light-background h-full w-full bg-[#F1F3F6]'}>
@@ -39,11 +41,10 @@ export const DescriptionBanner = ({
 					{title}
 				</h1>
 				<p
-					className={`mt-[12px] mb-[22px] ${descriptionStyles} leading-[150%] md:mt-[20px] md:mb-[28px]`}
+					className={`mt-[12px] mb-[22px] ${descriptionStyles} leading-[155%] md:mt-[20px] md:mb-[28px]`}
 				>
 					{description}
 				</p>
-
 				{isButtonShown && (
 					<div className="w-full sm:w-auto lg:w-auto">
 						<Link href={buttonLink}>

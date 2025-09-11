@@ -13,9 +13,9 @@ export const Connections = (): JSX.Element => {
 	]);
 
 	return (
-		<section className="mb-[56px] px-[20px] lg:mb-[208px] lg:px-0">
+		<section className="mb-[56px] px-[20px] lg:mb-[208px] lg:px-0 lg:pt-[6px]">
 			<div className="mb-[24px] flex flex-col items-center lg:mb-[120px]">
-				<h2 className="mb-2 text-center text-[36px] leading-11 lg:mb-[20px] lg:w-[954px] lg:text-[64px] lg:leading-[64px]">
+				<h2 className="font-chalet-1960 mb-2 text-center text-[36px] leading-11 lg:mb-[20px] lg:w-[954px] lg:text-[64px] lg:leading-[64px]">
 					We build more than homes — we build strong connections.
 				</h2>
 				<p className="mb-[20px] text-left text-[16px] leading-[155%] lg:mb-[28px] lg:w-[770px] lg:text-center">

@@ -10,7 +10,7 @@ export const Advantages = (): JSX.Element => {
 				}}
 			></div>
 			<div className="flex flex-col bg-[#CFEDD9] px-[20px] py-[40px] lg:w-1/2 lg:px-0 lg:pt-[80px] lg:pr-[80px] lg:pb-[36px] lg:pl-[40px]">
-				<h2 className="mb-14 text-[36px] leading-11 lg:mb-38 lg:text-[48px] lg:leading-12">
+				<h2 className="font-chalet-1960 mb-14 text-[36px] leading-11 lg:mb-38 lg:text-[48px] lg:leading-12">
 					We simplify home improvement by connecting people with
 					trusted local pros
 				</h2>
@@ -24,20 +24,20 @@ export const Advantages = (): JSX.Element => {
 						ready to work.From first request to final review, we
 						help you manage your home project with confidence.
 					</p>
-					<ul className="mt-4 ml-1 flex flex-wrap justify-center gap-[28px]">
+					<ul className="mt-4 flex flex-wrap justify-center gap-[28px] lg:justify-start lg:gap-[32px]">
 						<li className="flex flex-col">
-							<div className="text-[40px] font-[500] lg:text-[48px]">
+							<div className="text-[40px] font-[500] tracking-[3px] lg:text-[48px]">
 								1000+
 							</div>
-							<div className="w-[130px] text-[14px] lg:w-full lg:text-[16px]">
-								Project Completed
+							<div className="mt-[-4px] w-[130px] text-[14px] lg:w-full lg:text-[16px]">
+								Projects Completed
 							</div>
 						</li>
 						<li className="flex flex-col">
 							<div className="text-[40px] font-[500] lg:text-[48px]">
 								300+
 							</div>
-							<div className="w-[132px] text-[14px] lg:w-full lg:text-[16px]">
+							<div className="mt-[-4px] w-[132px] text-[14px] lg:w-full lg:text-[16px]">
 								Verified Contractors
 							</div>
 						</li>
@@ -45,7 +45,7 @@ export const Advantages = (): JSX.Element => {
 							<div className="text-[40px] font-[500] lg:text-[48px]">
 								20+
 							</div>
-							<div className="w-[130px] text-[14px] lg:w-full lg:text-[16px]">
+							<div className="mt-[-4px] w-[130px] text-[14px] lg:w-full lg:text-[16px]">
 								Cities Served
 							</div>
 						</li>
