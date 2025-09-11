@@ -17,6 +17,7 @@ export default function ForClients(): JSX.Element {
 					}
 					buttonText={'Post a Job'}
 					buttonLink={'#'}
+					descriptionStyles="w-[453px]"
 				/>
 			</div>
 

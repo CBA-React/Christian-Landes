@@ -13,7 +13,7 @@ export const MAIN_NAVIGATION = [
 	},
 	{
 		name: 'About',
-		route: '#',
+		route: '/about',
 	},
 	{
 		name: 'Pricing',

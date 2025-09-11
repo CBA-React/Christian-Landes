@@ -14,6 +14,7 @@ export default function ForContractors(): JSX.Element {
 					description="Work on your own terms, get stable orders, and forget about finding clients — we’ll take care of the rest."
 					buttonText="Find Work"
 					buttonLink="#"
+					descriptionStyles="w-[453px]"
 				/>
 			</div>
 

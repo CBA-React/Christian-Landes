@@ -14,6 +14,7 @@ interface BannerProps {
 	isButtonShown?: boolean;
 	titleStyles?: string;
 	sectionStyles?: string;
+	descriptionStyles?: string;
 }
 
 export const DescriptionBanner = ({
@@ -25,6 +26,7 @@ export const DescriptionBanner = ({
 	isButtonShown = true,
 	titleStyles,
 	sectionStyles,
+	descriptionStyles,
 }: BannerProps): JSX.Element => {
 	return (
 		<article className={'light-background h-full w-full bg-[#F1F3F6]'}>
@@ -36,7 +38,9 @@ export const DescriptionBanner = ({
 				>
 					{title}
 				</h1>
-				<p className="mt-[12px] mb-[22px] max-w-[449px] leading-[150%] md:mt-[20px] md:mb-[28px]">
+				<p
+					className={`mt-[12px] mb-[22px] ${descriptionStyles} leading-[150%] md:mt-[20px] md:mb-[28px]`}
+				>
 					{description}
 				</p>
 
