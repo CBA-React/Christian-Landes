@@ -15,7 +15,6 @@ interface BannerProps {
 	titleStyles?: string;
 	sectionStyles?: string;
 	descriptionStyles?: string;
-	sectionStyles?: string;
 }
 
 export const DescriptionBanner = ({
@@ -28,7 +27,6 @@ export const DescriptionBanner = ({
 	titleStyles,
 	sectionStyles,
 	descriptionStyles,
-	sectionStyles,
 }: BannerProps): JSX.Element => {
 	return (
 		<article className={'light-background h-full w-full bg-[#F1F3F6]'}>
@@ -66,4 +64,3 @@ export const DescriptionBanner = ({
 		</article>
 	);
 };
-
