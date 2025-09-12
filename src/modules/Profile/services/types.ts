@@ -65,12 +65,7 @@ export interface ContractorMetrics {
 	totalPrice?: number;
 }
 
-export interface HomeownerMetrics {
-	countProjects?: number;
-	countBids?: number;
-	countCompleted?: number;
-	totalPrice?: number;
-}
+
 
 // LOCAL TYPES
 export interface ProfileData {
@@ -84,7 +79,7 @@ export interface ProfileData {
 	phone: string;
 	location: string;
 	about: string | null;
-	specialities: string[]; // Always strings after transformation
+	specialities: string[]; 
 }
 
 export interface StatItem {

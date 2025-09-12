@@ -154,9 +154,6 @@ export class ProfileApi {
 		}));
 	}
 
-	/**
-	 * Formatting date in "Aug 02" format
-	 */
 	private static formatDate(dateString: string): string {
 		try {
 			const date = new Date(dateString);
