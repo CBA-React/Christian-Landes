@@ -2,7 +2,7 @@ import React from 'react';
 
 export const HomeSimplify: React.FC = () => {
 	return (
-		<section className="mt-[56px] flex w-full max-w-[1240px] flex-col px-5 lg:mx-auto lg:mt-10">
+		<section className="mt-[56px] flex w-full max-w-[1240px] flex-col px-5 lg:mt-10 xl:mx-auto xl:px-0">
 			<p className="w-full text-[24px] text-[#242424] md:text-[28px] lg:w-[600px] xl:w-[831px]">
 				At BuildConnect, we’re on a mission to simplify how people get
 				home projects done. Whether it’s a small repair or a full

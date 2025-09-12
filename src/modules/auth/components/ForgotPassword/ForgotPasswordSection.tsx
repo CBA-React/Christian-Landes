@@ -15,7 +15,7 @@ import { Button } from '@/shared/components/Button/Button';
 export const ForgotPasswordSection = (): JSX.Element => {
 	const router = useRouter();
 
-	const [step, setStep] = useState<1 | 2 | 3 | 4>(3);
+	const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 	const [email, setEmail] = useState<string>('');
 	const [serverError, setServerError] = useState<string | null>(null);
 
