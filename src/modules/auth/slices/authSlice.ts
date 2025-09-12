@@ -5,6 +5,7 @@ interface AuthState {
 	token: string | null;
 	email: string | null;
 	role: 1 | 2 | 3 | null;
+	hydrated: boolean;
 }
 
 interface JWTPayload {
@@ -17,35 +18,21 @@ interface JWTPayload {
 const getRoleFromToken = (token: string): 1 | 2 | 3 | null => {
 	try {
 		const decoded = jwtDecode<JWTPayload>(token);
-
 		const currentTime = Date.now() / 1000;
-		if (decoded.exp < currentTime) {
-			return null;
-		}
-
-		if (![1, 2, 3].includes(decoded.role)) {
-			return null;
-		}
-
+		if (decoded.exp < currentTime) return null;
+		if (![1, 2, 3].includes(decoded.role)) return null;
 		return decoded.role;
-	} catch (error) {
+	} catch {
 		return null;
 	}
 };
 
-const getStoredAuth = (): AuthState => {
-	if (typeof window === 'undefined') {
-		return { token: null, email: null, role: null };
-	}
-
-	const token = localStorage.getItem('access_token');
-	const email = localStorage.getItem('email');
-	const role = token ? getRoleFromToken(token) : null;
-
-	return { token, email, role };
+const initialState: AuthState = {
+	token: null,
+	email: null,
+	role: null,
+	hydrated: false,
 };
-
-const initialState: AuthState = getStoredAuth();
 
 const authSlice = createSlice({
 	name: 'auth',
@@ -57,11 +44,7 @@ const authSlice = createSlice({
 		) => {
 			const { token, email } = action.payload;
 			const role = getRoleFromToken(token);
-
-			if (!role) {
-				return;
-			}
-
+			if (!role) return;
 			state.token = token;
 			state.email = email;
 			state.role = role;
@@ -70,7 +53,6 @@ const authSlice = createSlice({
 			state.token = null;
 			state.email = null;
 			state.role = null;
-
 			if (typeof window !== 'undefined') {
 				localStorage.removeItem('access_token');
 				localStorage.removeItem('refresh_token');
@@ -78,8 +60,11 @@ const authSlice = createSlice({
 				document.cookie = 'token=; Max-Age=0; path=/';
 			}
 		},
+		setHydrated: (state, action: PayloadAction<boolean>) => {
+			state.hydrated = action.payload;
+		},
 	},
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setHydrated } = authSlice.actions;
 export default authSlice.reducer;
