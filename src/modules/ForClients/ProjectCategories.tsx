@@ -72,3 +72,4 @@ export const ProjectCategories = (): JSX.Element => {
 		</article>
 	);
 };
+

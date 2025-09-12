@@ -9,7 +9,7 @@ import { HowItWorks } from '@/modules/home/HowItWorks';
 
 export default function Home(): JSX.Element {
 	return (
-		<main className="mb-[56px] md:mb-[97px]">
+		<main className="mb-[56px] md:mb-[120px]">
 			<HomeHero />
 			<HomeSimplify />
 			<HowItWorks />
@@ -19,4 +19,3 @@ export default function Home(): JSX.Element {
 		</main>
 	);
 }
-

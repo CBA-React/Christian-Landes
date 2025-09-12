@@ -97,7 +97,7 @@ export const LoginForm = (): JSX.Element => {
 			</div>
 
 			<Button
-				className="flex flex-row justify-center !gap-4 py-3"
+				className="font-chalet-1960 flex flex-row justify-center !gap-4 py-3"
 				icon={<ArrowIconWhite />}
 				iconPosition="right"
 				type="submit"

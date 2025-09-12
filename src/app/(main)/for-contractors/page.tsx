@@ -8,13 +8,15 @@ import { DescriptionBanner } from '@/shared/components/DescriptionBanner/Descrip
 export default function ForContractors(): JSX.Element {
 	return (
 		<main>
-			<DescriptionBanner
-				title="Expand your business opportunities with us"
-				description="Work on your own terms, get stable orders, and forget finding clients — we’ll take care of the rest."
-				buttonText="Find Work"
-				buttonLink="#"
-				height="700px"
-			/>
+			<div className="h-[522px] xl:h-[700px]">
+				<DescriptionBanner
+					title="Expand your business opportunities with us"
+					description="Work on your own terms, get stable orders, and forget about finding clients — we’ll take care of the rest."
+					buttonText="Find Work"
+					buttonLink="#"
+					descriptionStyles="w-[453px]"
+				/>
+			</div>
 
 			<HowWorks />
 			<ProjectCategoriesSlider />
@@ -22,3 +24,4 @@ export default function ForContractors(): JSX.Element {
 		</main>
 	);
 }
+

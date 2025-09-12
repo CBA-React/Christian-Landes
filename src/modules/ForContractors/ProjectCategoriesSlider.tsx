@@ -37,17 +37,43 @@ export const ProjectCategoriesSlider = () => {
 	}, [emblaApi, updateScrollButtons]);
 
 	return (
-		<div className="mt-[60px]">
-			<h2 className="mb-6 text-[36px] leading-12">
-				Popular Projects Categories
-			</h2>
+		<div className="mx-[20px] mt-[60px] xl:mx-0 xl:mt-[130px] xl:ml-[100px]">
+			<div className="mb-4 flex justify-between lg:mb-12">
+				<h2 className="text-[36px] leading-11 lg:w-[400px] lg:text-[48px] lg:leading-12">
+					Popular Projects Categories
+				</h2>
+				<div className="mr-25 hidden gap-2 self-end lg:flex">
+					<button
+						onClick={scrollPrev}
+						disabled={!canScrollPrev}
+						className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
+							canScrollPrev
+								? 'bg-gray-900 text-white hover:bg-gray-600'
+								: 'cursor-not-allowed bg-gray-700 text-gray-600'
+						}`}
+					>
+						<ArrowLeftHorizontal />
+					</button>
+					<button
+						onClick={scrollNext}
+						disabled={!canScrollNext}
+						className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
+							canScrollNext
+								? 'bg-gray-900 text-white hover:bg-gray-600'
+								: 'cursor-not-allowed bg-gray-700 text-gray-600'
+						}`}
+					>
+						<ArrowRightHorizontal />
+					</button>
+				</div>
+			</div>
 
-			<div className="embla overflow-hidden" ref={emblaRef}>
+			<div className="embla_categories overflow-hidden" ref={emblaRef}>
 				<div className="embla__container flex gap-4">
 					{categoriesData.map((category) => (
 						<div
 							key={category.id}
-							className="embla__slide !w-[80vw] !flex-none"
+							className="embla__slide h-[128px] w-[300px] !flex-none lg:h-[157px] lg:w-[400px]"
 						>
 							<CategoryItem
 								name={category.name}
@@ -59,7 +85,7 @@ export const ProjectCategoriesSlider = () => {
 				</div>
 			</div>
 
-			<div className="mt-6 flex gap-2">
+			<div className="mt-6 flex gap-2 lg:hidden">
 				<button
 					onClick={scrollPrev}
 					disabled={!canScrollPrev}
@@ -86,3 +112,4 @@ export const ProjectCategoriesSlider = () => {
 		</div>
 	);
 };
+
