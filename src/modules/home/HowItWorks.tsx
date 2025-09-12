@@ -6,7 +6,7 @@ import { Button } from '@/shared/components/Button/Button';
 export const HowItWorks: React.FC = () => {
 	return (
 		<section
-			className="relative mt-[56px] flex h-[786px] justify-end bg-cover bg-[right_850px_top_0px] px-5 max-[1100]:mt-[120px] md:h-[800px] md:bg-[right_0px_top_0px] xl:px-[0px]"
+			className="relative mt-[56px] flex h-[786px] justify-end bg-cover bg-[right_850px_top_0px] px-5 min-[1100]:mt-[120px] md:h-[800px] md:bg-[right_0px_top_0px] xl:px-[0px]"
 			style={{
 				backgroundImage: "url('/images/how-it-works.png')",
 			}}
@@ -26,7 +26,7 @@ export const HowItWorks: React.FC = () => {
 						</Button>
 					</Link>
 				</div>
-				<div className="mt-[56px] ml-[115px] flex flex-col items-end justify-end gap-[56px] md:mt-0 md:ml-0 md:h-full md:items-start md:gap-6 md:pl-[130px]">
+				<div className="mt-[56px] ml-[115px] flex flex-col justify-end gap-[56px] md:mt-0 md:ml-0 md:h-full md:items-start md:gap-6 md:pl-[130px]">
 					<div>
 						<div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#003BFF] text-[20px] font-[400] text-white md:mb-6">
 							01

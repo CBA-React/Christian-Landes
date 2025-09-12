@@ -9,7 +9,7 @@ export const HomeSimplify: React.FC = () => {
 				renovation, our platform connects clients with trusted local
 				contractors — quickly, safely, and without the back-and-forth.
 			</p>
-			<div className="mt-6 grid min-h-[470px] grid-cols-1 items-start gap-4 lg:mt-[120px] lg:grid-cols-3 lg:gap-5">
+			<div className="mt-6 grid grid-cols-1 items-start gap-4 min-[1100px]:min-h-[470px] lg:mt-[120px] lg:grid-cols-3 lg:gap-5">
 				<div className="min-[1100px]pb-4 flex h-[200px] w-full flex-col justify-between self-start rounded-[10px] bg-[#003BFF] p-8 text-white min-[1100px]:h-[309px]">
 					<p className="text-[80px] leading-[84px] font-[700] tracking-[-1px] min-[1100px]:text-[120px]">
 						+100
