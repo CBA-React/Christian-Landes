@@ -1,15 +1,14 @@
 'use client';
 
-import { JSX } from 'react';
+import type { JSX } from 'react';
 import Image from 'next/image';
 
 import { Button } from '@/shared/components/Button/Button';
-import { ProjectDisplayData } from './services/types';
+import type { ProjectDisplayData } from '../services/types';
 
-import Check from '../../../public/icons/profile/symbol-check-small.svg';
-import Plus from '../../../public/icons/profile/plus-white.svg';
-import Separator from '../../../public/icons/profile/separator.svg';
-import LongSeparator from '../../../public/icons/profile/separator-long.svg';
+import Check from '../../../../public/icons/profile/symbol-check-small.svg';
+import Plus from '../../../../public/icons/profile/plus-white.svg';
+import Separator from '../../../../public/icons/profile/separator.svg';
 
 interface RecentProjectsProps {
 	projects?: ProjectDisplayData[];
@@ -75,9 +74,9 @@ export const RecentProjects = ({
 	const displayProjects = showAll ? projects : projects.slice(0, maxItems);
 
 	return (
-		<div className="mb-6 rounded-lg bg-[#F1F3F6] p-6 md:mb-30 md:p-10">
+		<div className="mb-6 rounded-lg bg-[#F1F3F6] p-6 lg:mb-30 lg:p-10">
 			{/* Header section */}
-			<div className="mb-6 flex flex-col gap-6 md:mb-6 md:flex-row md:items-center md:justify-between md:gap-0">
+			<div className="mb-6 flex flex-col gap-6 lg:mb-6 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
 				<div>
 					<h2 className="font-chalet-1960 text-[40px] tracking-[-1px] text-[#242424]">
 						{showAll ? 'All Projects' : 'Recent Projects'}
@@ -94,7 +93,7 @@ export const RecentProjects = ({
 					color="dark"
 					iconPosition="left"
 					icon={<Plus />}
-					className="font-chalet-1960 h-[48px] w-full justify-center !gap-3 !px-6 md:w-[176px]"
+					className="font-chalet-1960 h-[48px] w-full justify-center !gap-3 !px-6 lg:w-[176px]"
 				>
 					Post Request
 				</Button>
@@ -108,17 +107,20 @@ export const RecentProjects = ({
 			) : (
 				<>
 					{/* Projects grid */}
-					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6">
+					<div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-6">
 						{displayProjects.map((project) => (
 							<div
-								key={project.id}
+								key={project.project_id}
 								className="group cursor-pointer"
-								onClick={() => handleViewProject(project.id)}
+								onClick={() => handleViewProject(project.project_id)}
 							>
-								<div className="relative h-[180px] w-full overflow-hidden md:h-[260px]">
+								<div className="relative h-[180px] w-full overflow-hidden md:h-[220px] lg:h-[260px]">
 									{/* Project image */}
 									<Image
-										src={project.images[0]}
+										src={
+											project.images[0] ||
+											'/placeholder.svg'
+										}
 										alt={project.title}
 										fill
 										className="object-cover"
@@ -128,9 +130,9 @@ export const RecentProjects = ({
 									<div className="absolute inset-0 bg-gradient-to-b from-[#2B2B2B]/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
 									{/* Status Badge */}
-									<div className="absolute top-3 right-3">
+									<div className="absolute top-4 right-3">
 										<span
-											className={`inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium ${project.status.bgColor} ${project.status.textColor}`}
+											className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium ${project.status.bgColor} text-[#242424]`}
 										>
 											<Check />
 											{project.status.label}
@@ -139,7 +141,7 @@ export const RecentProjects = ({
 								</div>
 
 								{/* Project Info */}
-								<div className="mt-3 md:mt-4">
+								<div className="mt-3 lg:mt-4">
 									<h3 className="font-chalet-1960 text-[20px] text-[#242424]">
 										{project.title}
 									</h3>
@@ -149,8 +151,8 @@ export const RecentProjects = ({
 									</p>
 
 									{/* Project Details */}
-									<div className="mt-2 flex flex-col items-start text-[16px] md:flex-row md:flex-wrap md:items-center">
-										<div className="flex items-center">
+									<div className="mt-2 flex flex-col items-start text-[16px] sm:flex-row sm:flex-wrap sm:items-center">
+										<div className="flex flex-col sm:flex-row sm:items-center">
 											<span>
 												<span className="text-[#242424]/70">
 													Bids:{' '}
@@ -158,12 +160,12 @@ export const RecentProjects = ({
 												<span className="text-[#242424]">
 													{project.bidsCount}
 												</span>
-											</span>
-											<LongSeparator className="mx-3 block md:hidden" />
-											<Separator className="mx-3 hidden md:block" />
-										</div>
 
-										<div className="mt-2 flex items-center md:mt-0">
+												<Separator className="mx-3 hidden sm:inline" />
+											</span>
+										</div>
+										<hr className="my-1 w-full opacity-50 sm:hidden" />
+										<div className="sm:flex sm:items-center">
 											<span>
 												<span className="text-[#242424]/70">
 													Posted:{' '}
@@ -171,12 +173,11 @@ export const RecentProjects = ({
 												<span className="text-[#242424]">
 													{project.postedDate}
 												</span>
+												<Separator className="mx-3 hidden sm:inline" />
 											</span>
-											<LongSeparator className="mx-3 block md:hidden" />
-											<Separator className="mx-3 hidden md:block" />
 										</div>
-
-										<div className="mt-2 md:mt-0">
+										<hr className="my-1 w-full opacity-50 sm:hidden" />
+										<div>
 											<span>
 												<span className="text-[#242424]/70">
 													Budget:{' '}

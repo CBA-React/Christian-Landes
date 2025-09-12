@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 
-import { ProfileData, StatItem, ProjectDisplayData } from './services/types';
+import { ProfileData, StatItem, ProjectDisplayData } from '../services/types';
 import { ProfileHeader } from './ProfileHeader';
 import { ProfileContent } from './ProfileContent';
 

@@ -5,8 +5,8 @@ import Image from 'next/image';
 
 import { Button } from '@/shared/components/Button/Button';
 
-import ArrowUp from '../../../public/icons/profile/arrow-up-large.svg';
-import Plus from '../../../public/icons/profile/plus-white.svg';
+import ArrowUp from '../../../../public/icons/profile/arrow-up-large.svg';
+import Plus from '../../../../public/icons/profile/plus-white.svg';
 
 const portfolioData = [
 	{
@@ -60,7 +60,7 @@ export const Portfolio = (): JSX.Element => {
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6">
 				{portfolioData.map((item) => (
 					<div key={item.id} className="group">
-						<div className="relative h-[180px] w-full cursor-pointer overflow-hidden md:h-[260px]">
+						<div className="relative h-[180px] w-full cursor-pointer overflow-hidden lg:h-[260px]">
 							<Image
 								src={item.imageUrl}
 								alt={item.title}

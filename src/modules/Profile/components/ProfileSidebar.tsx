@@ -1,10 +1,10 @@
 'use client';
 
 import { JSX } from 'react';
-import { ProfileSection } from './services/constants';
-import { NavigationItem } from './navigationConfig';
+import { ProfileSection } from '../services/constants';
+import { NavigationItem } from '../services/navigationConfig';
 
-import ActiveArrow from '../../../public/icons/profile/sidebar-arrow-right-white.svg';
+import ActiveArrow from '../../../../public/icons/profile/sidebar-arrow-right-white.svg';
 
 interface ProfileSidebarProps {
 	activeSection: ProfileSection;

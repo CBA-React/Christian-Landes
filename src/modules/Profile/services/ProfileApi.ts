@@ -10,6 +10,7 @@ import type {
 	StatItem,
 	ProjectDisplayData,
 	ProjectStatus,
+	ApiSpecialityItem,
 } from './types';
 
 import { PROJECT_STATUS_CONFIG, API_ENDPOINTS } from './constants';
@@ -58,19 +59,36 @@ export class ProfileApi {
 		apiData: ApiProfileData,
 		authRole: AuthRole,
 	): ProfileData {
+		const specialities = this.transformSpecialities(apiData.speciality);
+
 		return {
-			id: apiData.id.toString(),
+			profile_id: apiData.id.toString(),
 			name: apiData.full_name,
 			email: apiData.email,
 			avatar: apiData.logo || '/images/Profile/mock-avatar.jpg',
 			role: authRole === 2 ? 'contractor' : 'client',
-			rating: apiData.avg_reviews,
-			reviewsCount: apiData._count.reviews,
-			phone: apiData.phone,
-			location: apiData.location,
-			about: apiData.about,
-			specialities: apiData.speciality,
+			rating: apiData.avg_reviews || 0,
+			reviewsCount: apiData._count?.reviews || 0,
+			phone: apiData.phone || '',
+			location: apiData.location || '',
+			about: apiData.about || null,
+			specialities,
 		};
+	}
+
+	/**
+	 * Transform specialities to ensure they're strings
+	 */
+	private static transformSpecialities(
+		speciality: ApiSpecialityItem[] | undefined,
+	): string[] {
+		if (!speciality || !Array.isArray(speciality)) {
+			return [];
+		}
+
+		return speciality
+			.map((item: ApiSpecialityItem) => item.value)
+			.filter(Boolean); 
 	}
 
 	private static transformMetricsData(
@@ -80,22 +98,28 @@ export class ProfileApi {
 		if (authRole === 2) {
 			const data = apiData as ContractorMetrics;
 			return [
-				{ label: 'Active Projects', value: data.countClosetProjects },
-				{ label: 'Submitted Bids', value: data.countBids },
+				{
+					label: 'Active Projects',
+					value: data.countClosetProjects || 0,
+				},
+				{ label: 'Submitted Bids', value: data.countBids || 0 },
 				{
 					label: 'Total Earnings',
-					value: `$${data.totalPrice.toLocaleString()}`,
+					value: `$${(data.totalPrice || 0).toLocaleString()}`,
 				},
 			];
 		} else {
 			const data = apiData as HomeownerMetrics;
 			return [
-				{ label: 'Projects Posted', value: data.countProjects },
-				{ label: 'Bids Received', value: data.countBids },
-				{ label: 'Projects Completed', value: data.countCompleted },
+				{ label: 'Projects Posted', value: data.countProjects || 0 },
+				{ label: 'Bids Received', value: data.countBids || 0 },
+				{
+					label: 'Projects Completed',
+					value: data.countCompleted || 0,
+				},
 				{
 					label: 'Total Spent',
-					value: `$${data.totalPrice.toLocaleString()}`,
+					value: `$${(data.totalPrice || 0).toLocaleString()}`,
 				},
 			];
 		}
@@ -107,22 +131,26 @@ export class ProfileApi {
 	static transformProjectsForDisplay(
 		projects: ApiProject[],
 	): ProjectDisplayData[] {
+		if (!projects || !Array.isArray(projects)) return [];
+
 		return projects.map((project) => ({
-			id: project.id.toString(),
-			title: project.title,
-			category: project.category,
-			location: project.location,
-			budget: project.budget.toString(),
-			description: project.description,
+			project_id: project.id.toString(),
+			title: project.title || 'Untitled Project',
+			category: project.category || 'General',
+			location: project.location || 'Location not specified',
+			budget: project.budget?.toString() || '0',
+			description: project.description || '',
 			images:
 				project.images && project.images.length > 0
 					? project.images
 					: ['/images/profile/project-placeholder.png'],
 			status: PROJECT_STATUS_CONFIG[project.status as ProjectStatus],
-			bidsCount: project._count.bids,
-			createdAt: project.created_at,
-			postedDate: this.formatDate(project.created_at),
-			budgetFormatted: `$${project.budget.toLocaleString()}`,
+			bidsCount: project._count?.bids || 0,
+			createdAt: project.created_at || new Date().toISOString(),
+			postedDate: this.formatDate(
+				project.created_at || new Date().toISOString(),
+			),
+			budgetFormatted: `$${(project.budget || 0).toLocaleString()}`,
 		}));
 	}
 
@@ -130,10 +158,14 @@ export class ProfileApi {
 	 * Formatting date in "Aug 02" format
 	 */
 	private static formatDate(dateString: string): string {
-		const date = new Date(dateString);
-		return date.toLocaleDateString('en-US', {
-			month: 'short',
-			day: '2-digit',
-		});
+		try {
+			const date = new Date(dateString);
+			return date.toLocaleDateString('en-US', {
+				month: 'short',
+				day: '2-digit',
+			});
+		} catch (error) {
+			return 'N/A';
+		}
 	}
 }

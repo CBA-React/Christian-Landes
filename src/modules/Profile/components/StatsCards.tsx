@@ -9,7 +9,7 @@ interface StatItem {
 }
 
 interface StatsCardsProps {
-	stats: StatItem[]; 
+	stats: StatItem[];
 }
 
 const StatCard = ({ stat }: { stat: StatItem }) => (
@@ -34,7 +34,7 @@ export const StatsCards = ({ stats }: StatsCardsProps): JSX.Element => {
 			{/* Mobile*/}
 			<div className="block overflow-hidden md:hidden">
 				<div className="embla overflow-hidden" ref={emblaRef}>
-					<div className="embla__container flex gap-7">
+					<div className="embla__container flex gap-5">
 						{stats.map((stat, index) => (
 							<div
 								key={index}

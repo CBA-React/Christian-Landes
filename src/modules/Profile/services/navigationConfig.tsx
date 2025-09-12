@@ -1,12 +1,12 @@
-import { ProfileSection } from './services/constants';
+import { ProfileSection } from './constants';
 
-import OverviewIcon from '../../../public/icons/profile/overview.svg';
-import ProjectsIcon from '../../../public/icons/profile/plus.svg';
-import MyBidsIcon from '../../../public/icons/profile/my-bids.svg';
-import ReviewsIcon from '../../../public/icons/profile/reviews.svg';
-import PriceIcon from '../../../public/icons/profile/dollar-icon.svg';
-import ClipboardIcon from '../../../public/icons/profile/clipboard.svg';
-import UsersIcon from '../../../public/icons/profile/users.svg';
+import OverviewIcon from '../../../../public/icons/profile/overview.svg';
+import ProjectsIcon from '../../../../public/icons/profile/plus.svg';
+import MyBidsIcon from '../../../../public/icons/profile/my-bids.svg';
+import ReviewsIcon from '../../../../public/icons/profile/reviews.svg';
+import PriceIcon from '../../../../public/icons/profile/dollar-icon.svg';
+import ClipboardIcon from '../../../../public/icons/profile/clipboard.svg';
+import UsersIcon from '../../../../public/icons/profile/users.svg';
 import { JSX } from 'react';
 
 export interface NavigationItem {

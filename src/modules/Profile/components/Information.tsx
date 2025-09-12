@@ -1,9 +1,9 @@
 'use client';
 
 import { JSX } from 'react';
-import { ProfileData } from './services/types';
+import { ProfileData } from '../services/types';
 
-import ServiceIcon from '../../../public/icons/profile/service.svg';
+import ServiceIcon from '../../../../public/icons/profile/service.svg';
 
 interface InformationProps {
 	profileData: ProfileData;
@@ -14,9 +14,7 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 
 	const config = {
 		title: isContractor ? 'Business Information' : 'Account Information',
-		subtitle: isContractor
-			? 'Your public business details shown to homeowners'
-			: 'Your account information',
+		subtitle: 'Your public business details shown to homeowners',
 		nameLabel: isContractor ? 'Business Name' : 'Full Name',
 		nameValue: profileData.name,
 		email: profileData.email,
@@ -30,7 +28,7 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 	};
 
 	return (
-		<div className="rounded-lg bg-[#F1F3F6] p-6 md:p-10">
+		<div className="rounded-lg bg-[#F1F3F6] p-6 lg:p-10">
 			<h2 className="text-[40px] tracking-[-1px] text-[#242424]">
 				{config.title}
 			</h2>
@@ -38,50 +36,46 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 				{config.subtitle}
 			</p>
 
-			<div className="space-y-4 md:flex md:flex-row md:gap-30 md:space-y-0">
-				<div className="md:flex-1">
-					<div className="space-y-4">
-						<div>
-							<label className="font-chalet-1960 block text-[20px] text-[#242424]">
-								{config.nameLabel}
-							</label>
-							<div className="mt-1 text-[16px] text-[#242424]">
-								{config.nameValue}
-							</div>
+			<div className="space-y-4 md:flex md:flex-row md:gap-38 md:space-y-0">
+				<div className="space-y-4">
+					<div>
+						<label className="font-chalet-1960 block text-[20px] text-[#242424]">
+							{config.nameLabel}
+						</label>
+						<div className="mt-1 text-[16px] text-[#242424]">
+							{config.nameValue}
 						</div>
+					</div>
 
-						<div className="hidden md:block">
-							<label className="font-chalet-1960 block text-[20px] text-[#242424]">
-								Email
-							</label>
-							<div className="mt-1 text-[16px] text-[#242424]">
-								{config.email}
-							</div>
+					<div className="hidden md:block">
+						<label className="font-chalet-1960 block text-[20px] text-[#242424]">
+							Email
+						</label>
+						<div className="mt-1 text-[16px] text-[#242424]">
+							{config.email}
 						</div>
 					</div>
 				</div>
 
-				<div className="md:flex-1">
-					<div className="space-y-4">
-						<div>
-							<label className="font-chalet-1960 block text-[20px] text-[#242424]">
-								Phone
-							</label>
-							<div className="font-chalet-1960 mt-1 text-[16px] text-[#242424]">
-								{config.phone}
-							</div>
+				<div className="space-y-4">
+					<div>
+						<label className="font-chalet-1960 block text-[20px] text-[#242424]">
+							Phone
+						</label>
+						<div className="font-chalet-1960 mt-1 text-[16px] text-[#242424]">
+							{config.phone}
 						</div>
+					</div>
 
-						<div className="hidden md:block">
-							<label className="font-chalet-1960 block text-[20px] text-[#242424]">
-								{config.locationLabel}
-								{config.showLocationIcon && (
-									<ServiceIcon className="ml-1 inline" />
-								)}
-							</label>
-							<div className="font-chalet-1960 mt-1 text-[16px] text-[#242424]">
-								{config.locationValue}
-							</div>
+					<div className="hidden md:block">
+						<label className="font-chalet-1960 block text-[20px] text-[#242424]">
+							{config.locationLabel}
+							{config.showLocationIcon && (
+								<ServiceIcon className="ml-1 inline" />
+							)}
+						</label>
+						<div className="font-chalet-1960 mt-1 text-[16px] text-[#242424]">
+							{config.locationValue}
 						</div>
 					</div>
 				</div>

@@ -1,21 +1,28 @@
 // API TYPES
 
+export interface ApiSpecialityItem {
+	id: number;
+	user_id: number;
+	value: string;
+	created_at: string;
+}
+
 export interface ApiProfileData {
 	id: number;
 	full_name: string;
 	email: string;
-	phone: string;
-	location: string;
-	about: string | null;
-	speciality: string[];
-	google_id: string | null;
-	facebook_id: string | null;
-	apple_id: string | null;
-	windows_id: string | null;
-	logo: string | null;
-	avg_reviews: number;
-	_count: {
-		reviews: number;
+	phone?: string;
+	location?: string;
+	about?: string | null;
+	speciality?: ApiSpecialityItem[];
+	google_id?: string | null;
+	facebook_id?: string | null;
+	apple_id?: string | null;
+	windows_id?: string | null;
+	logo?: string | null;
+	avg_reviews?: number;
+	_count?: {
+		reviews?: number;
 	};
 }
 
@@ -32,8 +39,8 @@ export interface ApiProject {
 	images: string[];
 	status: ProjectStatus;
 	created_at: string;
-	_count: {
-		bids: number;
+	_count?: {
+		bids?: number;
 	};
 }
 
@@ -53,21 +60,21 @@ export interface ProjectsResponse {
 }
 
 export interface ContractorMetrics {
-	countClosetProjects: number;
-	countBids: number;
-	totalPrice: number;
+	countClosetProjects?: number;
+	countBids?: number;
+	totalPrice?: number;
 }
 
 export interface HomeownerMetrics {
-	countProjects: number;
-	countBids: number;
-	countCompleted: number;
-	totalPrice: number;
+	countProjects?: number;
+	countBids?: number;
+	countCompleted?: number;
+	totalPrice?: number;
 }
 
 // LOCAL TYPES
 export interface ProfileData {
-	id: string;
+	profile_id: string;
 	name: string;
 	email: string;
 	avatar: string;
@@ -77,7 +84,7 @@ export interface ProfileData {
 	phone: string;
 	location: string;
 	about: string | null;
-	specialities: string[];
+	specialities: string[]; // Always strings after transformation
 }
 
 export interface StatItem {
@@ -93,7 +100,7 @@ export interface ProjectStatusConfig {
 }
 
 export interface ProjectDisplayData {
-	id: string;
+	project_id: string;
 	title: string;
 	category: string;
 	location: string;
@@ -109,8 +116,6 @@ export interface ProjectDisplayData {
 
 // UTILITY TYPES
 
-export type ProfileRole = 'contractor' | 'client';
-
 export interface LoadingState {
 	isLoading: boolean;
 	isError: boolean;
@@ -125,7 +130,6 @@ export interface ProfileSectionConfig {
 	id: string;
 	label: string;
 	icon: React.ReactNode;
-	roles: ProfileRole[];
 }
 
 export type {
