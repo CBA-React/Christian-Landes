@@ -4,13 +4,11 @@ import { JSX } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { ProfileLayout } from '@/modules/Profile/ProfileLayout';
-import { PROFILE_MOCK_DATA } from '@/modules/Profile/constants';
 import { useAppSelector } from '@/shared/hooks/useStore';
-import { isContractor } from '@/shared/lib/roleMapper';
+import { useProfileData } from '@/modules/Profile/hooks/useProfile';
 
 export default function ProfilePage(): JSX.Element {
 	const router = useRouter();
-
 	const authRole = useAppSelector((state) => state.auth.role);
 	const token = useAppSelector((state) => state.auth.token);
 
@@ -19,24 +17,40 @@ export default function ProfilePage(): JSX.Element {
 		return <div>Redirecting to login...</div>;
 	}
 
-	if (!authRole) {
+	const { profile, stats, projects, isLoading, isError } =
+		useProfileData(authRole);
+
+	if (isLoading) {
 		return (
 			<div className="flex min-h-screen items-center justify-center">
 				<div className="text-center">
-					<h2 className="text-xl text-red-500">
-						Error: User role not found
-					</h2>
-					<p className="text-gray-600">Please try logging in again</p>
+					<p className="mt-4 text-[#242424]">Loading profile...</p>
 				</div>
 			</div>
 		);
 	}
 
-	const mockData = isContractor(authRole)
-		? PROFILE_MOCK_DATA.contractor
-		: PROFILE_MOCK_DATA.client;
+	if (isError || !profile || !stats) {
+		return (
+			<div className="flex min-h-screen items-center justify-center">
+				<div className="text-center">
+					<h2 className="text-xl text-red-500">
+						Failed to load profile
+					</h2>
+					<p className="text-[#242424]">
+						Please try refreshing the page
+					</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
-		<ProfileLayout profileData={mockData.profile} stats={mockData.stats} />
+		<ProfileLayout
+			profileData={profile}
+			stats={stats}
+			projects={projects?.displayData || []}
+			isLoadingProjects={!projects}
+		/>
 	);
 }

@@ -2,8 +2,8 @@
 
 import { JSX, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { ProfileData, StatItem } from './types';
-import { ProfileSection } from './constants';
+import { ProfileData, StatItem, ProjectDisplayData } from './services/types';
+import { ProfileSection } from './services/constants';
 import { NAVIGATION_CONFIG } from './navigationConfig';
 import { ProfileSidebar } from './ProfileSidebar';
 import { StatsCards } from './StatsCards';
@@ -14,11 +14,15 @@ import { RecentProjects } from './RecentProjects';
 interface ProfileContentProps {
 	profileData: ProfileData;
 	stats: StatItem[];
+	projects?: ProjectDisplayData[]; 
+	isLoadingProjects?: boolean;
 }
 
 export const ProfileContent = ({
 	profileData,
 	stats,
+	projects = [], 
+	isLoadingProjects = false, 
 }: ProfileContentProps): JSX.Element => {
 	const [activeSection, setActiveSection] = useState<ProfileSection>(
 		ProfileSection.OVERVIEW,
@@ -41,7 +45,10 @@ export const ProfileContent = ({
 						{profileData.role === 'contractor' ? (
 							<Portfolio />
 						) : (
-							<RecentProjects />
+							<RecentProjects
+								projects={projects}
+								isLoading={isLoadingProjects}
+							/>
 						)}
 					</>
 				);
@@ -157,7 +164,7 @@ export const ProfileContent = ({
 													: 'text-[#242424]/50 hover:text-[#242424]/70'
 											}`}
 										>
-											<div className="flex h-5 w-5 flex-shrink-0 items-center justify-center">
+											<div className="flex h-6 w-6 flex-shrink-0 items-center justify-center">
 												{item.icon}
 											</div>
 											<span>{item.label}</span>

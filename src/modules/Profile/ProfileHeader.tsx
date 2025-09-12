@@ -4,7 +4,7 @@ import { JSX } from 'react';
 import Image from 'next/image';
 import { Button } from '@/shared/components/Button/Button';
 
-import { ProfileData } from './types';
+import { ProfileData } from './services/types';
 
 import StarIcon from '../../../public/icons/profile/star.svg';
 import DollarIcon from '../../../public/icons/profile/dollar-for-button.svg';
@@ -60,7 +60,7 @@ export const ProfileHeader = ({
 
 					{/* Name */}
 					<div className="flex items-center gap-2">
-						<h1 className="font-chalet-1960 text-[36px] leading-[38px] text-gray-900 md:text-[48px] md:leading-[64px]">
+						<h1 className="font-chalet-1960 text-[36px] leading-[38px] text-[#242424] md:text-[48px] md:leading-[64px]">
 							{profileData.name}
 						</h1>
 					</div>

@@ -1,4 +1,4 @@
-import { ProfileSection } from './constants';
+import { ProfileSection } from './services/constants';
 
 import OverviewIcon from '../../../public/icons/profile/overview.svg';
 import ProjectsIcon from '../../../public/icons/profile/plus.svg';
