@@ -21,6 +21,15 @@ const nextConfig: NextConfig = {
 
 		return config;
 	},
+
+	async rewrites() {
+		return [
+			{
+				source: '/api/:path*',
+				destination: 'http://52.9.74.40/:path*',
+			},
+		];
+	},
 	turbopack: {
 		rules: {
 			'*.svg': {
