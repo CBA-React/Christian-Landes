@@ -169,6 +169,7 @@ export const SignUp = (): JSX.Element => {
 						<input
 							{...register('password')}
 							type={showPassword ? 'text' : 'password'}
+
 							className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none sm:block"
 							placeholder="Create a strong password (min. 8 characters)"
 						/>
