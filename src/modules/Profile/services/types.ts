@@ -44,6 +44,8 @@ export interface ApiProject {
 	};
 }
 
+
+
 export enum ProjectStatus {
 	ACTIVE = 1,
 	COMPLETED = 2,
@@ -65,7 +67,12 @@ export interface ContractorMetrics {
 	totalPrice?: number;
 }
 
-
+export interface HomeownerMetrics {
+	countProjects?: number;
+	countBids?: number;
+	countCompleted?: number;
+	totalPrice?: number;
+}
 
 // LOCAL TYPES
 export interface ProfileData {
@@ -79,7 +86,7 @@ export interface ProfileData {
 	phone: string;
 	location: string;
 	about: string | null;
-	specialities: string[]; 
+	specialities: string[]; // Always strings after transformation
 }
 
 export interface StatItem {
