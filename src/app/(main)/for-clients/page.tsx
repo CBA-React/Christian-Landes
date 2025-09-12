@@ -9,15 +9,18 @@ import { DescriptionBanner } from '@/shared/components/DescriptionBanner/Descrip
 export default function ForClients(): JSX.Element {
 	return (
 		<main>
-			<DescriptionBanner
-				title={'Find and hire trusted local contractors in minutes'}
-				description={
-					'Post your request, receive bids, and get the job done quickly and safely.'
-				}
-				height={'530px'}
-				buttonText={'Post a Job'}
-				buttonLink={'#'}
-			/>
+			<div className="h-[530px] xl:h-[700px]">
+				<DescriptionBanner
+					title={'Find and hire trusted local contractors in minutes'}
+					description={
+						'Post your request, receive bids, and get the job done quickly and safely.'
+					}
+					buttonText={'Post a Job'}
+					buttonLink={'#'}
+					descriptionStyles="w-[453px]"
+				/>
+			</div>
+
 			<PointsDescription />
 			<ProjectCategories />
 			<WhyUs />
@@ -25,3 +28,4 @@ export default function ForClients(): JSX.Element {
 		</main>
 	);
 }
+

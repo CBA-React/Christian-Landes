@@ -26,17 +26,17 @@ const howWorks = [
 
 export const HowWorks = (): JSX.Element => {
 	return (
-		<section className="relative h-[800px] w-full overflow-visible">
-			<div className="relative z-10 mx-auto flex h-full max-w-[1240px] gap-6">
-				<div className="h-full w-1/2">
-					<h1 className="mt-[80px] text-[48px]">
+		<section className="mx-auto !flex w-full flex-col overflow-visible md:block md:h-[800px] md:flex-row lg:max-w-[1440px]">
+			<div className="mb-[23px] h-full px-[20px] md:w-1/2 lg:mb-0 xl:px-0">
+				<div className="h-full xl:pl-[100px]">
+					<h1 className="mt-[56px] text-[36px] leading-[45px] md:mt-[85px] md:text-[48px]">
 						How ServiceBridge Works
 					</h1>
-					<div className="mt-[230px]">
+					<div className="mt-[24px] md:mt-[24px] md:mb-0 lg:mt-[240px] lg:mb-[379px]">
 						{howWorks.map((work, index, array) => (
 							<div key={work.num}>
 								<div
-									className={`flex gap-12 ${index === 0 ? 'mt-0' : 'mt-[20px]'}`}
+									className={`flex gap-[24px] md:gap-12 ${index === 0 ? 'mt-0' : 'mt-[22px]'} ${index === 0 ? 'mt-0' : 'md:mt-[28px]'}`}
 								>
 									<p className="text-[24px] leading-[100%]">
 										{work.num}
@@ -57,17 +57,15 @@ export const HowWorks = (): JSX.Element => {
 						))}
 					</div>
 				</div>
-				<div className="w-1/2" />
 			</div>
-
 			<div
-				className="absolute inset-y-0 right-0 left-1/2 bg-cover bg-right"
+				className="flex h-[350px] w-full justify-center bg-cover bg-right md:h-full md:w-1/2 lg:block lg:h-full"
 				style={{
 					backgroundImage:
 						"url('/images/for-contractors-apply-now.png')",
 				}}
 			>
-				<div className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
+				<div className="mt-[56px] h-[238px] w-[335px] lg:mt-[281px] lg:ml-[186px]">
 					<Link href="#">
 						<ApplyNowButton />
 					</Link>
@@ -76,3 +74,4 @@ export const HowWorks = (): JSX.Element => {
 		</section>
 	);
 };
+

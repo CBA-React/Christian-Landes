@@ -21,6 +21,7 @@
 		"@tanstack/react-query": "^5.84.1",
 		"@types/testing-library__jest-dom": "^5.14.9",
 		"axios": "^1.7.9",
+		"embla-carousel-auto-scroll": "^8.6.0",
 		"embla-carousel-react": "^8.6.0",
 		"jwt-decode": "^4.0.0",
 		"next": "^15.3.2",

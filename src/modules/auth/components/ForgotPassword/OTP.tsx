@@ -35,7 +35,7 @@ export const OTP = ({
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
 		idx: number,
-	) => {
+	): void => {
 		const val = e.target.value.replace(/\D/, ''); // только цифры
 		const newValue = internalValue.split('');
 		newValue[idx] = val;
@@ -56,7 +56,7 @@ export const OTP = ({
 	const handleKeyDown = (
 		e: React.KeyboardEvent<HTMLInputElement>,
 		idx: number,
-	) => {
+	): void => {
 		if (e.key === 'Backspace') {
 			e.preventDefault();
 			const newValue = internalValue.split('');
@@ -89,8 +89,9 @@ export const OTP = ({
 	};
 
 	return (
-		<div className="flex w-full flex-col items-center gap-2">
-			<div className="flex gap-3">
+		<div className="flex w-full flex-col items-center gap-2.5">
+			<p className="self-start text-base">Verification Code</p>
+			<div className="flex gap-1.5 self-start md:gap-2.5">
 				{Array.from({ length }).map((_, idx) => (
 					<input
 						key={idx}
@@ -104,7 +105,7 @@ export const OTP = ({
 						onChange={(e) => handleChange(e, idx)}
 						onKeyDown={(e) => handleKeyDown(e, idx)}
 						onPaste={handlePaste}
-						className="h-12 w-16 rounded-md border border-gray-300 text-center text-lg font-medium placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+						className="h-[45px] w-[43px] border border-[#24242480] text-center text-base font-medium placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none md:h-[45px] md:w-[66px]"
 					/>
 				))}
 			</div>

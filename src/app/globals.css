@@ -34,6 +34,14 @@ body {
 	overflow: hidden;
 }
 
+.embla_categories {
+	overflow: hidden;
+}
+
+.embla_for_contractors {
+	overflow: hidden;
+}
+
 .embla__container {
 	display: flex;
 }
@@ -43,8 +51,27 @@ body {
 	min-width: 0;
 }
 
+.embla__slide_contractors {
+	flex: 0 0 100%;
+	min-width: 0;
+}
+
 @media screen and (width > 768px) {
+	.embla {
+		overflow: visible;
+	}
+
 	.embla__slide {
+		flex: 1 1 1;
+	}
+}
+
+@media screen and (width > 1024px) {
+	.embla_for_contractors {
+		overflow: visible;
+	}
+
+	.embla__slide_contractors {
 		flex: 1 1 1;
 	}
 }

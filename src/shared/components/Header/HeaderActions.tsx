@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -11,10 +11,15 @@ import ArrowIconBlack from 'public/icons/arrow-up-right-black.svg';
 import ArrowIconWhite from 'public/icons/arrow-up-right-white.svg';
 import UserIcon from 'public/icons/user.svg';
 
-export const HeaderActions = (): JSX.Element => {
+export const HeaderActions = (): JSX.Element | null => {
 	const router = useRouter();
 
-	const isLoggedIn = useAppSelector((state) => state.auth.token);
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => setMounted(true), []);
+
+	const token = useAppSelector((s) => s.auth.token);
+
+	if (!mounted) return null;
 
 	return (
 		<div className="hidden items-center gap-3 lg:flex">
@@ -29,7 +34,7 @@ export const HeaderActions = (): JSX.Element => {
 				Contact Us
 			</Button>
 
-			{!!isLoggedIn ? (
+			{token ? (
 				<Link href="/profile" aria-label="User Profile" className="p-2">
 					<UserIcon className="h-4 w-4 transition hover:opacity-80" />
 				</Link>

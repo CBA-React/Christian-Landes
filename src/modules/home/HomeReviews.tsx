@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import useEmblaCarousel from 'embla-carousel-react';
 
@@ -9,10 +9,6 @@ import { useCarouselDot } from '@/shared/hooks/useCarouselDot';
 export const HomeReviews: React.FC = () => {
 	const [emblaRef, emblaApi] = useEmblaCarousel();
 	const { selectedIndex } = useCarouselDot(emblaApi);
-
-	useEffect(() => {
-		console.log(emblaApi?.selectedScrollSnap());
-	}, [emblaApi]);
 
 	return (
 		<section className="mx-auto mt-[53px] flex w-full max-w-[1240px] flex-col md:mt-[110px]">

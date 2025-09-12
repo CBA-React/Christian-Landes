@@ -169,7 +169,8 @@ export const SignUp = (): JSX.Element => {
 						<input
 							{...register('password')}
 							type={showPassword ? 'text' : 'password'}
-							className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none"
+
+							className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none sm:block"
 							placeholder="Create a strong password (min. 8 characters)"
 						/>
 						<button
@@ -241,7 +242,7 @@ export const SignUp = (): JSX.Element => {
 						iconPosition="right"
 						type="submit"
 						disabled={isSubmitting}
-						className="!w-full justify-center !bg-[#003BFF] !px-6 !py-3"
+						className="font-chalet-1960 !w-full justify-center !bg-[#003BFF] !px-6 !py-3"
 					>
 						Create Account
 					</Button>

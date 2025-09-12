@@ -51,12 +51,12 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 	return (
 		<article
 			aria-labelledby={id}
-			className={`p-10 ${bgClass} flex h-max w-full max-w-[400px] flex-col gap-6 rounded-[10px] ${selfClass} ${className}`}
+			className={`mx-auto p-[24px] md:p-10 lg:mx-0 ${bgClass} flex h-full w-full max-w-[400px] flex-col gap-6 rounded-[10px] md:gap-7 ${selfClass} ${className}`}
 		>
 			<div>
 				<h3
 					id={id}
-					className={`mb-4 text-[32px] leading-[100%] font-[500] tracking-[-1px] ${textClass}`}
+					className={`mb-[16px] text-[24px] leading-[120%] font-[400] md:mb-6 md:text-[32px] md:leading-[120%] md:font-[500] md:tracking-[-1px] ${textClass}`}
 				>
 					{title}
 				</h3>
@@ -65,10 +65,10 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 					className={`flex items-end gap-3 ${textClass}`}
 					aria-label="Price"
 				>
-					<span className="text-[64px] leading-[100%] font-[700] tracking-[-1px]">
+					<span className="text-[48px] leading-[100%] font-[700] tracking-[-1px] xl:text-[64px]">
 						{price}
 					</span>
-					<span className="text-[20px] font-[500] opacity-90">
+					<span className="text-[16px] font-[500] opacity-90 md:text-[20px]">
 						{period}
 					</span>
 				</div>
@@ -77,7 +77,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 			<hr className={`h-[1px] w-full border-0 ${dividerClass}`} />
 
 			<ul
-				className={`text-[16px] font-[400] ${textClass}`}
+				className={`space-y-1 text-[16px] font-[400] ${textClass}`}
 				aria-label="Plan features"
 			>
 				{features.map((f, i) => (
@@ -103,7 +103,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 					type="button"
 					variant="solid"
 					color={button.color ?? 'dark'}
-					className={`!h-[43px] !w-full justify-center !px-6 !py-3 !text-[20px] !font-[400] ${button.className ?? ''}`}
+					className={`!h-[43px] !w-full justify-center !px-6 !py-3 !text-[16px] !font-[400] md:!text-[20px] ${button.className ?? ''}`}
 				>
 					{button.label}
 				</Button>
@@ -111,3 +111,4 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 		</article>
 	);
 };
+

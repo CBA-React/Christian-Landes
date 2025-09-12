@@ -17,6 +17,7 @@ export const ForgotPasswordSection = (): JSX.Element => {
 
 	const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 	const [email, setEmail] = useState<string>('');
+	const [serverError, setServerError] = useState<string | null>(null);
 
 	function renderStepForm(step: number): JSX.Element {
 		switch (step) {
@@ -30,9 +31,23 @@ export const ForgotPasswordSection = (): JSX.Element => {
 					/>
 				);
 			case 2:
-				return <VerificationCodeForm onSuccess={() => setStep(3)} />;
+				return (
+					<VerificationCodeForm
+						setServerError={setServerError}
+						serverError={serverError}
+						email={email}
+						onSuccess={() => setStep(3)}
+					/>
+				);
 			case 3:
-				return <ResetPasswordForm onSuccess={() => setStep(4)} />;
+				return (
+					<ResetPasswordForm
+						serverError={serverError}
+						setServerError={setServerError}
+						email={email}
+						onSuccess={() => setStep(4)}
+					/>
+				);
 			case 4:
 				return (
 					<Button
@@ -47,15 +62,21 @@ export const ForgotPasswordSection = (): JSX.Element => {
 		}
 	}
 	return (
-		<div className="mx-5 mt-[109px] mb-[56px] flex w-full max-w-[1240px] justify-end md:mt-[161px] md:mb-[122px] xl:mx-auto">
-			<section className="h-fit w-full max-w-[578px] rounded-[20px] bg-[#FFFFFFD9] p-16 backdrop-blur-[20px]">
+		<div className="mx-5 mt-[110px] mb-[56px] flex w-full max-w-[1240px] justify-end md:mt-[161px] md:mb-[122px] xl:mx-auto">
+			<section className="h-fit w-full max-w-[335px] rounded-[20px] bg-[#ffffffbf] px-6 py-10 backdrop-blur-[20px] md:max-w-[578px] md:p-16">
 				<article className="flex flex-col gap-4">
-					<h1 className="text-[84px] leading-[84px] font-medium text-[#242424]">
+					<h1 className="font-chalet-1960 text-[48px] leading-[58px] font-medium text-[#242424] md:text-[84px] md:leading-[100%]">
 						{getTitle(step)}
 					</h1>
-					<p className="text-[20px]">{getDescription(step, email)}</p>
+					{!serverError && (
+						<p className="text-base text-[#242424] md:text-xl">
+							{getDescription(step, email)}
+						</p>
+					)}
 				</article>
-				<article className="mt-6">{renderStepForm(step)}</article>
+				<article className="mt-5 md:mt-6">
+					{renderStepForm(step)}
+				</article>
 			</section>
 		</div>
 	);
