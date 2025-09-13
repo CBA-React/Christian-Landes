@@ -63,6 +63,7 @@ export function middleware(request: NextRequest): NextResponse<unknown> {
 
 	const role = payload.role as Role;
 	const allowed = ACCESS[base];
+	console.log(role);
 
 	if (role === 3 || allowed.includes(role)) {
 		return NextResponse.next();
