@@ -1,7 +1,7 @@
 'use client';
 
 import { JSX } from 'react';
-import { ProfileData } from '../services/types';
+import { ProfileData } from '../types';
 
 import ServiceIcon from '../../../../public/icons/profile/service.svg';
 

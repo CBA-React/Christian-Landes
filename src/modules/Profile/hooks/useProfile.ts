@@ -1,12 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { AuthRole } from '@/shared/lib/roleMapper';
 import { ProfileApi } from '../services/ProfileApi';
-import { CACHE_CONFIG } from '../services/constants';
-import type {
-	ProfileData,
-	StatItem,
-	ProjectsResponse,
-} from '../services/types';
+import { CACHE_CONFIG } from '../constants';
+import type { ProfileData, StatItem, ProjectsResponse } from '../types';
 
 export function useProfile(authRole: AuthRole | null) {
 	return useQuery({

@@ -2,9 +2,9 @@
 
 import { JSX, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { ProfileData, StatItem, ProjectDisplayData } from '../services/types';
-import { ProfileSection } from '../services/constants';
-import { NAVIGATION_CONFIG } from '../services/navigationConfig';
+import { ProfileData, StatItem, ProjectDisplayData } from '../types';
+import { ProfileSection } from '../constants';
+import { NAVIGATION_CONFIG } from '../components/navigationConfig';
 import { ProfileSidebar } from './ProfileSidebar';
 import { StatsCards } from './StatsCards';
 import { Information } from './Information';
@@ -133,7 +133,7 @@ export const ProfileContent = ({
 	};
 
 	return (
-		<div className="px-5 lg:px-0">
+		<div className="mx-5 xl:mx-0">
 			<div className="flex flex-col gap-6 pt-6 lg:flex-row lg:gap-10 lg:pt-10">
 				<div className="hidden lg:block">
 					<ProfileSidebar

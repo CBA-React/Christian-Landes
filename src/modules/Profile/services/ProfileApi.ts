@@ -11,9 +11,9 @@ import type {
 	ProjectDisplayData,
 	ProjectStatus,
 	ApiSpecialityItem,
-} from './types';
+} from '../types';
 
-import { PROJECT_STATUS_CONFIG, API_ENDPOINTS } from './constants';
+import { PROJECT_STATUS_CONFIG, API_ENDPOINTS } from '../constants';
 
 export class ProfileApi {
 	private static getEndpoint(authRole: AuthRole): string {
@@ -88,7 +88,7 @@ export class ProfileApi {
 
 		return speciality
 			.map((item: ApiSpecialityItem) => item.value)
-			.filter(Boolean); 
+			.filter(Boolean);
 	}
 
 	private static transformMetricsData(

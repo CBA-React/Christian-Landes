@@ -1,13 +1,11 @@
 import { AuthRole } from '@/shared/lib/roleMapper';
 import { ProjectStatus } from './types';
 
-
 export const API_ENDPOINTS: Record<AuthRole, string> = {
-	1: 'homeowner', 
-	2: 'contractor', 
+	1: 'homeowner',
+	2: 'contractor',
 	3: 'homeowner', //fallback
 } as const;
-
 
 export const PROJECT_STATUS_CONFIG = {
 	[ProjectStatus.ACTIVE]: {
@@ -21,9 +19,8 @@ export const PROJECT_STATUS_CONFIG = {
 		color: 'green',
 		bgColor: 'bg-green-100',
 		textColor: 'text-green-800',
-	}
+	},
 } as const;
-
 
 /**
  * Cache Time for React Query
@@ -34,7 +31,6 @@ export const CACHE_CONFIG = {
 	PROJECTS_STALE_TIME: 3 * 60 * 1000,
 	STATS_REFETCH_INTERVAL: 5 * 60 * 1000,
 } as const;
-
 
 export enum ProfileSection {
 	OVERVIEW = 'overview',

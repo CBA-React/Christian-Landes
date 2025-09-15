@@ -4,7 +4,7 @@ import { JSX } from 'react';
 import Image from 'next/image';
 import { Button } from '@/shared/components/Button/Button';
 
-import { ProfileData } from '../services/types';
+import { ProfileData } from '../types';
 
 import StarIcon from '../../../../public/icons/profile/star.svg';
 import DollarIcon from '../../../../public/icons/profile/dollar-for-button.svg';
@@ -32,9 +32,9 @@ export const ProfileHeader = ({
 	profileData,
 }: ProfileHeaderProps): JSX.Element => {
 	return (
-		<div className="bg-[#F1F3F6] px-5 pt-28 pb-8 lg:pt-40 lg:pb-20">
+		<div className="flex justify-center bg-[#F1F3F6] pt-28 pb-8 lg:pt-40 lg:pb-20">
 			<section
-				className="mx-auto flex max-w-[1240px] flex-col items-center gap-6 lg:flex-row lg:items-end"
+				className="mx-5 flex w-full max-w-[1240px] flex-col items-center gap-6 lg:flex-row lg:items-end"
 				aria-label="Profile information"
 			>
 				<div className="relative h-35 w-35 flex-shrink-0 overflow-hidden rounded-xl shadow-sm">

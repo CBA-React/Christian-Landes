@@ -13,11 +13,6 @@ export default function ProfilePage(): JSX.Element {
 	const authRole = useAppSelector((state) => state.auth.role);
 	const token = useAppSelector((state) => state.auth.token);
 
-	if (!token) {
-		router.push('/login');
-		return <div>Redirecting...</div>;
-	}
-
 	const { profile, stats, projects, isLoading, isError } =
 		useProfileData(authRole);
 

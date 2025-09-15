@@ -4,7 +4,7 @@ import type { JSX } from 'react';
 import Image from 'next/image';
 
 import { Button } from '@/shared/components/Button/Button';
-import type { ProjectDisplayData } from '../services/types';
+import type { ProjectDisplayData } from '../types';
 
 import Check from '../../../../public/icons/profile/symbol-check-small.svg';
 import Plus from '../../../../public/icons/profile/plus-white.svg';
@@ -112,9 +112,11 @@ export const RecentProjects = ({
 							<div
 								key={project.project_id}
 								className="group cursor-pointer"
-								onClick={() => handleViewProject(project.project_id)}
+								onClick={() =>
+									handleViewProject(project.project_id)
+								}
 							>
-								<div className="relative h-[180px] w-full overflow-hidden md:h-[220px] lg:h-[260px]">
+								<div className="relative h-[180px] w-full overflow-hidden md:h-[300px] lg:h-[260px]">
 									{/* Project image */}
 									<Image
 										src={
