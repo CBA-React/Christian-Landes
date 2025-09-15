@@ -3,8 +3,6 @@ import Link from 'next/link';
 
 import { MAIN_NAVIGATION } from '@/shared/constants/navigation';
 
-import { NewsletterForm } from './NewsletterForm';
-
 import FacebookLogo from 'public/icons/facebook-logo.svg';
 import InstgramLogo from 'public/icons/instagram-logo.svg';
 import TwitterLogo from 'public/icons/twitter-logo.svg';
@@ -34,7 +32,6 @@ export const Footer = (): JSX.Element => {
 								</Link>
 							</div>
 						</div>
-						<NewsletterForm />
 					</article>
 					<section className="flex flex-wrap justify-start gap-[15px_92px] pt-6 md:justify-center md:gap-20 md:px-6 lg:px-0 lg:pt-0">
 						<article>
@@ -97,4 +94,3 @@ export const Footer = (): JSX.Element => {
 		</footer>
 	);
 };
-
