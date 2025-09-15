@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX } from 'react';
+import { JSX, useState } from 'react';
 import {
 	Bar,
 	BarChart,
@@ -11,7 +11,6 @@ import {
 	YAxis,
 } from 'recharts';
 
-import { MONTHS } from '../contants';
 import { RevenueInfo } from '../services/DashboardApi';
 
 function formatMoney(n: number): string {
@@ -24,10 +23,7 @@ function formatMoney(n: number): string {
 
 interface IDashboardGraph {
 	revenue: RevenueInfo | null;
-	revenueData: {
-		name: string;
-		amount: number;
-	}[];
+	revenueData: { name: string; amount: number }[];
 	year: number;
 }
 
@@ -39,6 +35,10 @@ export const DashboardGraph = ({
 	const totalYear =
 		revenue?.totalForYear ??
 		revenueData.reduce((s: number, x) => s + x.amount, 0);
+
+	const [activeIndex, setActiveIndex] = useState<number | null>(null);
+	const defaultIndex = new Date().getMonth();
+	const idx = activeIndex ?? defaultIndex;
 
 	return (
 		<div className="max-w-[747px] rounded-[16px] bg-white p-6 shadow-sm">
@@ -54,23 +54,20 @@ export const DashboardGraph = ({
 						{formatMoney(totalYear)}
 					</div>
 				</div>
-
-				<div className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm">
-					<div className="text-[11px] text-neutral-500">
-						{MONTHS[7]} {year}
-					</div>
-					<div className="flex items-center gap-2">
-						<span className="text-neutral-500">Total</span>
-						<span className="font-medium">
-							{formatMoney(revenueData[7]?.amount || 0)}
-						</span>
-					</div>
-				</div>
 			</div>
 
 			<div className="h-[300px] w-full">
 				<ResponsiveContainer width="100%" height="100%">
-					<BarChart data={revenueData} barSize={28}>
+					<BarChart
+						data={revenueData}
+						barSize={28}
+						onMouseMove={(state: any) => {
+							if (typeof state?.activeTooltipIndex === 'number') {
+								setActiveIndex(state.activeTooltipIndex);
+							}
+						}}
+						onMouseLeave={() => setActiveIndex(null)}
+					>
 						<CartesianGrid strokeDasharray="3 3" vertical={false} />
 						<XAxis dataKey="name" />
 						<YAxis />
@@ -79,6 +76,7 @@ export const DashboardGraph = ({
 								formatMoney(Number(v)),
 								'Total',
 							]}
+							labelFormatter={(label: any) => `${label} ${year}`}
 							cursor={{ fillOpacity: 0.08 }}
 						/>
 						<Bar

@@ -16,16 +16,12 @@ const ROLE_CONTRACTOR: UserRole = 2;
 
 export default function AdminDashboardPage(): JSX.Element {
 	const now = useMemo(() => new Date(), []);
-	const [month, setMonth] = useState<number>(now.getMonth() + 1);
-	const [year, setYear] = useState<number>(now.getFullYear());
 
 	const [revenue, setRevenue] = useState<RevenueInfo | null>(null);
-	const [loading, setLoading] = useState<boolean>(false);
 
 	useEffect(() => {
 		let cancelled = false;
-		async function run() {
-			setLoading(true);
+		async function run(): Promise<void> {
 			try {
 				const [revenueInfo] = await Promise.all([
 					DashboardApi.getRevenueInformation(),
@@ -36,15 +32,13 @@ export default function AdminDashboardPage(): JSX.Element {
 				setRevenue(revenueInfo);
 			} catch (e) {
 				console.error(e);
-			} finally {
-				if (!cancelled) setLoading(false);
 			}
 		}
 		run();
-		return () => {
+		return (): void => {
 			cancelled = true;
 		};
-	}, [month, year]);
+	}, []);
 
 	const revenueData = useMemo(() => {
 		const months: { name: string; amount: number }[] = Array.from(
@@ -94,7 +88,7 @@ export default function AdminDashboardPage(): JSX.Element {
 			<DashboardGraph
 				revenue={revenue}
 				revenueData={revenueData}
-				year={year}
+				year={now.getFullYear()}
 			/>
 		</div>
 	);
