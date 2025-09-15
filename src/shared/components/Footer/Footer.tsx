@@ -3,8 +3,6 @@ import Link from 'next/link';
 
 import { MAIN_NAVIGATION } from '@/shared/constants/navigation';
 
-import { NewsletterForm } from './NewsletterForm';
-
 import FacebookLogo from 'public/icons/facebook-logo.svg';
 import InstgramLogo from 'public/icons/instagram-logo.svg';
 import TwitterLogo from 'public/icons/twitter-logo.svg';
@@ -34,7 +32,6 @@ export const Footer = (): JSX.Element => {
 								</Link>
 							</div>
 						</div>
-						<NewsletterForm />
 					</article>
 					<section className="flex flex-wrap justify-start gap-[15px_92px] pt-6 md:justify-center md:gap-20 md:px-6 lg:px-0 lg:pt-0">
 						<article>
@@ -84,7 +81,11 @@ export const Footer = (): JSX.Element => {
 							<p className="mb-1 text-base">
 								info@theloremiipsum
 							</p>
-							<p className="text-base">(718) 309-3000</p>
+							<p className="mb-1 text-base">
+								1846 1st St Ste 100 PMB 733628
+								<br />
+								Idaho Falls, Idaho 83401-4415 US
+							</p>
 						</article>
 					</section>
 				</section>
@@ -97,4 +98,3 @@ export const Footer = (): JSX.Element => {
 		</footer>
 	);
 };
-

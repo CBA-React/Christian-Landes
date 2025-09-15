@@ -21,6 +21,22 @@ import GoogleLogin from 'public/icons/google-login.svg';
 
 const phoneRegex = /^(?:(?:\+)?[0-9\s\-().]{7,})$/;
 
+const passwordSchema = z
+	.string()
+	.min(8, 'Password must be at least 8 characters')
+	.refine((v) => /[A-Z]/.test(v), {
+		message: 'Password must contain at least one uppercase letter',
+	})
+	.refine((v) => /[a-z]/.test(v), {
+		message: 'Password must contain at least one lowercase letter',
+	})
+	.refine((v) => /\d/.test(v), {
+		message: 'Password must contain at least one digit',
+	})
+	.refine((v) => /[^A-Za-z0-9]/.test(v), {
+		message: 'Password must contain at least one special character',
+	});
+
 const registrationSchema = z
 	.object({
 		fullName: z.string().min(2, 'Full name must be at least 2 characters'),
@@ -36,7 +52,7 @@ const registrationSchema = z
 		location: z
 			.string()
 			.min(2, 'Please enter your city, state, or ZIP code'),
-		password: z.string().min(8, 'Password must be at least 8 characters'),
+		password: passwordSchema,
 		confirmPassword: z.string().min(8, 'Confirm password is required'),
 		termsAccepted: z.boolean().refine((v) => v, {
 			message:
@@ -148,9 +164,7 @@ export const SignUp = (): JSX.Element => {
 					)}
 				</div>
 				<div className="flex flex-col gap-[10px]">
-					<label htmlFor="location">
-						Location (city, state, or ZIP)
-					</label>
+					<label htmlFor="location">Location</label>
 					<input
 						{...register('location')}
 						type="text"
@@ -169,7 +183,6 @@ export const SignUp = (): JSX.Element => {
 						<input
 							{...register('password')}
 							type={showPassword ? 'text' : 'password'}
-
 							className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none sm:block"
 							placeholder="Create a strong password (min. 8 characters)"
 						/>
@@ -263,7 +276,7 @@ export const SignUp = (): JSX.Element => {
 					</Link>
 				</div>
 				<p className="text-center text-sm text-[#242424]">
-					Don’t have an account?{' '}
+					Already have an account?{' '}
 					<Link className="font-semibold" href="/login">
 						Log In
 					</Link>

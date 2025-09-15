@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
 import { Button } from '@/shared/components/Button/Button';
+import { decodeJwt } from '@/shared/lib/decodeJwt';
 import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 import { AuthApi } from '../services/AuthApi';
 import { login } from '../slices/authSlice';
@@ -43,7 +44,12 @@ export const LoginForm = (): JSX.Element => {
 
 			dispatch(login({ token: res.access_token, email: data.email }));
 
-			router.push('/');
+			const payload = decodeJwt(res.access_token);
+			if (payload?.role === 3) {
+				router.push('/admin');
+			} else {
+				router.push('/');
+			}
 		} catch (err: unknown) {
 			const msg = getErrorMessage(err, 'Invalid email or password');
 			setServerError(msg);
