@@ -12,19 +12,39 @@ export type RevenueInfo = {
 	months: RevenueMonth[];
 };
 
+export type CountDelta = {
+	month: number;
+	year: number;
+	currentCount: number;
+	previousCount: number;
+	percentChange: number;
+};
+
+function normalizeCount(payload: any): CountDelta {
+	const month = Number(payload?.month) || 0;
+	const year = Number(payload?.year) || 0;
+	const currentCount = Number(payload?.currentCount) || 0;
+	const previousCount = Number(payload?.previousCount) || 0;
+
+	const computed =
+		previousCount === 0
+			? currentCount === 0
+				? 0
+				: 100
+			: ((currentCount - previousCount) / Math.abs(previousCount)) * 100;
+
+	const percentChange =
+		typeof payload?.percentChange === 'number'
+			? payload.percentChange
+			: computed;
+
+	return { month, year, currentCount, previousCount, percentChange };
+}
+
 function pickNumber(value: any): number {
 	if (typeof value === 'number') return value;
 	const parsed = Number(value);
 	return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function pickCount(payload: any): number {
-	if (typeof payload === 'number') return payload;
-	if (payload?.count != null) return pickNumber(payload.count);
-	if (payload?.total != null) return pickNumber(payload.total);
-	if (payload?.data?.count != null) return pickNumber(payload.data.count);
-	if (payload?.data?.total != null) return pickNumber(payload.data.total);
-	return 0;
 }
 
 function normalizeRevenue(payload: any): RevenueInfo {
@@ -64,23 +84,23 @@ export class DashboardApi {
 		month: number;
 		year: number;
 		role: UserRole;
-	}): Promise<number> {
+	}): Promise<CountDelta> {
 		const res = await axiosInstance.get(
 			'admin/dashboard/getCountUserWithRole',
 			{ params },
 		);
-		return pickCount(res.data);
+		return normalizeCount(res.data);
 	}
 
 	static async getCountActiveProjects(params: {
 		month: number;
 		year: number;
-	}): Promise<number> {
+	}): Promise<CountDelta> {
 		const res = await axiosInstance.get(
 			'admin/dashboard/getCountActiveProjects',
 			{ params },
 		);
-		return pickCount(res.data);
+		return normalizeCount(res.data);
 	}
 
 	static async getRevenueInformation(): Promise<RevenueInfo> {

@@ -11,7 +11,7 @@ import {
 	YAxis,
 } from 'recharts';
 
-import { MONTHS } from '@/app/(admin)/admin/page';
+import { MONTHS } from '../contants';
 import { RevenueInfo } from '../services/DashboardApi';
 
 function formatMoney(n: number): string {

@@ -72,7 +72,9 @@ export default function AdminLayout({
 			<AdminSidebar />
 
 			<div className="flex">
-				<main className="mt-14 ml-[240px] w-full p-8">{children}</main>
+				<main className="mt-17.5 ml-[240px] w-full overflow-hidden p-8">
+					{children}
+				</main>
 			</div>
 		</div>
 	);
