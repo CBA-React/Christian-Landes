@@ -81,7 +81,11 @@ export const Footer = (): JSX.Element => {
 							<p className="mb-1 text-base">
 								info@theloremiipsum
 							</p>
-							<p className="text-base">(718) 309-3000</p>
+							<p className="mb-1 text-base">
+								1846 1st St Ste 100 PMB 733628
+								<br />
+								Idaho Falls, Idaho 83401-4415 US
+							</p>
 						</article>
 					</section>
 				</section>
