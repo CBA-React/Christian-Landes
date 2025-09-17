@@ -10,7 +10,6 @@ import { Button } from '../Button/Button';
 
 import ArrowIconBlack from 'public/icons/arrow-up-right-black.svg';
 import ArrowIconWhite from 'public/icons/arrow-up-right-white.svg';
-import UserIcon from 'public/icons/user.svg';
 
 interface MobileHeaderProps {
 	isOpen: boolean;
@@ -65,19 +64,28 @@ export const MobileHeader = ({
 						iconPosition="right"
 						color="dark"
 						variant="solid"
-						onClick={() => router.push('/contact-us')}
+						onClick={() => {
+							router.push('/contact-us');
+							onClose(!isOpen);
+						}}
 					>
 						Contact Us
 					</Button>
 
 					{!!isLoggedIn ? (
-						<Link
-							href="/profile"
-							aria-label="User Profile"
-							className="p-2"
+						<Button
+							className="font-chalet-1960 justify-center bg-[#FFFFFF] py-2 text-base"
+							icon={<ArrowIconBlack />}
+							iconPosition="right"
+							color="light"
+							variant="solid"
+							onClick={() => {
+								router.push('/profile');
+								onClose(!isOpen);
+							}}
 						>
-							<UserIcon className="h-4 w-4 transition hover:opacity-80" />
-						</Link>
+							Profile
+						</Button>
 					) : (
 						<Button
 							className="font-chalet-1960 justify-center bg-[#FFFFFF] py-2 text-base"
@@ -85,7 +93,10 @@ export const MobileHeader = ({
 							iconPosition="right"
 							color="light"
 							variant="solid"
-							onClick={() => router.push('/login')}
+							onClick={() => {
+								router.push('/login');
+								onClose(!isOpen);
+							}}
 						>
 							Login
 						</Button>
