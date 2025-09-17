@@ -10,7 +10,7 @@ interface LogoSectionProps {
 	onImageChange?: (file: File) => void;
 	onError?: (error: string) => void;
 	disabled?: boolean;
-	isUploading?: boolean; 
+	isUploading?: boolean;
 }
 
 export const LogoSection = ({
@@ -18,7 +18,7 @@ export const LogoSection = ({
 	onImageChange,
 	onError,
 	disabled = false,
-	isUploading = false, 
+	isUploading = false,
 }: LogoSectionProps): JSX.Element => {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -48,7 +48,7 @@ export const LogoSection = ({
 	const isButtonDisabled = disabled || isUploading;
 
 	return (
-		<div className="flex flex-row items-center gap-6 lg:flex-col">
+		<div className="flex flex-row gap-4 lg:flex-col lg:gap-2">
 			<div className="relative lg:mb-4">
 				<div className="relative h-20 w-20 overflow-hidden rounded-[10px] lg:h-[171px] lg:w-[171px]">
 					<Image
@@ -59,39 +59,35 @@ export const LogoSection = ({
 							isUploading ? 'opacity-70' : 'opacity-100'
 						}`}
 					/>
-					{isUploading && (
-						<div className="bg-opacity-50 absolute inset-0 flex items-center justify-center bg-black">
-							<div className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent lg:h-8 lg:w-8"></div>
-						</div>
-					)}
 				</div>
 			</div>
+			<div className="flex flex-row items-center">
+				<UploadIcon className="h-5 w-5" />
+				<Button
+					type="button"
+					onClick={triggerFileInput}
+					disabled={isButtonDisabled}
+					variant="ghost"
+					color="light"
+					iconPosition="left"
+					className={`!justify-between text-[16px] transition-colors ${
+						isButtonDisabled
+							? 'cursor-not-allowed opacity-50'
+							: 'text-[#242424]'
+					}`}
+				>
+					{isUploading ? 'Uploading...' : 'Upload new photo'}
+				</Button>
 
-			<Button
-				type="button"
-				onClick={triggerFileInput}
-				disabled={isButtonDisabled}
-				variant="ghost"
-				color="primary"
-				icon={<UploadIcon className="h-5 w-5" />}
-				iconPosition="left"
-				className={`text-[16px] transition-colors ${
-					isButtonDisabled
-						? 'cursor-not-allowed opacity-50'
-						: 'text-[#242424] hover:text-[#003BFF]'
-				}`}
-			>
-				{isUploading ? 'Uploading...' : 'Upload new photo'}
-			</Button>
-
-			<input
-				ref={fileInputRef}
-				type="file"
-				accept="image/*"
-				onChange={handleImageUpload}
-				className="hidden"
-				disabled={isButtonDisabled}
-			/>
+				<input
+					ref={fileInputRef}
+					type="file"
+					accept="image/*"
+					onChange={handleImageUpload}
+					className="hidden"
+					disabled={isButtonDisabled}
+				/>
+			</div>
 		</div>
 	);
 };
