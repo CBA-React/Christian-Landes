@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/components/Button/Button';
 
-import { ProfileData } from '../types';
+import { ProfileData } from '@/shared/types/profile';
 
 import StarIcon from '../../../../public/icons/profile/star.svg';
 import DollarIcon from '../../../../public/icons/profile/dollar-for-button.svg';

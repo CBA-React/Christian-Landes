@@ -1,30 +1,3 @@
-// API TYPES
-
-export interface ApiSpecialityItem {
-	id: number;
-	user_id: number;
-	value: string;
-	created_at: string;
-}
-
-export interface ApiProfileData {
-	id: number;
-	full_name: string;
-	email: string;
-	phone?: string;
-	location?: string;
-	about?: string | null;
-	speciality?: ApiSpecialityItem[];
-	google_id?: string | null;
-	facebook_id?: string | null;
-	apple_id?: string | null;
-	windows_id?: string | null;
-	logo?: string | null;
-	avg_reviews?: number;
-	_count?: {
-		reviews?: number;
-	};
-}
 
 export interface ApiProject {
 	id: number;
@@ -72,41 +45,6 @@ export interface HomeownerMetrics {
 	totalPrice?: number;
 }
 
-export interface UpdateProfilePayload {
-	id: number;
-	full_name: string;
-	email: string;
-	phone: string;
-	location: string;
-	about: string | null;
-	speciality: Array<{ value: string }>;
-	logo?: any;
-}
-
-// LOCAL TYPES
-export interface ProfileData {
-	profile_id: number;
-	name: string;
-	email: string;
-	avatar: string;
-	role: 'contractor' | 'client';
-	rating: number;
-	reviewsCount: number;
-	phone: string;
-	location: string;
-	about: string | null;
-	specialities: string[];
-}
-
-export interface UpdateProfileFormData {
-	fullName: string;
-	email: string;
-	phone: string;
-	location: string;
-	about?: string;
-	specialities?: string[];
-}
-
 export interface StatItem {
 	label: string;
 	value: string | number;
@@ -134,8 +72,6 @@ export interface ProjectDisplayData {
 	budgetFormatted: string;
 }
 
-// UTILITY TYPES
-
 export interface LoadingState {
 	isLoading: boolean;
 	isError: boolean;
@@ -153,7 +89,6 @@ export interface ProfileSectionConfig {
 }
 
 export type {
-	ProfileData as Profile,
 	StatItem as Stat,
 	ProjectDisplayData as Project,
 	LoadingState as Loading,

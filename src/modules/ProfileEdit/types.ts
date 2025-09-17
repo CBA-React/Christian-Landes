@@ -1,5 +1,3 @@
-//API
-
 export interface UpdateProfilePayload {
 	id: number;
 	full_name: string;
@@ -8,14 +6,15 @@ export interface UpdateProfilePayload {
 	location: string;
 	about: string | null;
 	speciality: Array<{ value: string }>;
-	logo?: any;
+	logo?:
+		| {
+				id?: number;
+				url?: string;
+				type?: string;
+				created_at?: string;
+		  }
+		| {};
 }
-
-
-
-//LOCAL
-
-
 
 export interface UpdateProfileFormData {
 	fullName: string;

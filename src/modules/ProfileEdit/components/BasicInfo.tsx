@@ -2,9 +2,9 @@
 
 import { JSX } from 'react';
 import { UseFormRegister, FieldErrors } from 'react-hook-form';
-import { FormInput } from './FormField';
 import { UpdateProfileFormData } from '../types';
 import ServiceIcon from 'public/icons/profile/service.svg';
+import { Input } from '@/shared/components/Input/Input';
 
 interface BasicInfoProps {
 	register: UseFormRegister<UpdateProfileFormData>;
@@ -17,52 +17,51 @@ export const BasicInfo = ({
 	register,
 	errors,
 	isContractor,
-	disabled = false,
 }: BasicInfoProps): JSX.Element => {
 	return (
 		<div className="space-y-4 md:space-y-5">
 			{/* Name and Phone */}
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
-				<FormInput
-					{...register('fullName')}
+				<Input
 					label={isContractor ? 'Business Name' : 'Full Name'}
 					placeholder={`Enter your ${isContractor ? 'business' : 'full'} name`}
+					register={register('fullName')}
 					error={errors.fullName}
-					required
-					disabled={disabled}
 				/>
 
-				<FormInput
-					{...register('phone')}
+				<Input
 					type="tel"
 					label="Phone"
 					placeholder="(555) 123-4567"
+					register={register('phone')}
 					error={errors.phone}
-					required
-					disabled={disabled}
 				/>
 			</div>
 
 			{/* Email and Location */}
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
-				<FormInput
-					{...register('email')}
+				<Input
 					type="email"
 					label="Email"
-					placeholder={isContractor ? 'business@example.com' : 'your@example.com'}
+					placeholder={
+						isContractor
+							? 'business@example.com'
+							: 'your@example.com'
+					}
+					register={register('email')}
 					error={errors.email}
-					required
-					disabled={disabled}
 				/>
 
-				<FormInput
-					{...register('location')}
+				<Input
 					label={isContractor ? 'Service Area' : 'Location'}
 					placeholder="Enter your location"
-					labelIcon={isContractor ? <ServiceIcon className="h-4 w-4" /> : undefined}
+					labelIcon={
+						isContractor ? (
+							<ServiceIcon className="h-4 w-4" />
+						) : undefined
+					}
+					register={register('location')}
 					error={errors.location}
-					required
-					disabled={disabled}
 				/>
 			</div>
 		</div>

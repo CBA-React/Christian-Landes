@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { UpdateProfileFormData } from '../types';
-import { ProfileData } from '@/modules/Profile/types';
+import { UpdateProfileFormData } from '../types'; 
+import { ProfileData } from '@/shared/types/profile'; 
+import { useFileUpload } from '@/shared/hooks/useFileUpload'; 
+import type { UpdateProfileWithImageData } from '../hooks/useEditProfile';
 
 const editProfileSchema = z.object({
 	fullName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -25,16 +27,38 @@ const editProfileSchema = z.object({
 
 interface UseEditProfileFormOptions {
 	profileData: ProfileData;
-	onSubmit?: (data: UpdateProfileFormData) => Promise<void>;
+	onSubmit?: (data: UpdateProfileWithImageData) => Promise<void>;
 }
 
-export function useEditProfileForm({ profileData, onSubmit }: UseEditProfileFormOptions) {
+export function useEditProfileForm({
+	profileData,
+	onSubmit,
+}: UseEditProfileFormOptions) {
 	const [selectedSpecialities, setSelectedSpecialities] = useState<string[]>(
 		profileData.specialities || [],
 	);
-	
-	const [selectedFile, setSelectedFile] = useState<File | null>(null);
-	const [previewImage, setPreviewImage] = useState<string>(profileData.avatar);
+
+	const [previewImage, setPreviewImage] = useState<string>(
+		profileData.avatar,
+	);
+	const [uploadedLogo, setUploadedLogo] = useState<{
+		id: number;
+		url: string;
+		type: string;
+		created_at: string;
+	} | null>(null);
+
+	const { uploadFile, isUploading, previewUrl, clearPreview } = useFileUpload(
+		{
+			onSuccess: (uploadedFile) => {
+				setUploadedLogo(uploadedFile);
+				setPreviewImage(uploadedFile.url);
+			},
+			onError: (error) => {
+				form.setError('fullName', { type: 'manual', message: error });
+			},
+		},
+	);
 
 	const form = useForm<UpdateProfileFormData>({
 		resolver: zodResolver(editProfileSchema),
@@ -50,26 +74,36 @@ export function useEditProfileForm({ profileData, onSubmit }: UseEditProfileForm
 
 	const handleAddSpeciality = (speciality: string) => {
 		if (selectedSpecialities.includes(speciality)) return;
-		
+
 		const newSpecialities = [...selectedSpecialities, speciality];
 		setSelectedSpecialities(newSpecialities);
-		form.setValue('specialities', newSpecialities, { shouldValidate: true });
+		form.setValue('specialities', newSpecialities, {
+			shouldValidate: true,
+		});
 	};
 
 	const handleRemoveSpeciality = (index: number) => {
-		const newSpecialities = selectedSpecialities.filter((_, i) => i !== index);
+		const newSpecialities = selectedSpecialities.filter(
+			(_, i) => i !== index,
+		);
 		setSelectedSpecialities(newSpecialities);
-		form.setValue('specialities', newSpecialities, { shouldValidate: true });
+		form.setValue('specialities', newSpecialities, {
+			shouldValidate: true,
+		});
 	};
 
-	const handleImageChange = (file: File) => {
-		setSelectedFile(file);
-		
-		const reader = new FileReader();
-		reader.onload = () => {
-			setPreviewImage(reader.result as string);
-		};
-		reader.readAsDataURL(file);
+	const handleImageChange = async (file: File) => {
+		try {
+			const tempPreview = URL.createObjectURL(file);
+			setPreviewImage(tempPreview);
+
+			await uploadFile(file, 'logo');
+
+			URL.revokeObjectURL(tempPreview);
+		} catch (error) {
+			setPreviewImage(profileData.avatar);
+			console.error('Image upload failed:', error);
+		}
 	};
 
 	const handleImageError = (error: string) => {
@@ -79,22 +113,34 @@ export function useEditProfileForm({ profileData, onSubmit }: UseEditProfileForm
 	const handleSubmit = async (data: UpdateProfileFormData) => {
 		try {
 			if (onSubmit) {
-				await onSubmit(data);
+				const submitData: UpdateProfileWithImageData = {
+					...data,
+					uploadedLogo: uploadedLogo || undefined,
+				};
+				await onSubmit(submitData);
 			}
 		} catch (error) {
 			throw error;
 		}
 	};
 
+	const currentPreviewUrl = previewUrl || previewImage;
+
 	return {
 		form,
 		selectedSpecialities,
-		selectedFile,
-		previewImage,
+		previewImage: currentPreviewUrl,
+		isUploadingImage: isUploading,
 		handleAddSpeciality,
 		handleRemoveSpeciality,
 		handleImageChange,
 		handleImageError,
 		handleSubmit,
+		clearImagePreview: () => {
+			clearPreview();
+			setPreviewImage(profileData.avatar);
+			setUploadedLogo(null);
+		},
+		hasNewImage: !!uploadedLogo,
 	};
 }

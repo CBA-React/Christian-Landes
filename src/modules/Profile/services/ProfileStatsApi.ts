@@ -1,85 +1,23 @@
 import { axiosInstance } from '@/shared/lib/axiosInstance';
 import { AuthRole } from '@/shared/lib/roleMapper';
+import { API_ENDPOINTS } from '@/shared/constants/profile';
 import type {
-	ApiProfileData,
 	ApiProject,
 	ProjectsResponse,
 	ContractorMetrics,
 	HomeownerMetrics,
-	ProfileData,
 	StatItem,
 	ProjectDisplayData,
 	ProjectStatus,
-	ApiSpecialityItem,
-	UpdateProfilePayload,
-	UpdateProfileFormData,
 } from '../types';
+import { PROJECT_STATUS_CONFIG } from '../constants';
 
-import { PROJECT_STATUS_CONFIG, API_ENDPOINTS } from '../constants';
 
-export class ProfileApi {
+export class ProfileStatsApi {
 	private static getEndpoint(authRole: AuthRole): string {
 		return API_ENDPOINTS[authRole] || API_ENDPOINTS[1];
 	}
 
-	static async updateProfile(
-		authRole: AuthRole,
-		data: UpdateProfilePayload,
-	): Promise<ApiProfileData> {
-		const endpoint = this.getEndpoint(authRole);
-
-		const response = await axiosInstance.post<ApiProfileData>(
-			`/${endpoint}/profile/update`,
-			data,
-		);
-
-		return response.data;
-	}
-
-	static transformToApiFormat(
-		formData: UpdateProfileFormData,
-		userId: number,
-	): UpdateProfilePayload {
-		return {
-			id: userId,
-			full_name: formData.fullName,
-			email: formData.email,
-			phone: formData.phone,
-			location: formData.location,
-			about:
-				formData.about === '' || !formData.about
-					? null
-					: formData.about,
-			speciality: (formData.specialities || []).map((value) => ({
-				value,
-			})),
-			logo: {},
-		};
-	}
-	static transformToFormFormat(
-		apiData: ApiProfileData,
-	): UpdateProfileFormData {
-		const specialities = this.transformSpecialities(apiData.speciality);
-
-		return {
-			fullName: apiData.full_name,
-			email: apiData.email,
-			phone: apiData.phone || '',
-			location: apiData.location || '',
-			about: apiData.about || '',
-			specialities,
-		};
-	}
-
-	static async getProfile(authRole: AuthRole): Promise<ProfileData> {
-		const endpoint = this.getEndpoint(authRole);
-
-		const response = await axiosInstance.get<ApiProfileData>(
-			`/${endpoint}/profile`,
-		);
-
-		return this.transformProfileData(response.data, authRole);
-	}
 
 	static async getMetrics(authRole: AuthRole): Promise<StatItem[]> {
 		const endpoint = this.getEndpoint(authRole);
@@ -90,6 +28,7 @@ export class ProfileApi {
 
 		return this.transformMetricsData(response.data, authRole);
 	}
+
 
 	static async getProjects(
 		authRole: AuthRole,
@@ -103,44 +42,6 @@ export class ProfileApi {
 		return response.data;
 	}
 
-	/**
-	 * Transforming API profile into local format
-	 */
-	static transformProfileData(
-		apiData: ApiProfileData,
-		authRole: AuthRole,
-	): ProfileData {
-		const specialities = this.transformSpecialities(apiData.speciality);
-
-		return {
-			profile_id: apiData.id,
-			name: apiData.full_name,
-			email: apiData.email,
-			avatar: apiData.logo || '/images/Profile/mock-avatar.jpg',
-			role: authRole === 2 ? 'contractor' : 'client',
-			rating: apiData.avg_reviews || 0,
-			reviewsCount: apiData._count?.reviews || 0,
-			phone: apiData.phone || '',
-			location: apiData.location || '',
-			about: apiData.about || null,
-			specialities,
-		};
-	}
-
-	/**
-	 * Transform specialities to ensure they're strings
-	 */
-	private static transformSpecialities(
-		speciality: ApiSpecialityItem[] | undefined,
-	): string[] {
-		if (!speciality || !Array.isArray(speciality)) {
-			return [];
-		}
-
-		return speciality
-			.map((item: ApiSpecialityItem) => item.value)
-			.filter(Boolean);
-	}
 
 	private static transformMetricsData(
 		apiData: ContractorMetrics | HomeownerMetrics,
@@ -176,9 +77,6 @@ export class ProfileApi {
 		}
 	}
 
-	/**
-	 * Transforming projects for display
-	 */
 	static transformProjectsForDisplay(
 		projects: ApiProject[],
 	): ProjectDisplayData[] {

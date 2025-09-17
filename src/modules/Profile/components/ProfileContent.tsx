@@ -2,7 +2,8 @@
 
 import { JSX, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { ProfileData, StatItem, ProjectDisplayData } from '../types';
+import { StatItem, ProjectDisplayData } from '../types';
+import { ProfileData } from '@/shared/types/profile';
 import { ProfileSection } from '../constants';
 import { NAVIGATION_CONFIG } from '../components/navigationConfig';
 import { ProfileSidebar } from './ProfileSidebar';

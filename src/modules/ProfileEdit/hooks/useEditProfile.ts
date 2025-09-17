@@ -1,10 +1,21 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { AuthRole } from '@/shared/lib/roleMapper';
-import { ProfileApi } from '../../Profile/services/ProfileApi';
-import { UpdateProfileFormData, ProfileData } from '../../Profile/types';
+import { ProfileApi } from '@/shared/api/ProfileApi';
+import type { ProfileData } from '@/shared/types/profile';
+import { ProfileEditApi } from '../services/ProfileEditApi';
+import type { UpdateProfileFormData } from '../types';
 import { useAppDispatch } from '@/shared/hooks/useStore';
 import { login } from '@/modules/auth/slices/authSlice';
+
+export interface UpdateProfileWithImageData extends UpdateProfileFormData {
+	uploadedLogo?: {
+		id: number;
+		url: string;
+		type: string;
+		created_at: string;
+	};
+}
 
 export function useEditProfile(authRole: AuthRole | null) {
 	const queryClient = useQueryClient();
@@ -12,7 +23,7 @@ export function useEditProfile(authRole: AuthRole | null) {
 	const router = useRouter();
 
 	return useMutation({
-		mutationFn: async (formData: UpdateProfileFormData) => {
+		mutationFn: async (formData: UpdateProfileWithImageData) => {
 			if (!authRole) throw new Error('Auth role is required');
 
 			const previousProfile = queryClient.getQueryData<ProfileData>([
@@ -24,15 +35,17 @@ export function useEditProfile(authRole: AuthRole | null) {
 				throw new Error('Profile data not found');
 			}
 
-			const apiPayload = ProfileApi.transformToApiFormat(
+			const apiPayload = ProfileEditApi.transformToApiFormat(
 				formData,
 				previousProfile.profile_id,
+				formData.uploadedLogo,
 			);
 
-			const response = await ProfileApi.updateProfile(
+			const response = await ProfileEditApi.updateProfile(
 				authRole,
 				apiPayload,
 			);
+
 			return ProfileApi.transformProfileData(response, authRole);
 		},
 		onMutate: async (formData) => {
@@ -54,6 +67,8 @@ export function useEditProfile(authRole: AuthRole | null) {
 					location: formData.location,
 					about: formData.about || null,
 					specialities: formData.specialities || [],
+					avatar:
+						formData.uploadedLogo?.url || previousProfile.avatar,
 				};
 
 				queryClient.setQueryData(
@@ -64,7 +79,7 @@ export function useEditProfile(authRole: AuthRole | null) {
 
 			return { previousProfile };
 		},
-		onSuccess: (updatedProfile: ProfileData, variables, context) => {
+		onSuccess: (updatedProfile: ProfileData) => {
 			queryClient.setQueryData(['profile', authRole], updatedProfile);
 
 			if (updatedProfile.email) {

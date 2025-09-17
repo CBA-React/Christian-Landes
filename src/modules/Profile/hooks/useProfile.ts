@@ -1,35 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
 import { AuthRole } from '@/shared/lib/roleMapper';
-import { ProfileApi } from '../services/ProfileApi';
-import { CACHE_CONFIG } from '../constants';
-import type { ProfileData, StatItem, ProjectsResponse } from '../types';
+import { useProfile as useSharedProfile } from '@/shared/hooks/useProfile'; 
+import type { ProfileData } from '@/shared/types/profile'; 
+import { ProfileStatsApi } from '../services/ProfileStatsApi';
+import { PROFILE_CACHE_CONFIG } from '../constants';
+import type { StatItem, ProjectsResponse } from '../types';
 
-export function useProfile(authRole: AuthRole | null) {
-	return useQuery({
-		queryKey: ['profile', authRole],
-		queryFn: () => {
-			if (!authRole) throw new Error('Auth role is required');
-			return ProfileApi.getProfile(authRole);
-		},
-		enabled: !!authRole,
-		staleTime: CACHE_CONFIG.PROFILE_STALE_TIME,
-		retry: 2,
-	});
-}
+
+export const useProfile = useSharedProfile;
+
 
 export function useProfileStats(authRole: AuthRole | null) {
 	return useQuery({
 		queryKey: ['profile-stats', authRole],
 		queryFn: () => {
 			if (!authRole) throw new Error('Auth role is required');
-			return ProfileApi.getMetrics(authRole);
+			return ProfileStatsApi.getMetrics(authRole);
 		},
 		enabled: !!authRole,
-		staleTime: CACHE_CONFIG.STATS_STALE_TIME,
+		staleTime: PROFILE_CACHE_CONFIG.STATS_STALE_TIME,
 		retry: 2,
-		refetchInterval: CACHE_CONFIG.STATS_REFETCH_INTERVAL,
+		refetchInterval: PROFILE_CACHE_CONFIG.STATS_REFETCH_INTERVAL,
 	});
 }
+
 
 export function useProjects(
 	authRole: AuthRole | null,
@@ -40,17 +34,18 @@ export function useProjects(
 		queryKey: ['profile-projects', authRole, page, perPage],
 		queryFn: () => {
 			if (!authRole) throw new Error('Auth role is required');
-			return ProfileApi.getProjects(authRole, page, perPage);
+			return ProfileStatsApi.getProjects(authRole, page, perPage);
 		},
 		enabled: !!authRole,
-		staleTime: CACHE_CONFIG.PROJECTS_STALE_TIME,
+		staleTime: PROFILE_CACHE_CONFIG.PROJECTS_STALE_TIME,
 		retry: 2,
 		select: (data: ProjectsResponse) => ({
 			...data,
-			displayData: ProfileApi.transformProjectsForDisplay(data.data),
+			displayData: ProfileStatsApi.transformProjectsForDisplay(data.data),
 		}),
 	});
 }
+
 
 export interface UseProfileDataReturn {
 	profile?: ProfileData;
@@ -87,9 +82,9 @@ export interface UseProfileDataReturn {
 export function useProfileData(
 	authRole: AuthRole | null,
 ): UseProfileDataReturn {
-	const profileQuery = useProfile(authRole);
-	const statsQuery = useProfileStats(authRole);
-	const projectsQuery = useProjects(authRole, 1, 6);
+	const profileQuery = useProfile(authRole); 
+	const statsQuery = useProfileStats(authRole); 
+	const projectsQuery = useProjects(authRole, 1, 6); 
 
 	const isLoading = profileQuery.isLoading || statsQuery.isLoading;
 	const isError = profileQuery.isError || statsQuery.isError;

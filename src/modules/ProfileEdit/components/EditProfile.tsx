@@ -11,7 +11,7 @@ import { useAppSelector } from '@/shared/hooks/useStore';
 import { useEditProfile } from '../hooks/useEditProfile';
 import { useEditProfileForm } from '../hooks/useEditProfileForm';
 import { UpdateProfileFormData } from '../types';
-import { ProfileData } from '@/modules/Profile/types';
+import { ProfileData } from '@/shared/types/profile';
 import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
 interface EditProfileProps {
@@ -37,6 +37,7 @@ export const EditProfile = ({
 		form,
 		selectedSpecialities,
 		previewImage,
+		isUploadingImage,
 		handleAddSpeciality,
 		handleRemoveSpeciality,
 		handleImageChange,
@@ -54,23 +55,23 @@ export const EditProfile = ({
 	};
 
 	const isLoading =
-		form.formState.isSubmitting || editProfileMutation.isPending;
+		form.formState.isSubmitting ||
+		editProfileMutation.isPending ||
+		isUploadingImage;
 
 	return (
 		<div className="w-full rounded-lg bg-[#F1F3F6] p-6 lg:p-10">
 			<form onSubmit={form.handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
-					{/* Photo Section */}
 					<LogoSection
 						currentImage={previewImage}
 						onImageChange={handleImageChange}
 						onError={handleImageError}
 						disabled={isLoading}
+						isUploading={isUploadingImage}
 					/>
 
-					{/* Form Content */}
 					<div className="w-full flex-1 space-y-4 md:space-y-5">
-						{/* Header */}
 						<div className="mb-6 text-left md:mb-8">
 							<h2 className="mb-2 text-[36px] leading-[100%] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
 								{isContractor
@@ -84,7 +85,12 @@ export const EditProfile = ({
 							</p>
 						</div>
 
-						{/* Basic Information */}
+						{isUploadingImage && (
+							<div className="rounded-md bg-blue-50 p-3 text-sm text-blue-700">
+								Uploading image, please wait...
+							</div>
+						)}
+
 						<BasicInfo
 							register={form.register}
 							errors={form.formState.errors}
@@ -92,7 +98,6 @@ export const EditProfile = ({
 							disabled={isLoading}
 						/>
 
-						{/* Speciality/Projects Selector */}
 						<SpecialitySelector
 							selectedSpecialities={selectedSpecialities}
 							availableOptions={specialityOptions}
@@ -109,7 +114,6 @@ export const EditProfile = ({
 							maxItems={10}
 						/>
 
-						{/* About Section */}
 						<FormTextarea
 							{...form.register('about')}
 							rows={4}
@@ -119,7 +123,6 @@ export const EditProfile = ({
 							disabled={isLoading}
 						/>
 
-						{/* Form Actions */}
 						<ProfileFormActions
 							onCancel={onCancel}
 							isSubmitting={form.formState.isSubmitting}
