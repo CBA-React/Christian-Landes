@@ -11,6 +11,8 @@ import type {
 	ProjectDisplayData,
 	ProjectStatus,
 	ApiSpecialityItem,
+	UpdateProfilePayload,
+	UpdateProfileFormData,
 } from '../types';
 
 import { PROJECT_STATUS_CONFIG, API_ENDPOINTS } from '../constants';
@@ -18,6 +20,55 @@ import { PROJECT_STATUS_CONFIG, API_ENDPOINTS } from '../constants';
 export class ProfileApi {
 	private static getEndpoint(authRole: AuthRole): string {
 		return API_ENDPOINTS[authRole] || API_ENDPOINTS[1];
+	}
+
+	static async updateProfile(
+		authRole: AuthRole,
+		data: UpdateProfilePayload,
+	): Promise<ApiProfileData> {
+		const endpoint = this.getEndpoint(authRole);
+
+		const response = await axiosInstance.post<ApiProfileData>(
+			`/${endpoint}/profile/update`,
+			data,
+		);
+
+		return response.data;
+	}
+
+	static transformToApiFormat(
+		formData: UpdateProfileFormData,
+		userId: number,
+	): UpdateProfilePayload {
+		return {
+			id: userId,
+			full_name: formData.fullName,
+			email: formData.email,
+			phone: formData.phone,
+			location: formData.location,
+			about:
+				formData.about === '' || !formData.about
+					? null
+					: formData.about,
+			speciality: (formData.specialities || []).map((value) => ({
+				value,
+			})),
+			logo: {},
+		};
+	}
+	static transformToFormFormat(
+		apiData: ApiProfileData,
+	): UpdateProfileFormData {
+		const specialities = this.transformSpecialities(apiData.speciality);
+
+		return {
+			fullName: apiData.full_name,
+			email: apiData.email,
+			phone: apiData.phone || '',
+			location: apiData.location || '',
+			about: apiData.about || '',
+			specialities,
+		};
 	}
 
 	static async getProfile(authRole: AuthRole): Promise<ProfileData> {
@@ -55,14 +106,14 @@ export class ProfileApi {
 	/**
 	 * Transforming API profile into local format
 	 */
-	private static transformProfileData(
+	static transformProfileData(
 		apiData: ApiProfileData,
 		authRole: AuthRole,
 	): ProfileData {
 		const specialities = this.transformSpecialities(apiData.speciality);
 
 		return {
-			profile_id: apiData.id.toString(),
+			profile_id: apiData.id,
 			name: apiData.full_name,
 			email: apiData.email,
 			avatar: apiData.logo || '/images/Profile/mock-avatar.jpg',

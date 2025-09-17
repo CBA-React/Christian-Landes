@@ -2,6 +2,7 @@
 
 import { JSX } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/components/Button/Button';
 
 import { ProfileData } from '../types';
@@ -16,21 +17,23 @@ interface ProfileHeaderProps {
 	profileData: ProfileData;
 }
 
-const handleViewEarnings = () => {
-	console.log('View Earnings clicked');
-};
-
-const handlePostRequest = () => {
-	console.log('Post New Request clicked');
-};
-
-const handleEditProfile = () => {
-	console.log('Edit Profile clicked');
-};
-
 export const ProfileHeader = ({
 	profileData,
 }: ProfileHeaderProps): JSX.Element => {
+	const router = useRouter();
+
+	const handleViewEarnings = () => {
+		console.log('View Earnings clicked');
+	};
+
+	const handlePostRequest = () => {
+		console.log('Post New Request clicked');
+	};
+
+	const handleEditProfile = () => {
+		router.push('/profile/edit');
+	};
+
 	return (
 		<div className="flex justify-center bg-[#F1F3F6] pt-28 pb-8 lg:pt-40 lg:pb-20">
 			<section

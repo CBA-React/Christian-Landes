@@ -44,8 +44,6 @@ export interface ApiProject {
 	};
 }
 
-
-
 export enum ProjectStatus {
 	ACTIVE = 1,
 	COMPLETED = 2,
@@ -74,9 +72,20 @@ export interface HomeownerMetrics {
 	totalPrice?: number;
 }
 
+export interface UpdateProfilePayload {
+	id: number;
+	full_name: string;
+	email: string;
+	phone: string;
+	location: string;
+	about: string | null;
+	speciality: Array<{ value: string }>;
+	logo?: any;
+}
+
 // LOCAL TYPES
 export interface ProfileData {
-	profile_id: string;
+	profile_id: number;
 	name: string;
 	email: string;
 	avatar: string;
@@ -86,7 +95,16 @@ export interface ProfileData {
 	phone: string;
 	location: string;
 	about: string | null;
-	specialities: string[]; // Always strings after transformation
+	specialities: string[];
+}
+
+export interface UpdateProfileFormData {
+	fullName: string;
+	email: string;
+	phone: string;
+	location: string;
+	about?: string;
+	specialities?: string[];
 }
 
 export interface StatItem {
