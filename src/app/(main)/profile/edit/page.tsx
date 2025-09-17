@@ -40,7 +40,7 @@ export default function EditProfilePage(): JSX.Element {
 				</div>
 			</div>
 
-			<div className="flex justify-center px-5 py-8 pb-30">
+			<div className="flex justify-center px-5 py-14 lg:py-10 pb-10 lg:pb-30">
 				<div className="w-full max-w-[1240px]">
 					<EditProfile
 						profileData={profileData}
