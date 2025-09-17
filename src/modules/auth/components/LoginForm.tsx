@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
+import { EyeClose } from '@/modules/auth/components/ForgotPassword/EyeClose';
+import { EyeOpen } from '@/modules/auth/components/ForgotPassword/EyeOpen';
 import { Button } from '@/shared/components/Button/Button';
 import { decodeJwt } from '@/shared/lib/decodeJwt';
 import { getErrorMessage } from '@/shared/lib/getErrorMessage';
@@ -23,6 +25,7 @@ interface LoginFormValues {
 
 export const LoginForm = (): JSX.Element => {
 	const [serverError, setServerError] = useState<string | null>(null);
+	const [showPassword, setShowPassword] = useState(false);
 	const {
 		register,
 		handleSubmit,
@@ -78,18 +81,25 @@ export const LoginForm = (): JSX.Element => {
 			/>
 
 			<div>
-				<div className="flex flex-col gap-[6px] pb-3 text-[#242424]">
-					<label>Password</label>
-					<input
-						placeholder="Enter your password"
-						type="password"
-						className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none"
-						{...register('password', {
-							required: 'Password is required',
-						})}
-					/>
+				<div className="flex flex-col gap-[6px] pb-3">
+					<label htmlFor="password">Password</label>
+					<div className="relative">
+						<input
+							{...register('password')}
+							type={showPassword ? 'text' : 'password'}
+							className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none sm:block"
+							placeholder="Create a strong password (min. 8 characters)"
+						/>
+						<button
+							type="button"
+							onClick={() => setShowPassword(!showPassword)}
+							className="absolute top-[50%] right-[18px] -translate-y-1/2"
+						>
+							{showPassword ? <EyeOpen /> : <EyeClose />}
+						</button>
+					</div>
 					{errors.password && (
-						<p className="mt-1 text-sm text-red-500">
+						<p className="mt-1 text-sm text-red-600">
 							{errors.password.message}
 						</p>
 					)}

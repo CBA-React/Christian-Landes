@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { EyeClose } from '@/modules/auth/components/ForgotPassword/EyeClose';
@@ -104,6 +105,7 @@ export const SignUp = (): JSX.Element => {
 
 		try {
 			await AuthApi.register(payload);
+			toast.success('Account created! Redirecting…', { duration: 2000 });
 			router.push('/login');
 		} catch (err: unknown) {
 			setServerError(getErrorMessage(err, 'Registration failed'));
