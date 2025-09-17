@@ -9,6 +9,7 @@ import { store } from '@/store/store';
 const queryClient = new QueryClient();
 
 import { useEffect } from 'react';
+import { Toaster } from 'sonner';
 
 import { login, logout, setHydrated } from '@/modules/auth/slices/authSlice';
 import { useAppDispatch } from '@/shared/hooks/useStore';
@@ -39,6 +40,7 @@ export const AppProvider = ({
 		<Provider store={store}>
 			<QueryClientProvider client={queryClient}>
 				<AuthHydrator />
+				<Toaster position="top-center" richColors closeButton />
 				{children}
 			</QueryClientProvider>
 		</Provider>
