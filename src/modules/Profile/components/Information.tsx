@@ -1,7 +1,8 @@
 'use client';
 
 import { JSX } from 'react';
-import { ProfileData } from '../types';
+import { ProfileData } from '@/shared/types/profile';
+import { SpecialityTag } from '@/shared/components/SpecialityTag/SpecialityTag';
 
 import ServiceIcon from '../../../../public/icons/profile/service.svg';
 
@@ -14,7 +15,9 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 
 	const config = {
 		title: isContractor ? 'Business Information' : 'Account Information',
-		subtitle: 'Your public business details shown to homeowners',
+		subtitle: isContractor
+			? 'Your public business details shown to homeowners'
+			: 'Your account information and preferences',
 		nameLabel: isContractor ? 'Business Name' : 'Full Name',
 		nameValue: profileData.name,
 		email: profileData.email,
@@ -119,12 +122,9 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 				<div className="flex flex-wrap gap-2">
 					{config.tags.length > 0 ? (
 						config.tags.map((tag: string, index: number) => (
-							<span
-								key={index}
-								className="font-chalet-1960 inline-flex items-center rounded-full border-1 bg-[#003BFF]/10 px-3 py-1 text-[14px] text-[#003BFF]"
-							>
+							<SpecialityTag key={index} size="md">
 								{tag}
-							</span>
+							</SpecialityTag>
 						))
 					) : (
 						<span className="text-[#242424]/50 italic">

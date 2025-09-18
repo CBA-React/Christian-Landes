@@ -38,16 +38,14 @@ const nextConfig: NextConfig = {
 			},
 		},
 	},
-	// images: {
-	//     remotePatterns: [
-	//         {
-	//             protocol: 'http',
-	//             hostname: '18.214.205.10',
-	//             port: '',
-	//             pathname: '/public/uploads/**',
-	//         },
-	//     ],
-	// },
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 'conectbuild-upload.s3.us-east-1.amazonaws.com',
+			},
+		],
+	},
 };
 
 export default nextConfig;
