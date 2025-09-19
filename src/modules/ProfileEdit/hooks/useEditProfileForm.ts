@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { UpdateProfileFormData } from '../types'; 
-import { ProfileData } from '@/shared/types/profile'; 
-import { useFileUpload } from '@/shared/hooks/useFileUpload'; 
+import { UpdateProfileFormData } from '../types';
+import { ProfileData } from '@/shared/types/profile';
+import { useFileUpload } from '@/shared/hooks/useFileUpload';
 import type { UpdateProfileWithImageData } from '../hooks/useEditProfile';
 
 const editProfileSchema = z.object({
@@ -48,14 +48,26 @@ export function useEditProfileForm({
 		created_at: string;
 	} | null>(null);
 
+	const [isImageUploading, setIsImageUploading] = useState(false);
+
 	const { uploadFile, isUploading, previewUrl, clearPreview } = useFileUpload(
 		{
 			onSuccess: (uploadedFile) => {
+				if (!uploadedFile || typeof uploadedFile !== 'object') {
+					return;
+				}
+
+				if (!uploadedFile.id || !uploadedFile.url) {
+					return;
+				}
+
 				setUploadedLogo(uploadedFile);
 				setPreviewImage(uploadedFile.url);
+				setIsImageUploading(false);
 			},
 			onError: (error) => {
 				form.setError('fullName', { type: 'manual', message: error });
+				setIsImageUploading(false);
 			},
 		},
 	);
@@ -72,57 +84,79 @@ export function useEditProfileForm({
 		},
 	});
 
-	const handleAddSpeciality = (speciality: string) => {
-		if (selectedSpecialities.includes(speciality)) return;
+	const handleAddSpeciality = useCallback(
+		(speciality: string) => {
+			if (selectedSpecialities.includes(speciality)) return;
 
-		const newSpecialities = [...selectedSpecialities, speciality];
-		setSelectedSpecialities(newSpecialities);
-		form.setValue('specialities', newSpecialities, {
-			shouldValidate: true,
-		});
-	};
+			const newSpecialities = [...selectedSpecialities, speciality];
+			setSelectedSpecialities(newSpecialities);
+			form.setValue('specialities', newSpecialities, {
+				shouldValidate: true,
+			});
+		},
+		[selectedSpecialities, form],
+	);
 
-	const handleRemoveSpeciality = (index: number) => {
-		const newSpecialities = selectedSpecialities.filter(
-			(_, i) => i !== index,
-		);
-		setSelectedSpecialities(newSpecialities);
-		form.setValue('specialities', newSpecialities, {
-			shouldValidate: true,
-		});
-	};
+	const handleRemoveSpeciality = useCallback(
+		(index: number) => {
+			const newSpecialities = selectedSpecialities.filter(
+				(_, i) => i !== index,
+			);
+			setSelectedSpecialities(newSpecialities);
+			form.setValue('specialities', newSpecialities, {
+				shouldValidate: true,
+			});
+		},
+		[selectedSpecialities, form],
+	);
 
-	const handleImageChange = async (file: File) => {
-		try {
-			const tempPreview = URL.createObjectURL(file);
-			setPreviewImage(tempPreview);
+	const handleImageChange = useCallback(
+		async (file: File) => {
+			setIsImageUploading(true);
 
-			await uploadFile(file, 'logo');
+			try {
+				const tempPreview = URL.createObjectURL(file);
+				setPreviewImage(tempPreview);
 
-			URL.revokeObjectURL(tempPreview);
-		} catch (error) {
-			setPreviewImage(profileData.avatar);
-			console.error('Image upload failed:', error);
-		}
-	};
+				await uploadFile(file, 'logo');
 
-	const handleImageError = (error: string) => {
-		form.setError('fullName', { type: 'manual', message: error });
-	};
+				URL.revokeObjectURL(tempPreview);
+			} catch (error) {
+				setPreviewImage(profileData.avatar);
+				setIsImageUploading(false);
+			}
+		},
+		[uploadFile, profileData.avatar],
+	);
 
-	const handleSubmit = async (data: UpdateProfileFormData) => {
-		try {
+	const handleImageError = useCallback(
+		(error: string) => {
+			form.setError('fullName', { type: 'manual', message: error });
+		},
+		[form],
+	);
+
+	const handleSubmit = useCallback(
+		async (formData: UpdateProfileFormData) => {
+			if (isImageUploading) {
+				form.setError('fullName', {
+					type: 'manual',
+					message: 'Please wait for image upload to complete',
+				});
+				return;
+			}
+
 			if (onSubmit) {
 				const submitData: UpdateProfileWithImageData = {
-					...data,
+					...formData,
 					uploadedLogo: uploadedLogo || undefined,
 				};
+
 				await onSubmit(submitData);
 			}
-		} catch (error) {
-			throw error;
-		}
-	};
+		},
+		[isImageUploading, uploadedLogo, onSubmit, form],
+	);
 
 	const currentPreviewUrl = previewUrl || previewImage;
 
@@ -130,16 +164,17 @@ export function useEditProfileForm({
 		form,
 		selectedSpecialities,
 		previewImage: currentPreviewUrl,
-		isUploadingImage: isUploading,
+		isUploadingImage: isUploading || isImageUploading,
 		handleAddSpeciality,
 		handleRemoveSpeciality,
 		handleImageChange,
 		handleImageError,
-		handleSubmit,
+		handleSubmit: form.handleSubmit(handleSubmit),
 		clearImagePreview: () => {
 			clearPreview();
 			setPreviewImage(profileData.avatar);
 			setUploadedLogo(null);
+			setIsImageUploading(false);
 		},
 		hasNewImage: !!uploadedLogo,
 	};

@@ -10,7 +10,6 @@ import { CONTRACTOR_SPECIALITIES, CLIENT_TYPICAL_PROJECTS } from '../constants';
 import { useAppSelector } from '@/shared/hooks/useStore';
 import { useEditProfile } from '../hooks/useEditProfile';
 import { useEditProfileForm } from '../hooks/useEditProfileForm';
-import { UpdateProfileFormData } from '../types';
 import { ProfileData } from '@/shared/types/profile';
 import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
@@ -37,38 +36,42 @@ export const EditProfile = ({
 		form,
 		selectedSpecialities,
 		previewImage,
-		isUploadingImage,
 		handleAddSpeciality,
 		handleRemoveSpeciality,
 		handleImageChange,
 		handleImageError,
-	} = useEditProfileForm({ profileData });
-
-	const onSubmit = async (data: UpdateProfileFormData) => {
-		try {
-			await editProfileMutation.mutateAsync(data);
-			onSuccess();
-		} catch (error) {
-			const errorMsg = getErrorMessage(error, 'Failed to update profile');
-			form.setError('fullName', { type: 'manual', message: errorMsg });
-		}
-	};
+		handleSubmit,
+	} = useEditProfileForm({
+		profileData,
+		onSubmit: async (data) => {
+			try {
+				await editProfileMutation.mutateAsync(data);
+				onSuccess();
+			} catch (error) {
+				const errorMsg = getErrorMessage(
+					error,
+					'Failed to update profile',
+				);
+				form.setError('fullName', {
+					type: 'manual',
+					message: errorMsg,
+				});
+			}
+		},
+	});
 
 	const isLoading =
-		form.formState.isSubmitting ||
-		editProfileMutation.isPending ||
-		isUploadingImage;
+		form.formState.isSubmitting || editProfileMutation.isPending;
 
 	return (
 		<div className="w-full rounded-lg bg-[#F1F3F6] p-6 lg:p-10">
-			<form onSubmit={form.handleSubmit(onSubmit)}>
+			<form onSubmit={handleSubmit}>
 				<div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
 					<LogoSection
 						currentImage={previewImage}
 						onImageChange={handleImageChange}
 						onError={handleImageError}
 						disabled={isLoading}
-						isUploading={isUploadingImage}
 					/>
 
 					<div className="w-full flex-1 space-y-4 md:space-y-5">
@@ -84,12 +87,6 @@ export const EditProfile = ({
 									: 'Your account information and preferences'}
 							</p>
 						</div>
-
-						{isUploadingImage && (
-							<div className="rounded-md bg-blue-50 p-3 text-sm text-blue-700">
-								Uploading image, please wait...
-							</div>
-						)}
 
 						<BasicInfo
 							register={form.register}
