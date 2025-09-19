@@ -23,10 +23,10 @@ export const PROFILE_CACHE_CONFIG = {
 
 export enum ProfileSection {
 	OVERVIEW = 'overview',
-	AVAILABLE_PROJECTS = 'available_projects',
-	MY_BIDS = 'my_bids',
-	MY_REQUESTS = 'my_requests',
+	AVAILABLE_PROJECTS = 'available-projects',
+	MY_BIDS = 'my-bids',
+	MY_REQUESTS = 'my-requests',
 	CONTRACTORS = 'contractors',
 	REVIEWS = 'reviews',
-	PRICING_PLAN = 'pricing_plan',
+	PRICING_PLAN = 'pricing-plan',
 }

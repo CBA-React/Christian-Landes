@@ -1,0 +1,98 @@
+'use client';
+
+import { JSX, ReactNode } from 'react';
+import { useAppSelector } from '@/shared/hooks/useStore';
+import { useProfile } from '@/modules/Profile/hooks/useProfile';
+import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
+import { ProfileHeader } from '@/modules/Profile/components/ProfileHeader';
+import { ProfileSidebar } from '@/modules/Profile/components/ProfileSidebar';
+import { NAVIGATION_CONFIG } from '@/modules/Profile/components/navigationConfig';
+import { MobileProfileNavigation } from '@/modules/Profile/components/MobileProfileNavigation';
+
+interface ProfileLayoutProps {
+	children: ReactNode;
+	showHeader?: boolean;
+	showSidebar?: boolean;
+	className?: string;
+}
+
+export default function ProfileLayout({
+	children,
+	showHeader = true,
+	showSidebar = true,
+	className = '',
+}: ProfileLayoutProps): JSX.Element {
+	const authRole = useAppSelector((state) => state.auth.role);
+
+	const { data: profileData, isLoading, isError } = useProfile(authRole);
+
+	if (showHeader && isLoading) {
+		return <LoadingSpinner />;
+	}
+
+	if (showHeader && (isError || !profileData)) {
+		return (
+			<div className="flex min-h-screen items-center justify-center p-8 text-center">
+				<div>
+					<h2 className="mb-2 text-xl font-semibold text-red-600">
+						Failed to load profile
+					</h2>
+					<p className="mb-4 text-gray-600">
+						Please try refreshing the page
+					</p>
+					<button
+						onClick={() => window.location.reload()}
+						className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+					>
+						Refresh
+					</button>
+				</div>
+			</div>
+		);
+	}
+
+	const navigationItems = profileData
+		? NAVIGATION_CONFIG[profileData.role]
+		: [];
+
+	return (
+		<div className={`min-h-screen bg-white ${className}`}>
+			{/* Header */}
+			{showHeader && profileData && (
+				<ProfileHeader profileData={profileData} />
+			)}
+
+			<div className="mx-auto max-w-[1240px] pb-8">
+				<div className="mx-5 xl:mx-0">
+					<div
+						className={`flex flex-col gap-6 pt-6 lg:gap-10 lg:pt-10 ${showSidebar ? 'lg:flex-row' : ''}`}
+					>
+						{/* Sidebar */}
+						{showSidebar && (
+							<>
+								{/* Desktop Sidebar */}
+								<div className="hidden lg:block">
+									<ProfileSidebar
+										navigationItems={navigationItems}
+									/>
+								</div>
+
+								{/* Mobile Navigation */}
+								<div className="block lg:hidden">
+									<MobileProfileNavigation
+										navigationItems={navigationItems}
+									/>
+								</div>
+							</>
+						)}
+
+						{/* Main Content */}
+						<div className="flex-1 space-y-6 lg:space-y-10">
+							{children}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
