@@ -103,8 +103,6 @@ export function useEditProfile(authRole: AuthRole | null) {
 					context.previousProfile,
 				);
 			}
-
-			console.error('Failed to update profile:', error);
 		},
 	});
 }
