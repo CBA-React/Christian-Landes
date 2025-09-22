@@ -15,9 +15,6 @@ function HeaderProfile(): JSX.Element {
 	const profile = useAdminProfile();
 	return (
 		<div className="hidden w-full max-w-[1388px] min-[640px]:block">
-			<Link href="/" className="absolute top-4 left-[26px] z-50">
-				<Logo />
-			</Link>
 			<div className="flex w-full items-center justify-end pr-[31px] pl-[320px]">
 				<div className="flex items-center gap-3">
 					{profile && (
@@ -49,8 +46,11 @@ export default function AdminLayout({
 	return (
 		<AdminProfileProvider>
 			<div className="h-[100vh] bg-neutral-100 text-neutral-900">
-				<header className="fixed z-30 flex h-[64px] w-full flex-row items-center justify-center border-b border-[#D5D5D5] bg-white min-[640px]:h-[70px] min-[640px]:justify-end">
-					<Link href="/" className="min-[640px]:hidden">
+				<header className="fixed z-100 flex h-[64px] w-full flex-row items-center justify-center border-b border-[#D5D5D5] bg-white min-[640px]:h-[70px] min-[640px]:justify-end">
+					<Link
+						href="/"
+						className="min-[640px]:absolute min-[640px]:top-4 min-[640px]:left-[26px] min-[640px]:z-110"
+					>
 						<Logo />
 					</Link>
 					<HeaderProfile />
