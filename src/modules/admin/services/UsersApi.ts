@@ -10,7 +10,7 @@ export type ApiUser = {
 	role: UserRole;
 	created_at: string;
 	logo: { url: string } | null;
-	// status?: 'blocked' | 'unblocked';
+	block?: boolean;
 };
 
 export type UsersResponse = {
@@ -18,6 +18,19 @@ export type UsersResponse = {
 	page?: number;
 	perPage?: number;
 	total?: number;
+};
+
+export type AddUserPayload = {
+	full_name: string;
+	email: string;
+	phone?: string;
+	location?: string;
+	password: string;
+	google_id?: string;
+	facebook_id?: string;
+	apple_id?: string;
+	windows_id?: string;
+	role: UserRole;
 };
 
 export class UsersApi {
@@ -43,6 +56,14 @@ export class UsersApi {
 			sort ? `&sort=${sort}&order=${order}` : ''
 		}`;
 		const res = await axiosInstance.get<UsersResponse>(url);
+		return res.data;
+	}
+
+	static async addUser(payload: AddUserPayload): Promise<ApiUser> {
+		const res = await axiosInstance.post<ApiUser>(
+			'/admin/users/addUser',
+			payload,
+		);
 		return res.data;
 	}
 

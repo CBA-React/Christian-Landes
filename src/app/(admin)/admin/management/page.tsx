@@ -2,6 +2,7 @@
 
 import { JSX, useEffect, useMemo, useState } from 'react';
 
+import { AddUserModal } from '@/modules/admin/components/AddUserModal';
 import { ApiUser, UsersApi } from '@/modules/admin/services/UsersApi';
 
 type RoleNum = 1 | 2 | 3;
@@ -32,6 +33,8 @@ export default function ManagementPage(): JSX.Element {
 	const [perPage, setPerPage] = useState(10);
 	const [total, setTotal] = useState<number | undefined>(undefined);
 
+	const [addOpen, setAddOpen] = useState(false);
+
 	useEffect(() => {
 		let ignore = false;
 		setLoading(true);
@@ -57,7 +60,9 @@ export default function ManagementPage(): JSX.Element {
 				cmp = (a.full_name || '').localeCompare(
 					b.full_name || '',
 					undefined,
-					{ sensitivity: 'base' },
+					{
+						sensitivity: 'base',
+					},
 				);
 			} else if (sort === 'role') {
 				cmp = (a.role ?? 0) - (b.role ?? 0);
@@ -81,7 +86,10 @@ export default function ManagementPage(): JSX.Element {
 				<h1 className="font-chalet-1960 text-[28px] font-medium min-[680px]:text-[32px]">
 					Management
 				</h1>
-				<button className="font-chalet-1960 w-full min-w-[186px] rounded-full bg-[#003BFF] px-6 py-3 text-base font-medium text-white shadow-sm hover:opacity-90 min-[670px]:max-w-[186px]">
+				<button
+					onClick={() => setAddOpen(true)}
+					className="font-chalet-1960 w-full min-w-[186px] rounded-full bg-[#003BFF] px-6 py-3 text-base font-medium text-white shadow-sm hover:opacity-90 min-[670px]:max-w-[186px]"
+				>
 					Add New User <span className="ml-1">＋</span>
 				</button>
 			</div>
@@ -282,23 +290,19 @@ export default function ManagementPage(): JSX.Element {
 										<td className="px-4 py-4 whitespace-nowrap">
 											<span
 												className={
-													(u.status ??
-														'unblocked') ===
-													'blocked'
+													(u.block ?? false) === true
 														? 'text-orange-500'
 														: 'text-emerald-600'
 												}
 											>
-												{(u.status ?? 'unblocked') ===
-												'blocked'
+												{(u.block ?? false) === true
 													? 'Blocked'
 													: 'Unblocked'}
 											</span>
 										</td>
 										<td className="px-4 py-4">
 											<div className="flex items-center gap-2 whitespace-nowrap">
-												{(u.status ?? 'unblocked') ===
-												'blocked' ? (
+												{(u.block ?? false) === true ? (
 													<button
 														onClick={() =>
 															UsersApi.toggleBlock(
@@ -311,7 +315,7 @@ export default function ManagementPage(): JSX.Element {
 																			u.id
 																				? {
 																						...y,
-																						status: 'unblocked',
+																						block: false,
 																					}
 																				: y,
 																	),
@@ -336,7 +340,7 @@ export default function ManagementPage(): JSX.Element {
 																			u.id
 																				? {
 																						...y,
-																						status: 'blocked',
+																						block: true,
 																					}
 																				: y,
 																	),
@@ -408,6 +412,13 @@ export default function ManagementPage(): JSX.Element {
 					Next
 				</button>
 			</div>
+			<AddUserModal
+				open={addOpen}
+				onClose={() => setAddOpen(false)}
+				onCreated={(u) => {
+					setUsers((prev) => [u, ...prev]);
+				}}
+			/>
 		</div>
 	);
 }
