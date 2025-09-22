@@ -1,11 +1,11 @@
 import { axiosInstance } from '@/shared/lib/axiosInstance';
 import { AuthRole } from '@/shared/lib/roleMapper';
+import { API_ENDPOINTS } from '../constants/profile';
 import type {
 	ApiProfileData,
-	ProfileData,
 	ApiSpecialityItem,
+	ProfileData,
 } from '../types/profile';
-import { API_ENDPOINTS } from '../constants/profile';
 
 export class ProfileApi {
 	private static getEndpoint(authRole: AuthRole): string {

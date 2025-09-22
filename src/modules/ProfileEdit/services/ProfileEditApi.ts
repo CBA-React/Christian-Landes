@@ -33,6 +33,15 @@ export class ProfileEditApi {
 			created_at: string;
 		},
 	): UpdateProfilePayload {
+		const logoData = uploadedFile
+			? {
+					id: uploadedFile.id,
+					url: uploadedFile.url,
+					type: uploadedFile.type,
+					created_at: uploadedFile.created_at,
+				}
+			: null;
+
 		return {
 			id: userId,
 			full_name: formData.fullName,
@@ -46,9 +55,10 @@ export class ProfileEditApi {
 			speciality: (formData.specialities || []).map((value) => ({
 				value,
 			})),
-			logo: uploadedFile || {},
+			logo: logoData,
 		};
 	}
+
 	static transformToFormFormat(
 		apiData: ApiProfileData,
 	): UpdateProfileFormData {

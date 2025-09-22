@@ -38,10 +38,15 @@ export const DashboardGraph = ({
 
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const defaultIndex = new Date().getMonth();
-	const idx = activeIndex ?? defaultIndex;
+	const idx =
+		activeIndex ??
+		Math.min(defaultIndex, Math.max(0, revenueData.length - 1));
+
+	const barSize = 28;
+	const chartWidth = 690;
 
 	return (
-		<div className="max-w-[747px] rounded-[16px] bg-white p-6 shadow-sm">
+		<div className="max-w-[747px] min-w-[335px] rounded-[16px] bg-white p-6 shadow-sm">
 			<div className="mb-6 flex items-center justify-between">
 				<div>
 					<h3 className="font-chalet-1960 text-[24px] font-medium text-[#242424]">
@@ -56,37 +61,49 @@ export const DashboardGraph = ({
 				</div>
 			</div>
 
-			<div className="h-[300px] w-full">
-				<ResponsiveContainer width="100%" height="100%">
-					<BarChart
-						data={revenueData}
-						barSize={28}
-						onMouseMove={(state: any) => {
-							if (typeof state?.activeTooltipIndex === 'number') {
-								setActiveIndex(state.activeTooltipIndex);
-							}
-						}}
-						onMouseLeave={() => setActiveIndex(null)}
-					>
-						<CartesianGrid strokeDasharray="3 3" vertical={false} />
-						<XAxis dataKey="name" />
-						<YAxis />
-						<Tooltip
-							formatter={(v: any) => [
-								formatMoney(Number(v)),
-								'Total',
-							]}
-							labelFormatter={(label: any) => `${label} ${year}`}
-							cursor={{ fillOpacity: 0.08 }}
-						/>
-						<Bar
-							dataKey="amount"
-							fill="#003BFF"
-							radius={[6, 6, 0, 0]}
-						/>
-					</BarChart>
-				</ResponsiveContainer>
+			<div className="w-full overflow-x-auto">
+				<div style={{ width: chartWidth, height: 300 }}>
+					<ResponsiveContainer width="100%" height="100%">
+						<BarChart
+							data={revenueData}
+							barSize={barSize}
+							onMouseMove={(state: any) => {
+								if (
+									typeof state?.activeTooltipIndex ===
+									'number'
+								) {
+									setActiveIndex(state.activeTooltipIndex);
+								}
+							}}
+							onMouseLeave={() => setActiveIndex(null)}
+						>
+							<CartesianGrid
+								strokeDasharray="3 3"
+								vertical={false}
+							/>
+							<XAxis dataKey="name" />
+							<YAxis />
+							<Tooltip
+								formatter={(v: any) => [
+									formatMoney(Number(v)),
+									'Total',
+								]}
+								labelFormatter={(label: any) =>
+									`${label} ${year}`
+								}
+								cursor={{ fillOpacity: 0.08 }}
+							/>
+							<Bar
+								dataKey="amount"
+								fill="#003BFF"
+								radius={[6, 6, 0, 0]}
+							/>
+						</BarChart>
+					</ResponsiveContainer>
+				</div>
 			</div>
 		</div>
 	);
 };
+
+//640
