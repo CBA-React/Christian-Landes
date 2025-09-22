@@ -88,7 +88,7 @@ export default function ManagementPage(): JSX.Element {
 				</h1>
 				<button
 					onClick={() => setAddOpen(true)}
-					className="font-chalet-1960 w-full min-w-[186px] rounded-full bg-[#003BFF] px-6 py-3 text-base font-medium text-white shadow-sm hover:opacity-90 min-[670px]:max-w-[186px]"
+					className="font-chalet-1960 w-full min-w-[186px] cursor-pointer rounded-full bg-[#003BFF] px-6 py-3 text-base font-medium text-white shadow-sm hover:opacity-90 min-[670px]:max-w-[186px]"
 				>
 					Add New User <span className="ml-1">＋</span>
 				</button>
