@@ -57,34 +57,48 @@ export default function AdminDashboardPage(): JSX.Element {
 
 	return (
 		<div className="flex flex-col gap-5 xl:gap-[31px]">
-			<div className="flex flex-nowrap gap-3 xl:gap-[31px]">
-				<StatCardWithControls
-					title="NEW CLIENTS"
-					fetcher={({ month, year }) =>
-						DashboardApi.getCountUserWithRole({
-							month,
-							year,
-							role: ROLE_CLIENT,
-						})
-					}
-				/>
-				<StatCardWithControls
-					title="NEW CONTRACTORS"
-					fetcher={({ month, year }) =>
-						DashboardApi.getCountUserWithRole({
-							month,
-							year,
-							role: ROLE_CONTRACTOR,
-						})
-					}
-				/>
-				<StatCardWithControls
-					title="ACTIVE PROJECTS"
-					fetcher={({ month, year }) =>
-						DashboardApi.getCountActiveProjects({ month, year })
-					}
-				/>
+			<div className="relative -mx-2 overflow-x-auto px-2">
+				<div className="flex snap-x snap-mandatory flex-nowrap gap-3 pb-1 xl:gap-[31px]">
+					<div className="min-w-[260px] shrink-0 snap-start">
+						<StatCardWithControls
+							title="NEW CLIENTS"
+							fetcher={({ month, year }) =>
+								DashboardApi.getCountUserWithRole({
+									month,
+									year,
+									role: ROLE_CLIENT,
+								})
+							}
+						/>
+					</div>
+
+					<div className="min-w-[260px] shrink-0 snap-start">
+						<StatCardWithControls
+							title="NEW CONTRACTORS"
+							fetcher={({ month, year }) =>
+								DashboardApi.getCountUserWithRole({
+									month,
+									year,
+									role: ROLE_CONTRACTOR,
+								})
+							}
+						/>
+					</div>
+
+					<div className="min-w-[260px] shrink-0 snap-start">
+						<StatCardWithControls
+							title="ACTIVE PROJECTS"
+							fetcher={({ month, year }) =>
+								DashboardApi.getCountActiveProjects({
+									month,
+									year,
+								})
+							}
+						/>
+					</div>
+				</div>
 			</div>
+
 			<DashboardGraph
 				revenue={revenue}
 				revenueData={revenueData}

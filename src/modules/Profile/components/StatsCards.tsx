@@ -1,7 +1,7 @@
 'use client';
 
-import useEmblaCarousel from 'embla-carousel-react';
 import { JSX } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
 
 interface StatItem {
 	label: string;
