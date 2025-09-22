@@ -1,76 +1,60 @@
 import { ReactNode } from 'react';
 
-import KitchenIcon from '../../../public/icons/categories/categories-handyperson-icon.svg';
-import BathroomIcon from '../../../public/icons/categories/categories-bathroom-icon.svg';
-import RoofingIcon from '../../../public/icons/categories/categories-roofing-icon.svg';
-import ElectricalIcon from '../../../public/icons/categories/categories-electrical-icon.svg';
-import PlumbingIcon from '../../../public/icons/categories/categories-plumbing-icon.svg';
-import LandscapingIcon from '../../../public/icons/categories/categories-landscaping-icon.svg';
-import PaintingIcon from '../../../public/icons/categories/categories-painting-icon.svg';
-import RenovationIcon from '../../../public/icons/categories/categories-renovation-icon.svg';
-import RemodelingIcon from '../../../public/icons/categories/categories-remodeling-icon.svg';
+import KitchenIcon from '../../../public/icons/profile/project-categories/categories-kitchen-icon.svg';
+import BathroomIcon from '../../../public/icons/profile/project-categories/categories-bathroom-icon.svg';
+import RoofingIcon from '../../../public/icons/profile/project-categories/categories-roofing-icon.svg';
+import RenovationIcon from '../../../public/icons/profile/project-categories/categories-renovation-icon.svg';
+import ElectricalIcon from '../../../public/icons/profile/project-categories/categories-electrical-icon.svg';
 
 export interface ProjectCategory {
 	id: string;
 	name: string;
-	icon: ReactNode;
 	slug: string;
+	icon: ReactNode;
 }
 
 export const PROJECT_CATEGORIES: ProjectCategory[] = [
 	{
-		id: 'kitchen-remodeling',
-		name: 'Kitchen Remodeling',
-		slug: 'kitchen-remodeling',
-		icon: <KitchenIcon />,
+		id: 'renovation',
+		name: 'Renovation',
+		slug: 'Renovation',
+		icon: <RenovationIcon className="h-5 w-5 flex-shrink-0" />,
+	},
+	{
+		id: 'electrical-plumbing',
+		name: 'Electrical Plumbing',
+		slug: 'Electrical Plumbing',
+		icon: <ElectricalIcon className="h-5 w-5 flex-shrink-0" />,
 	},
 	{
 		id: 'bathroom',
 		name: 'Bathroom',
-		slug: 'bathroom',
-		icon: <BathroomIcon />,
+		slug: 'Bathroom',
+		icon: <BathroomIcon className="h-5 w-5 flex-shrink-0" />,
 	},
 	{
-		id: 'roofing',
-		name: 'Roofing',
-		slug: 'roofing',
-		icon: <RoofingIcon />,
+		id: 'kitchen',
+		name: 'Kitchen',
+		slug: 'Kitchen',
+		icon: <KitchenIcon className="h-5 w-5 flex-shrink-0" />,
+	},
+	{
+		id: 'roof-renovation',
+		name: 'Roof Renovation',
+		slug: 'Roof-renovation',
+		icon: <RoofingIcon className="h-5 w-5 flex-shrink-0" />,
+	},
+	{
+		id: 'electrical',
+		name: 'Electrical',
+		slug: 'Electrical',
+		icon: <ElectricalIcon className="h-5 w-5 flex-shrink-0" />,
 	},
 	{
 		id: 'remodeling',
 		name: 'Remodeling',
-		slug: 'remodeling',
-		icon: <RemodelingIcon />,
-	},
-	{
-		id: 'electrical-work',
-		name: 'Electrical Work',
-		slug: 'electrical-work',
-		icon: <ElectricalIcon />,
-	},
-	{
-		id: 'plumbing',
-		name: 'Plumbing',
-		slug: 'plumbing',
-		icon: <PlumbingIcon />,
-	},
-	{
-		id: 'landscaping',
-		name: 'Landscaping',
-		slug: 'landscaping',
-		icon: <LandscapingIcon />,
-	},
-	{
-		id: 'painting',
-		name: 'Painting',
-		slug: 'painting',
-		icon: <PaintingIcon />,
-	},
-	{
-		id: 'renovation',
-		name: 'Renovation',
-		slug: 'renovation',
-		icon: <RenovationIcon />,
+		slug: 'Remodeling',
+		icon: <RenovationIcon className="h-5 w-5 flex-shrink-0" />,
 	},
 ];
 
@@ -78,22 +62,38 @@ export const getCategoryById = (id: string): ProjectCategory | undefined => {
 	return PROJECT_CATEGORIES.find((category) => category.id === id);
 };
 
-export const getCategoryBySlug = (
-	slug: string,
+export const getCategoryByName = (
+	name: string,
 ): ProjectCategory | undefined => {
-	return PROJECT_CATEGORIES.find((category) => category.slug === slug);
+	return PROJECT_CATEGORIES.find(
+		(category) =>
+			category.name.toLowerCase() === name.toLowerCase() ||
+			category.slug.toLowerCase() === name.toLowerCase(),
+	);
+};
+
+export const getCategoryIcon = (categoryName: string): ReactNode | null => {
+	const category = getCategoryByName(categoryName);
+	return category?.icon || null;
+};
+
+const categoryMap = new Map<string, ProjectCategory>();
+PROJECT_CATEGORIES.forEach((category) => {
+	categoryMap.set(category.name.toLowerCase(), category);
+	categoryMap.set(category.slug.toLowerCase(), category);
+});
+
+export const getCategoryFromMap = (
+	name: string,
+): ProjectCategory | undefined => {
+	return categoryMap.get(name.toLowerCase());
 };
 
 export const getCategoryNames = (): string[] => {
 	return PROJECT_CATEGORIES.map((category) => category.name);
 };
 
-export const getCategorySlugs = (): string[] => {
-	return PROJECT_CATEGORIES.map((category) => category.slug);
-};
-
 export const CATEGORY_OPTIONS = PROJECT_CATEGORIES.map((category) => ({
-	value: category.slug,
 	label: category.name,
 	icon: category.icon,
 }));

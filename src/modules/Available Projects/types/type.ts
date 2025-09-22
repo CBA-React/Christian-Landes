@@ -8,7 +8,16 @@ export interface ApiProject {
 	preferred_start: string;
 	completion_window: string;
 	description: string;
-	images: string[];
+	images:
+		| [
+				{
+					id: number;
+					url: string;
+					type: string;
+					created_at: string;
+				},
+		  ]
+		| string[];
 	status: number;
 	created_at: string;
 }
@@ -40,6 +49,20 @@ export interface ProjectDisplayData {
 }
 
 export interface ProjectFilters {
+	page?: number;
+	perPage?: number;
+	location?: string;
+	date?: string;
+	budget?: {
+		from?: number | string;
+		to?: number | string;
+	};
+	bids?: string; 
+	search?: string;
+	category?: string;
+}
+
+export interface SimpleProjectFilters {
 	search?: string;
 	category?: string;
 	minBudget?: number;

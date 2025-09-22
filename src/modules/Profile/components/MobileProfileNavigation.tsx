@@ -34,13 +34,13 @@ export const MobileProfileNavigation = ({
 						>
 							<Link
 								href={`/profile/${item.id}`}
-								className={`flex items-center gap-2 px-1 pt-2 pb-3 text-sm font-medium whitespace-nowrap transition-colors ${
+								className={`flex items-center gap-2 pt-2 pb-3 text-sm font-medium whitespace-nowrap transition-colors ${
 									isActive
 										? 'border-b-1 border-[#242424] text-[#242424]'
 										: 'text-[#242424]/50 hover:text-[#242424]/70'
 								}`}
 							>
-								<div className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
+								<div className="flex flex-shrink-0 items-center justify-center">
 									{item.icon}
 								</div>
 								<span>{item.label}</span>

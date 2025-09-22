@@ -1,4 +1,3 @@
-
 export interface ApiProject {
 	id: number;
 	user_id: number;
@@ -9,7 +8,16 @@ export interface ApiProject {
 	preferred_start: string;
 	completion_window: string;
 	description: string;
-	images: string[];
+	images:
+		| [
+				{
+					id: number;
+					url: string;
+					type: string;
+					created_at: string;
+				},
+		  ]
+		| string[];
 	status: ProjectStatus;
 	created_at: string;
 	_count?: {

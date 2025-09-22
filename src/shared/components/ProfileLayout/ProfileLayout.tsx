@@ -57,7 +57,6 @@ export default function ProfileLayout({
 
 	return (
 		<div className={`min-h-screen bg-white ${className}`}>
-			{/* Header */}
 			{showHeader && profileData && (
 				<ProfileHeader profileData={profileData} />
 			)}
@@ -67,17 +66,14 @@ export default function ProfileLayout({
 					<div
 						className={`flex flex-col gap-6 pt-6 lg:gap-10 lg:pt-10 ${showSidebar ? 'lg:flex-row' : ''}`}
 					>
-						{/* Sidebar */}
 						{showSidebar && (
 							<>
-								{/* Desktop Sidebar */}
-								<div className="hidden lg:block">
+								<div className="hidden lg:block lg:w-[240px] lg:flex-shrink-0">
 									<ProfileSidebar
 										navigationItems={navigationItems}
 									/>
 								</div>
 
-								{/* Mobile Navigation */}
 								<div className="block lg:hidden">
 									<MobileProfileNavigation
 										navigationItems={navigationItems}
@@ -86,8 +82,9 @@ export default function ProfileLayout({
 							</>
 						)}
 
-						{/* Main Content */}
-						<div className="flex-1 space-y-6 lg:space-y-10">
+						<div
+							className={`w-full min-w-0 flex-1 space-y-6 lg:space-y-10 ${showSidebar ? 'lg:max-w-[calc(100%-240px-2.5rem)]' : 'lg:max-w-full'} overflow-hidden`}
+						>
 							{children}
 						</div>
 					</div>

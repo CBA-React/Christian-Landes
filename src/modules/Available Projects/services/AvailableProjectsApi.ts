@@ -4,39 +4,67 @@ import type {
 	ApiProject,
 	ProjectDisplayData,
 	ProjectFilters,
+	SimpleProjectFilters,
 } from '../types/type';
 
 export class ProjectsApi {
 	static async getProjects(params: {
 		page?: number;
 		perPage?: number;
-		filters?: ProjectFilters;
+		filters?: SimpleProjectFilters;
 	}): Promise<ProjectsResponse> {
-		const { page = 1, perPage = 6, filters } = params;
+		const { page = 1, perPage = 6, filters = {} } = params;
 
-		const queryParams = new URLSearchParams({
-			page: page.toString(),
-			perPage: perPage.toString(),
-		});
-
-		if (filters?.search) queryParams.append('search', filters.search);
-		if (filters?.category) queryParams.append('category', filters.category);
-		if (filters?.minBudget)
-			queryParams.append('minBudget', filters.minBudget.toString());
-		if (filters?.maxBudget)
-			queryParams.append('maxBudget', filters.maxBudget.toString());
-		if (filters?.location) queryParams.append('location', filters.location);
-
-		const response = await axiosInstance.get<ProjectsResponse>(
-			`contractor/project/getProjects?${queryParams.toString()}`,
+		const hasFilters = Boolean(
+			(filters.category && filters.category) ||
+				(filters.search && filters.search) ||
+				(filters.minBudget && filters.minBudget > 0) ||
+				(filters.maxBudget && filters.maxBudget > 0) ||
+				(filters.location && filters.location),
 		);
 
-		return response.data;
+		try {
+			let response;
+
+			if (hasFilters) {
+				const requestBody: ProjectFilters = {
+					page,
+					perPage,
+					location: filters.location || '',
+					date: '',
+					budget: {
+						from: filters.minBudget || 0,
+						to: filters.maxBudget || 0,
+					},
+					bids: '',
+					search: filters.search || '',
+					category: filters.category || '',
+				};
+
+				response = await axiosInstance.post(
+					'contractor/project/getProjects',
+					requestBody,
+				);
+			} else {
+				const queryParams = `page=${page}&perPage=${perPage}`;
+				response = await axiosInstance.get(
+					`contractor/project/getProjects?${queryParams}`,
+				);
+			}
+
+			return response.data as ProjectsResponse;
+		} catch (error) {
+			throw error;
+		}
 	}
 
 	static transformProjectsForDisplay(
 		projects: ApiProject[],
 	): ProjectDisplayData[] {
+		if (!Array.isArray(projects)) {
+			return [];
+		}
+
 		return projects.map((project) => ({
 			id: project.id.toString(),
 			title: project.title,
@@ -47,8 +75,10 @@ export class ProjectsApi {
 			description: project.description,
 			images:
 				project.images?.length > 0
-					? project.images
-					: ['/images/project-placeholder.png'],
+					? project.images.map((img) =>
+							typeof img === 'string' ? img : img.url,
+						)
+					: ['/images/profile/project-placeholder.png'],
 			status: project.status === 1 ? 'active' : 'completed',
 			createdAt: project.created_at,
 			postedDate: this.formatDate(project.created_at),

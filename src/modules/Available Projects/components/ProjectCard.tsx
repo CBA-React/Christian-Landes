@@ -1,6 +1,8 @@
 import { JSX } from 'react';
 import Image from 'next/image';
 
+import { CategoryBadge } from './CategoryBadge';
+
 import ArrowUp from '../../../../public/icons/profile/arrow-up-large.svg';
 import Location from '../../../../public/icons/profile/location.svg';
 
@@ -33,64 +35,60 @@ export const ProjectCard = ({
 
 	return (
 		<div
-			className={`group relative cursor-pointer overflow-hidden ${className}`}
+			className={`group relative cursor-pointer ${className}`}
 			onClick={handleClick}
 		>
-			{/* Image Container */}
-			<div className="relative h-[200px] w-full overflow-hidden">
+			<div className="relative h-[225px] w-full md:h-[260px]">
 				<Image
 					src={imageUrl}
 					alt={title}
 					fill
-					className="object-cover transition-transform duration-300 group-hover:scale-105"
+					className="object-cover"
 					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 				/>
 
-				{/* Category Badge */}
-				<div className="absolute top-3 left-3">
-					<div className="flex items-center gap-2 rounded-md bg-white/90 px-3 py-1.5 backdrop-blur-sm">
-						{/* Kitchen Icon Placeholder - замени на свою иконку */}
-						<div className="h-4 w-4 rounded-sm bg-gray-400"></div>
-						<span className="text-sm font-medium text-gray-800">
-							{category}
-						</span>
-					</div>
+				<div className="absolute top-4.5 left-4.5">
+					<CategoryBadge
+						categoryName={category}
+						variant="default"
+						showIcon={true}
+					/>
 				</div>
 
-				{/* Arrow Icon */}
-				<div className="absolute top-3 right-3">
-					<div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-colors group-hover:bg-white/30">
+				<div className="absolute top-4.5 right-4.5">
+					<div className="flex h-8 w-8 items-center justify-center">
 						<ArrowUp />
 					</div>
 				</div>
 			</div>
 
-			{/* Content */}
-			<div className="p-4">
-				{/* Title */}
-				<h3 className="mb-2 text-[20px] font-semibold text-[#242424]">
+			<div className="pt-3">
+				<h3 className="font-chalet-1960 line-clamp-2 text-[20px] leading-[155%] font-medium text-[#242424]">
 					{title}
 				</h3>
 
-				{/* Location */}
-				<div className="mb-3 flex items-center gap-2">
+				<div className="flex items-center gap-2">
 					<Location />
-					<span className="text-[16px] text-[#242424]">
+					<span className="font-chalet-1960 truncate text-[16px] text-[#242424]">
 						{location}
 					</span>
 				</div>
 
-				{/* Description */}
-				<p className="mb-3 line-clamp-1 text-[16px] text-[#242424]/50">
+				<p className="font-chalet-1960 line-clamp-2 text-[16px] leading-[155%] text-[#242424]/50">
 					{description}
 				</p>
 
-				{/* Price */}
-				<div className="flex items-center gap-1">
-					<span className="text-[20px] text-[#242424]">{price}</span>
-					<span className="text-[16px] text-blue-600">
-						open to bids
-					</span>
+				<hr className="my-1 border-t border-[#242424]/15 md:my-3" />
+
+				<div className="flex items-center justify-between">
+					<div className="flex items-end gap-2">
+						<span className="font-chalet-1960 text-[20px] leading-[120%] font-medium text-[#242424]">
+							{price}
+						</span>
+						<span className="font-chalet-1960 text-[14px] font-medium text-blue-600">
+							open to bids
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
