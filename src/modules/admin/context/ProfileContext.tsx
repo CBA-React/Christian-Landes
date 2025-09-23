@@ -30,6 +30,7 @@ export function AdminProfileProvider({
 					full_name: string;
 					logo: { url: string } | null;
 				}>('/admin/profile');
+				console.log('Loaded admin profile', data);
 
 				if (cancel) return;
 				setProfile({
