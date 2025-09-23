@@ -1,15 +1,21 @@
 'use client';
 
-import { JSX, useState } from 'react';
+import { JSX, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { useAdminProfile } from '@/modules/admin/context/ProfileContext';
+import { logout } from '@/modules/auth/slices/authSlice';
+import { useAppDispatch, useAppSelector } from '@/shared/hooks/useStore';
+import { decodeJwt } from '@/shared/lib/decodeJwt';
+import { useOutsideClose } from '../hooks/useOutsideClose';
+import { UsersApi } from '../services/UsersApi';
+
+import { ConfirmActionModal } from './ConfirmActionModal';
 
 import DashboardIcon from 'public/admin-icons/dashboard.svg';
 import ManagementIcon from 'public/admin-icons/management.svg';
 import SettingsIcon from 'public/admin-icons/settings.svg';
-import { useOutsideClose } from '../hooks/useOutsideClose';
 
 type NavItem = {
 	href: string;
@@ -34,6 +40,22 @@ const AdminSidebar = (): JSX.Element => {
 
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useOutsideClose<HTMLDivElement>(() => setMenuOpen(false));
+	const [logoutOpen, setLogoutOpen] = useState(false);
+	const [deleteOpen, setDeleteOpen] = useState(false);
+
+	const dispatch = useAppDispatch();
+	const token = useAppSelector((s) => s.auth.token);
+
+	const currentUserId = useMemo(() => {
+		if (!token) return null;
+		try {
+			const payload = decodeJwt(token);
+			const raw = payload?.sub ?? payload?.user_id;
+			return raw != null ? Number(raw) : null;
+		} catch {
+			return null;
+		}
+	}, [token]);
 
 	/* Desktop */
 	return (
@@ -218,6 +240,7 @@ const AdminSidebar = (): JSX.Element => {
 										role="menuitem"
 										onClick={() => {
 											setMenuOpen(false);
+											setLogoutOpen(true);
 										}}
 										className="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100"
 									>
@@ -227,6 +250,7 @@ const AdminSidebar = (): JSX.Element => {
 										role="menuitem"
 										onClick={() => {
 											setMenuOpen(false);
+											setDeleteOpen(true);
 										}}
 										className="block w-full px-4 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
 									>
@@ -238,6 +262,29 @@ const AdminSidebar = (): JSX.Element => {
 					</div>
 				</div>
 			</aside>
+			<ConfirmActionModal
+				open={logoutOpen}
+				variant="logout"
+				onClose={() => setLogoutOpen(false)}
+				onConfirm={() => {
+					dispatch(logout());
+					window.location.href = '/login';
+				}}
+			/>
+			<ConfirmActionModal
+				open={deleteOpen}
+				variant="delete"
+				onClose={() => setDeleteOpen(false)}
+				onConfirm={async () => {
+					if (!currentUserId) return;
+					try {
+						await UsersApi.deleteUser(currentUserId);
+					} finally {
+						dispatch(logout());
+						window.location.href = '/login';
+					}
+				}}
+			/>
 		</>
 	);
 };
