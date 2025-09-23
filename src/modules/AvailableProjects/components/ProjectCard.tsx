@@ -38,7 +38,7 @@ export const ProjectCard = ({
 			className={`group relative cursor-pointer ${className}`}
 			onClick={handleClick}
 		>
-			<div className="relative h-[225px] w-full md:h-[260px]">
+			<div className="relative h-[225px] w-full sm:h-[250px] md:h-[260px]">
 				<Image
 					src={imageUrl}
 					alt={title}
