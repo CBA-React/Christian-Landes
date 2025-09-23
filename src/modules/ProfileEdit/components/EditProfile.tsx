@@ -75,13 +75,13 @@ export const EditProfile = ({
 					/>
 
 					<div className="w-full flex-1 space-y-4 md:space-y-5">
-						<div className="mb-6 text-left md:mb-8">
-							<h2 className="mb-2 text-[36px] leading-[100%] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
+						<div className="mb-6 text-left lg:mb-7">
+							<h2 className="font-chalet-1960 mb-2 text-[36px] leading-[100%] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
 								{isContractor
 									? 'Business Information'
 									: 'Account Information'}
 							</h2>
-							<p className="text-sm text-[#242424]/50 md:text-base lg:text-[16px]">
+							<p className="font-chalet-1960 text-[16px] text-[#242424]/50">
 								{isContractor
 									? 'Your public business details shown to homeowners'
 									: 'Your account information and preferences'}

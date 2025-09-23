@@ -28,7 +28,7 @@ export default function EditProfilePage(): JSX.Element {
 				<div className="flex justify-center px-5">
 					<section className="w-full max-w-[1240px]">
 						<div className="mb-6 text-center lg:text-left">
-							<h1 className="font-chalet-1960 mb-2 text-[36px] leading-[100%] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
+							<h1 className="font-chalet-1960 mb-3 text-[36px] leading-[100%] font-medium tracking-[-1px] text-[#242424] lg:mb-1.5 lg:text-[40px]">
 								Edit Profile
 							</h1>
 							<p className="text-[16px] leading-[100%] text-[#242424]">
@@ -40,7 +40,7 @@ export default function EditProfilePage(): JSX.Element {
 				</div>
 			</div>
 
-			<div className="flex justify-center px-5 py-14 lg:py-10 pb-10 lg:pb-30">
+			<div className="flex justify-center px-5 py-14 pb-10 lg:py-10 lg:pb-30">
 				<div className="w-full max-w-[1240px]">
 					<EditProfile
 						profileData={profileData}
