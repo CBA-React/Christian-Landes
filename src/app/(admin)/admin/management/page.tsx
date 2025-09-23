@@ -412,13 +412,7 @@ export default function ManagementPage(): JSX.Element {
 					Next
 				</button>
 			</div>
-			<AddUserModal
-				open={addOpen}
-				onClose={() => setAddOpen(false)}
-				onCreated={(u) => {
-					setUsers((prev) => [u, ...prev]);
-				}}
-			/>
+			<AddUserModal open={addOpen} onClose={() => setAddOpen(false)} />
 		</div>
 	);
 }

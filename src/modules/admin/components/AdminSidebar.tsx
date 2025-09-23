@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX } from 'react';
+import { JSX, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -9,6 +9,7 @@ import { useAdminProfile } from '@/modules/admin/context/ProfileContext';
 import DashboardIcon from 'public/admin-icons/dashboard.svg';
 import ManagementIcon from 'public/admin-icons/management.svg';
 import SettingsIcon from 'public/admin-icons/settings.svg';
+import { useOutsideClose } from '../hooks/useOutsideClose';
 
 type NavItem = {
 	href: string;
@@ -30,6 +31,9 @@ const AdminSidebar = (): JSX.Element => {
 		if (href === '/admin') return pathname === '/admin';
 		return pathname === href || pathname.startsWith(href + '/');
 	};
+
+	const [menuOpen, setMenuOpen] = useState(false);
+	const menuRef = useOutsideClose<HTMLDivElement>(() => setMenuOpen(false));
 
 	/* Desktop */
 	return (
@@ -186,20 +190,51 @@ const AdminSidebar = (): JSX.Element => {
 								);
 							})}
 						</ul>
-						<Link
-							href="/admin/profile"
-							className="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full ring-2 ring-white"
-							aria-label={profile?.name}
-							title={profile?.name}
-						>
-							<img
-								src={
-									profile?.avatar ??
-									'/images/Profile/mock-avatar.jpg'
-								}
-								alt={profile?.name ?? 'User'}
-							/>
-						</Link>
+						<div className="relative">
+							<button
+								type="button"
+								onClick={() => setMenuOpen((v) => !v)}
+								aria-haspopup="menu"
+								aria-expanded={menuOpen}
+								className="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full ring-2 ring-white"
+								title={profile?.name}
+							>
+								<img
+									src={
+										profile?.avatar ??
+										'/images/Profile/mock-avatar.jpg'
+									}
+									alt={profile?.name ?? 'User'}
+								/>
+							</button>
+
+							{menuOpen && (
+								<div
+									ref={menuRef}
+									role="menu"
+									className="absolute right-0 bottom-12 z-50 w-48 overflow-hidden rounded-xl border border-black/10 bg-white shadow-lg ring-1 ring-black/5"
+								>
+									<button
+										role="menuitem"
+										onClick={() => {
+											setMenuOpen(false);
+										}}
+										className="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100"
+									>
+										Log Out
+									</button>
+									<button
+										role="menuitem"
+										onClick={() => {
+											setMenuOpen(false);
+										}}
+										className="block w-full px-4 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
+									>
+										Delete Account
+									</button>
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
 			</aside>

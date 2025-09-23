@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, ReactNode } from 'react';
+import { JSX, ReactNode, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import AdminSidebar from '@/modules/admin/components/AdminSidebar';
@@ -8,11 +8,17 @@ import {
 	AdminProfileProvider,
 	useAdminProfile,
 } from '@/modules/admin/context/ProfileContext';
+import { useOutsideClose } from '@/modules/admin/hooks/useOutsideClose';
 
+import More from 'public/admin-icons/more.svg';
 import Logo from 'public/logo-admin.svg';
 
 function HeaderProfile(): JSX.Element {
 	const profile = useAdminProfile();
+	const [open, setOpen] = useState(false);
+	const btnRef = useRef<HTMLButtonElement | null>(null);
+	const popoverRef = useOutsideClose<HTMLDivElement>(() => setOpen(false));
+
 	return (
 		<div className="hidden w-full max-w-[1388px] min-[640px]:block">
 			<div className="flex w-full items-center justify-end pr-[31px] pl-[320px]">
@@ -32,6 +38,46 @@ function HeaderProfile(): JSX.Element {
 							Admin
 						</div>
 					</div>
+					<button
+						ref={btnRef}
+						type="button"
+						aria-haspopup="menu"
+						aria-expanded={open}
+						onClick={() => setOpen((v) => !v)}
+						className="cursor-pointer transition-transform outline-none"
+						title="More"
+					>
+						<More
+							className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+						/>
+					</button>
+					{open && (
+						<div
+							ref={popoverRef}
+							role="menu"
+							aria-label="Profile menu"
+							className="absolute top-11 right-0 z-50 w-44 overflow-hidden rounded-xl border border-black/10 bg-white shadow-lg ring-1 ring-black/5"
+						>
+							<button
+								role="menuitem"
+								onClick={() => {
+									setOpen(false);
+								}}
+								className="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100"
+							>
+								Log Out
+							</button>
+							<button
+								role="menuitem"
+								onClick={() => {
+									setOpen(false);
+								}}
+								className="block w-full px-4 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
+							>
+								Delete Account
+							</button>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
@@ -45,7 +91,7 @@ export default function AdminLayout({
 }): JSX.Element {
 	return (
 		<AdminProfileProvider>
-			<div className="h-[100vh] bg-neutral-100 text-neutral-900">
+			<div className="h-[100%] bg-neutral-100 text-neutral-900">
 				<header className="fixed z-100 flex h-[64px] w-full flex-row items-center justify-center border-b border-[#D5D5D5] bg-white min-[640px]:h-[70px] min-[640px]:justify-end">
 					<Link
 						href="/"
