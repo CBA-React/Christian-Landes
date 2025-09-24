@@ -3,19 +3,16 @@
 
 import { JSX, useState, useRef, useEffect, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
+import {
+	FILTER_STATUS_OPTIONS,
+	STATUS_CONFIG,
+} from '@/shared/constants/requestStatus';
 
 import AllIcon from '../../../../public/icons/profile/project-categories/all.svg';
 import FilterIcon from '../../../../public/icons/profile/project-categories/filters.svg';
 import ChevronRightIcon from '../../../../public/icons/profile/project-categories/chevron-right-small.svg';
 import ChevronLeft from '../../../../public/icons/profile/project-categories/chevron-left-small.svg';
 import { StatusFilterMobile } from './StatusFilterMobile';
-
-// Status options instead of PROJECT_CATEGORIES
-const STATUS_OPTIONS = [
-	{ id: 1, name: 'Open', slug: 'open' },
-	{ id: 2, name: 'Closed', slug: 'closed' },
-	{ id: 3, name: 'Auto-closed', slug: 'auto-closed' },
-];
 
 interface StatusFilterProps {
 	selectedStatus: string | null;
@@ -140,6 +137,7 @@ export const StatusFilter = ({
 	const renderDesktopLayout = () => {
 		return (
 			<>
+				{/* All button */}
 				<button
 					onClick={() => handleStatusClick(null)}
 					className={`flex h-11 flex-shrink-0 items-center justify-center gap-1.5 px-3 transition-all duration-200 ${
@@ -154,28 +152,7 @@ export const StatusFilter = ({
 					</span>
 				</button>
 
-				<button
-					onClick={() => handleScroll('left')}
-					disabled={!canScrollLeft}
-					className={`absolute left-20 z-30 flex h-8 w-8 flex-shrink-0 items-center justify-center${
-						canScrollLeft
-							? 'cursor-pointer opacity-100'
-							: 'pointer-events-none opacity-0'
-					}`}
-					aria-label="Scroll left"
-				>
-					<ChevronLeft className="h-4 w-4" />
-				</button>
-
 				<div className="relative !mr-10 flex-1 overflow-hidden">
-					<div
-						className={`pointer-events-none absolute top-0 bottom-0 left-0 z-20 w-45 bg-gradient-to-r from-white via-white/65 to-transparent transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'} `}
-					/>
-
-					<div
-						className={`pointer-events-none absolute top-0 right-0 bottom-0 z-20 w-45 bg-gradient-to-l from-white via-white/65 to-transparent transition-opacity duration-300 ${canScrollRight ? 'opacity-100' : 'opacity-0'} `}
-					/>
-
 					<div
 						ref={scrollContainerRef}
 						onScroll={handleContainerScroll}
@@ -185,14 +162,20 @@ export const StatusFilter = ({
 							msOverflowStyle: 'none',
 						}}
 					>
-						{STATUS_OPTIONS.map((status) => {
-							const isSelected = selectedStatus === status.slug;
+						{FILTER_STATUS_OPTIONS.filter(
+							(option) => option.id !== 'all',
+						).map((option) => {
+							const isSelected = selectedStatus === option.slug;
+							const statusConfig =
+								STATUS_CONFIG[
+									option.slug as keyof typeof STATUS_CONFIG
+								];
 
 							return (
 								<button
-									key={status.id}
+									key={option.id}
 									onClick={() =>
-										handleStatusClick(status.slug)
+										handleStatusClick(option.slug)
 									}
 									className={`flex h-11 flex-shrink-0 items-center justify-center gap-2 px-3 py-1.5 whitespace-nowrap transition-all duration-200 ${
 										isSelected
@@ -200,27 +183,21 @@ export const StatusFilter = ({
 											: 'bg-white text-[#242424] hover:bg-gray-50'
 									}`}
 								>
+									<span className="h-5 w-5 flex-shrink-0">
+										{typeof option.icon === 'string' ? (
+											<AllIcon className="h-5 w-5" />
+										) : (
+											option.icon || statusConfig?.icon
+										)}
+									</span>
 									<span className="font-chalet-1960 text-[16px] leading-[100%] font-medium">
-										{status.name}
+										{option.name}
 									</span>
 								</button>
 							);
 						})}
 					</div>
 				</div>
-
-				<button
-					onClick={() => handleScroll('right')}
-					disabled={!canScrollRight}
-					className={`absolute right-28 z-30 flex h-8 w-8 flex-shrink-0 items-center justify-center ${
-						canScrollRight
-							? 'cursor-pointer opacity-100'
-							: 'pointer-events-none opacity-0'
-					}`}
-					aria-label="Scroll right"
-				>
-					<ChevronRightIcon className="h-4 w-4" />
-				</button>
 
 				<button
 					onClick={onFiltersClick}

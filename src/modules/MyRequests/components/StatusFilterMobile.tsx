@@ -3,16 +3,13 @@
 
 import { JSX, useEffect } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
+import {
+	FILTER_STATUS_OPTIONS,
+	STATUS_CONFIG,
+} from '@/shared/constants/requestStatus';
 
 import AllIcon from '../../../../public/icons/profile/project-categories/all.svg';
 import FilterIcon from '../../../../public/icons/profile/project-categories/filters.svg';
-
-// Status options instead of PROJECT_CATEGORIES
-const STATUS_OPTIONS = [
-	{ id: 1, name: 'Open', slug: 'open' },
-	{ id: 2, name: 'Closed', slug: 'closed' },
-	{ id: 3, name: 'Auto-closed', slug: 'auto-closed' },
-];
 
 interface StatusFilterMobileProps {
 	selectedStatus: string | null;
@@ -54,6 +51,7 @@ export const StatusFilterMobile = ({
 				style={{ WebkitOverflowScrolling: 'touch' }}
 			>
 				<div className="embla__container flex gap-2">
+					{/* All button */}
 					<div
 						className="embla__slide flex-shrink-0"
 						style={{ flex: '0 0 auto' }}
@@ -73,24 +71,40 @@ export const StatusFilterMobile = ({
 						</button>
 					</div>
 
-					{STATUS_OPTIONS.map((status) => {
-						const isSelected = selectedStatus === status.slug;
+					{/* Status options from FILTER_STATUS_OPTIONS */}
+					{FILTER_STATUS_OPTIONS.filter(
+						(option) => option.id !== 'all',
+					).map((option) => {
+						const isSelected = selectedStatus === option.slug;
+						const statusConfig =
+							STATUS_CONFIG[
+								option.slug as keyof typeof STATUS_CONFIG
+							];
+
 						return (
 							<div
-								key={status.id}
+								key={option.id}
 								className="embla__slide flex-shrink-0"
 								style={{ flex: '0 0 auto' }}
 							>
 								<button
-									onClick={() => onStatusChange(status.slug)}
+									onClick={() => onStatusChange(option.slug)}
 									className={`flex h-11 items-center justify-center gap-2 px-3 py-1.5 whitespace-nowrap transition-all duration-200 ${
 										isSelected
-											? 'bg-[#D1FAE5] text-[#059669]'
+											? 'bg-[#CFEDD9] text-[#242424]'
 											: 'bg-white text-[#242424] hover:bg-gray-50'
 									}`}
 								>
+									{/* Используем иконку из конфигурации */}
+									<span className="h-5 w-5 flex-shrink-0">
+										{typeof option.icon === 'string' ? (
+											<AllIcon className="h-5 w-5" /> // fallback для 'grid'
+										) : (
+											option.icon || statusConfig?.icon
+										)}
+									</span>
 									<span className="font-chalet-1960 text-[16px] font-medium">
-										{status.name}
+										{option.name}
 									</span>
 								</button>
 							</div>

@@ -1,7 +1,11 @@
-// modules/MyRequests/components/RequestCard.tsx
 import { JSX } from 'react';
 import Image from 'next/image';
 import { RequestDisplayData } from '../type';
+import {
+	STATUS_CONFIG,
+	REQUEST_STATUSES,
+} from '@/shared/constants/requestStatus';
+import Separator from '../../../../public/icons/profile/separator.svg';
 
 import Location from '../../../../public/icons/profile/location.svg';
 
@@ -39,168 +43,119 @@ export const RequestCard = ({
 		onCloseRequest?.(id);
 	};
 
-	const getStatusBadgeStyles = () => {
-		switch (statusBadge.variant) {
-			case 'open':
-				return 'bg-white text-[#242424] border border-gray-200';
-			case 'closed':
-				return 'bg-gray-600 text-white';
-			case 'auto-closed':
-				return 'bg-orange-500 text-white';
-			default:
-				return 'bg-gray-600 text-white';
-		}
-	};
-
-	const getStatusIcon = () => {
-		switch (statusBadge.variant) {
-			case 'open':
-				return (
-					<svg
-						className="mr-1 h-4 w-4"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M9 12l2 2 4-4"
-						/>
-					</svg>
-				);
-			case 'closed':
-				return (
-					<svg
-						className="mr-1 h-4 w-4"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M6 18L18 6M6 6l12 12"
-						/>
-					</svg>
-				);
-			case 'auto-closed':
-				return (
-					<svg
-						className="mr-1 h-4 w-4"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
-				);
-			default:
-				return null;
-		}
-	};
+	// Используем конфигурацию из requestStatus.tsx
+	const statusConfig =
+		STATUS_CONFIG[statusBadge.variant as keyof typeof STATUS_CONFIG];
+	const remainingDays = daysActive ? Math.max(0, 30 - daysActive) : 0;
 
 	return (
-		<div className={`${className}`}>
+		<div className={`overflow-hidden ${className}`}>
 			{/* Main card */}
 			<div className="cursor-pointer" onClick={handleClick}>
-				<div className="relative h-[280px] w-full">
+				<div className="relative h-[225px] w-full md:h-[260px]">
 					<Image
 						src={images[0]}
 						alt={title}
 						fill
-						className="rounded-lg object-cover"
+						className="object-cover"
 						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					/>
 
-					{/* Status Badge on image */}
-					<div className="absolute top-4 right-4">
+					{/* Status Badge on image using STATUS_CONFIG */}
+					<div className="absolute top-3 right-3">
 						<div
-							className={`flex items-center rounded-md px-3 py-1 text-sm font-medium ${getStatusBadgeStyles()}`}
+							className={`flex items-center justify-center px-3.5 py-1.5 text-[14px] ${statusConfig?.bgColor} ${statusConfig?.textColor}`}
 						>
-							{getStatusIcon()}
-							{statusBadge.text}
+							{statusConfig?.icon && (
+								<span className="mr-1.5">
+									{statusConfig.icon}
+								</span>
+							)}
+							{statusConfig?.label || statusBadge.text}
 						</div>
 					</div>
 				</div>
 
 				{/* Card content */}
-				<div className="pt-4">
-					<h3 className="mb-2 line-clamp-1 text-[20px] font-medium text-[#242424]">
+				<div className="pt-3">
+					<h3 className="font-chalet-1960 line-clamp-2 text-[20px] leading-[155%] font-medium text-[#242424]">
 						{title}
 					</h3>
 
-					<div className="mb-4 flex items-center gap-1 text-[#242424]">
-						<Location className="h-4 w-4" />
-						<span className="text-[16px]">{location}</span>
+					<div className="flex items-center gap-2">
+						<Location />
+						<span className="font-chalet-1960 truncate text-[16px] text-[#242424]">
+							{location}
+						</span>
+					</div>
+					<hr className="my-1 border-t border-[#242424]/15 md:my-3" />
+
+					{/* Meta information */}
+					<div className="flex flex-col items-start text-[16px] sm:flex-row sm:flex-wrap sm:items-center">
+						<span>
+							Bids:{' '}
+							<span className="font-semibold text-[#242424]">
+								{bidsCount}
+							</span>
+							<Separator className="mx-2 hidden sm:inline" />
+						</span>
+						<span>
+							Posted:{' '}
+							<span className="font-semibold text-[#003BFF]">
+								{postedDate}
+							</span>
+							<Separator className="mx-2 hidden sm:inline" />
+						</span>
+						<span>
+							Budget:{' '}
+							<span className="font-semibold text-[#003BFF]">
+								{budgetFormatted}
+							</span>
+						</span>
 					</div>
 				</div>
 			</div>
 
-			{/* Meta information */}
-			<div className="mb-3 flex items-center justify-between text-sm text-[#242424]">
-				<span>
-					Bids: <strong>{bidsCount}</strong>
-				</span>
-				<span>
-					Posted:{' '}
-					<strong className="text-blue-600">{postedDate}</strong>
-				</span>
-				<span>
-					Budget:{' '}
-					<strong className="text-blue-600">{budgetFormatted}</strong>
-				</span>
-			</div>
-
-			{/* Action buttons based on status */}
-			{statusBadge.variant === 'open' && (
-				<button
-					onClick={handleCloseRequest}
-					className="w-full rounded-md bg-blue-600 py-3 font-medium text-white transition-colors hover:bg-blue-700"
-				>
-					Close Request
-				</button>
-			)}
-
-			{statusBadge.variant === 'open' && daysActive && (
-				<div className="mt-2 text-center text-sm text-gray-500">
-					Auto-closes in {Math.max(0, 30 - daysActive)} days
-				</div>
-			)}
-
-			{statusBadge.variant === 'closed' && (
-				<div className="py-3 text-center text-gray-600">
-					<strong>Status:</strong> Closed By Client
-				</div>
-			)}
-
-			{statusBadge.variant === 'auto-closed' && (
-				<div className="py-3 text-center text-orange-600">
-					<div className="flex items-center justify-center">
-						<svg
-							className="mr-1 h-4 w-4"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
+			<div className="mt-3">
+				{statusBadge.variant === REQUEST_STATUSES.OPEN && (
+					<>
+						<button
+							onClick={handleCloseRequest}
+							className="w-full bg-[#003BFF] px-4 py-2.5 text-[16px] text-white"
 						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"
-							/>
-						</svg>
-						<strong>Auto-closed after 30 days</strong>
+							Close Request
+						</button>
+						{daysActive && (
+							<div className="mt-2 text-center text-[14px] text-[#003BFF]">
+								Auto-closes in {remainingDays} days
+							</div>
+						)}
+					</>
+				)}
+
+				{statusBadge.variant === REQUEST_STATUSES.CLOSED && (
+					<div className="pt-6 text-center">
+						<span className="text-[16px] text-[#242424]/50">
+							<span className="text-[16px] text-[#003BFF]">
+								Status:
+							</span>{' '}
+							{statusConfig?.description || 'Closed by client'}
+						</span>
 					</div>
-				</div>
-			)}
+				)}
+
+				{statusBadge.variant === REQUEST_STATUSES.AUTO_CLOSED && (
+					<div className="py-2.5">
+						<div className="flex items-center justify-center text-[#F97316]">
+							<span className="mr-1.5">{statusConfig?.icon}</span>
+							<span className="text-[16px]">
+								{statusConfig?.description ||
+									'Auto-closed after 30 days'}
+							</span>
+						</div>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

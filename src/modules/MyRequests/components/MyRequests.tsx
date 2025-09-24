@@ -1,4 +1,3 @@
-// modules/MyRequests/components/MyRequests.tsx
 'use client';
 
 import { JSX, useState, useEffect, useCallback, useRef } from 'react';
@@ -6,6 +5,7 @@ import { StatusFilter } from './StatusFilter';
 import { RequestCard } from './RequestCard';
 import { RequestDisplayData, SimpleRequestFilters } from '../type';
 import { RequestsApi } from '../services/RequestsApi';
+import { REQUEST_STATUSES } from '@/shared/constants/requestStatus';
 import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
 
 interface MyRequestsProps {
@@ -25,10 +25,12 @@ export const MyRequests = ({
 	const [currentPage, setCurrentPage] = useState(1);
 	const [hasMore, setHasMore] = useState(true);
 
+	// Refs для управления запросами и компонентом
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const isComponentMountedRef = useRef(true);
 
+	// Cleanup при размонтировании компонента
 	useEffect(() => {
 		isComponentMountedRef.current = true;
 		return () => {
@@ -42,6 +44,7 @@ export const MyRequests = ({
 		};
 	}, []);
 
+	// Основная функция загрузки заявок
 	const loadRequests = useCallback(
 		async (
 			newFilters: SimpleRequestFilters = {},
@@ -49,6 +52,7 @@ export const MyRequests = ({
 			isLoadMore: boolean = false,
 			signal?: AbortSignal,
 		) => {
+			// Отменяем предыдущий запрос
 			if (
 				abortControllerRef.current &&
 				!abortControllerRef.current.signal.aborted
@@ -62,6 +66,7 @@ export const MyRequests = ({
 			}
 			const requestSignal = signal || controller?.signal;
 
+			// Устанавливаем состояние загрузки
 			if (isLoadMore) {
 				setIsLoadingMore(true);
 			} else {
@@ -98,10 +103,6 @@ export const MyRequests = ({
 				const totalPages = response.pagination?.totalPages || 1;
 				setHasMore(page < totalPages);
 
-				if (isLoadMore) {
-					setCurrentPage((prev) => prev + 1);
-				}
-
 				setError(null);
 			} catch (err: any) {
 				if (err.name === 'AbortError' || requestSignal?.aborted) {
@@ -110,9 +111,12 @@ export const MyRequests = ({
 
 				if (!isComponentMountedRef.current) return;
 
+				// Улучшенная обработка ошибок
 				let errorMessage = 'Failed to load requests. Please try again.';
 
-				if (
+				if (err.message?.includes('Failed to')) {
+					errorMessage = err.message;
+				} else if (
 					err.code === 'ECONNABORTED' ||
 					err.message?.includes('timeout')
 				) {
@@ -122,8 +126,15 @@ export const MyRequests = ({
 				} else if (err.response?.status === 429) {
 					errorMessage =
 						'Too many requests. Please wait a moment and try again.';
+				} else if (err.response?.status === 401) {
+					errorMessage =
+						'Authentication required. Please log in again.';
+				} else if (err.response?.status === 403) {
+					errorMessage =
+						'Access denied. You do not have permission to view these requests.';
 				}
 
+				console.error('Error loading requests:', err);
 				setError(errorMessage);
 			} finally {
 				if (isComponentMountedRef.current) {
@@ -135,6 +146,7 @@ export const MyRequests = ({
 		[],
 	);
 
+	// Дебоунсинг запросов
 	const debouncedLoadRequests = useCallback(
 		(newFilters: SimpleRequestFilters) => {
 			if (debounceTimeoutRef.current) {
@@ -148,14 +160,19 @@ export const MyRequests = ({
 		[loadRequests],
 	);
 
+	// Загрузка дополнительных заявок
 	const handleLoadMore = useCallback(() => {
-		loadRequests(filters, currentPage + 1, true);
-	}, [loadRequests, filters, currentPage]);
+		if (!isLoadingMore && hasMore) {
+			loadRequests(filters, currentPage + 1, true);
+		}
+	}, [loadRequests, filters, currentPage, isLoadingMore, hasMore]);
 
+	// Обработка изменения статуса
 	const handleStatusChange = useCallback(
 		async (status: string | null) => {
 			setSelectedStatus(status);
 			setCurrentPage(1);
+			setHasMore(true);
 
 			const statusValue = status === null ? 'all' : status;
 
@@ -170,40 +187,71 @@ export const MyRequests = ({
 		[debouncedLoadRequests, filters],
 	);
 
+	// Клик по карточке заявки
 	const handleRequestClick = useCallback((requestId: string) => {
 		console.log('Request clicked:', requestId);
 		// TODO: Navigate to request details page
 		// router.push(`/profile/requests/${requestId}`);
 	}, []);
 
-	const handleCloseRequest = useCallback(
-		async (requestId: string) => {
-			try {
-				await RequestsApi.closeRequest(requestId);
-				// Reload requests after closing
-				loadRequests(filters, 1, false);
-			} catch (error) {
-				console.error('Failed to close request:', error);
-				// TODO: Add toast notification for error
-			}
-		},
-		[loadRequests, filters],
-	);
+	// Закрытие заявки
+	const handleCloseRequest = useCallback(async (requestId: string) => {
+		try {
+			await RequestsApi.closeRequest(requestId);
 
+			// Обновляем статус заявки локально для лучшего UX
+			setRequests((prev) =>
+				prev.map((request) =>
+					request.id === requestId
+						? {
+								...request,
+								status: REQUEST_STATUSES.CLOSED,
+								statusBadge: {
+									text: 'Closed',
+									variant: 'closed',
+								},
+							}
+						: request,
+				),
+			);
+
+			// Опционально перезагружаем данные
+			// loadRequests(filters, 1, false);
+		} catch (error: any) {
+			console.error('Failed to close request:', error);
+			setError(
+				error.message || 'Failed to close request. Please try again.',
+			);
+		}
+	}, []);
+
+	// Открытие фильтров
 	const handleFiltersClick = useCallback(() => {
 		console.log('Filters clicked');
 		// TODO: Open filters modal/sidebar
 	}, []);
 
+	// Повторная попытка загрузки
 	const handleRetry = useCallback(() => {
 		loadRequests(filters, 1, false);
 	}, [loadRequests, filters]);
 
+	// Загрузка при монтировании компонента
 	useEffect(() => {
 		if (initialRequests.length === 0) {
 			loadRequests();
 		}
 	}, [loadRequests, initialRequests.length]);
+
+	const getEmptyMessage = () => {
+		if (selectedStatus && selectedStatus !== 'all') {
+			const statusLabel =
+				selectedStatus.charAt(0).toUpperCase() +
+				selectedStatus.slice(1);
+			return `No ${statusLabel.toLowerCase()} requests found.`;
+		}
+		return "You haven't posted any requests yet.";
+	};
 
 	return (
 		<ProfileLayout showHeader={true} showSidebar={true}>
@@ -218,8 +266,8 @@ export const MyRequests = ({
 					</p>
 				</div>
 
-				{/* Status Filter - exact copy of ProjectsFilter layout */}
-				<div className="mb-6">
+				{/* Status Filter */}
+				<div className="mb-10">
 					<StatusFilter
 						selectedStatus={selectedStatus}
 						onStatusChange={handleStatusChange}
@@ -227,6 +275,7 @@ export const MyRequests = ({
 					/>
 				</div>
 
+				{/* Loading state */}
 				{isLoading && (
 					<div className="flex justify-center py-20">
 						<div className="flex items-center gap-3">
@@ -238,9 +287,11 @@ export const MyRequests = ({
 					</div>
 				)}
 
+				{/* Content */}
 				{!isLoading && (
 					<>
 						{error ? (
+							// Error state
 							<div className="flex flex-col items-center justify-center py-12 text-center">
 								<div className="mb-4 text-red-500">
 									<svg
@@ -265,7 +316,7 @@ export const MyRequests = ({
 								</p>
 								<button
 									onClick={handleRetry}
-									className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+									className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
 								>
 									Try Again
 								</button>
@@ -273,7 +324,7 @@ export const MyRequests = ({
 						) : requests.length > 0 ? (
 							<>
 								{/* Requests grid */}
-								<div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+								<div className="grid grid-cols-1 gap-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
 									{requests.map((request) => (
 										<RequestCard
 											key={request.id}
@@ -285,28 +336,24 @@ export const MyRequests = ({
 									))}
 								</div>
 
+								{/* Load More button */}
 								{hasMore && (
 									<div className="mt-20 mb-5 flex justify-center md:mb-20">
 										<button
 											onClick={handleLoadMore}
 											disabled={isLoadingMore}
-											className="flex cursor-pointer items-center gap-2"
+											className="flex cursor-pointer items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
 										>
 											{isLoadingMore ? (
-												<>
-													<div className="flex justify-center py-8">
-														<div className="flex items-center gap-3">
-															<div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
-															<span className="text-gray-600">
-																Loading
-																requests...
-															</span>
-														</div>
-													</div>
-												</>
+												<div className="flex items-center gap-3">
+													<div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+													<span className="text-gray-600">
+														Loading requests...
+													</span>
+												</div>
 											) : (
 												<div className="flex items-center gap-2">
-													<span className="text-[36px] text-[#242424] md:text-[40px]">
+													<span className="text-[36px] text-[#242424] transition-colors hover:text-blue-600 md:text-[40px]">
 														Load More +
 													</span>
 												</div>
@@ -316,6 +363,7 @@ export const MyRequests = ({
 								)}
 							</>
 						) : (
+							// Empty state
 							<div className="flex flex-col items-center justify-center py-12 text-center">
 								<div className="mb-4 text-[#242424]/30">
 									<svg
@@ -336,9 +384,7 @@ export const MyRequests = ({
 									No requests found
 								</h3>
 								<p className="text-[#242424]/50">
-									{selectedStatus && selectedStatus !== 'all'
-										? `No ${selectedStatus} requests found.`
-										: "You haven't posted any requests yet."}
+									{getEmptyMessage()}
 								</p>
 							</div>
 						)}

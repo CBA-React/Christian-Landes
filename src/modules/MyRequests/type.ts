@@ -1,5 +1,10 @@
 // modules/MyRequests/types/type.ts
 
+import {
+	RequestStatus,
+	RequestStatusVariant,
+} from '@/shared/constants/requestStatus';
+
 // API response structure based on your actual data
 export interface ApiRequest {
 	id: number;
@@ -11,7 +16,14 @@ export interface ApiRequest {
 	preferred_start: string;
 	completion_window: string;
 	description: string;
-	images: string[];
+	images:
+		| Array<{
+				id: number;
+				url: string;
+				type: string;
+				created_at: string;
+		  }>
+		| [];
 	status: number;
 	created_at: string;
 	_count: {
@@ -29,7 +41,7 @@ export interface RequestsResponse {
 	};
 }
 
-// Transformed data for UI display
+// Transformed data for UI display - использует типы из requestStatus
 export interface RequestDisplayData {
 	id: string;
 	title: string;
@@ -38,11 +50,11 @@ export interface RequestDisplayData {
 	budget: string;
 	budgetFormatted: string;
 	description: string;
-	images: string[];
-	status: 'open' | 'closed' | 'auto-closed';
+	images: string[]; // После трансформации это массив URL строк
+	status: RequestStatus; // Используем тип из requestStatus
 	statusBadge: {
 		text: string;
-		variant: 'open' | 'closed' | 'auto-closed';
+		variant: RequestStatusVariant; // Используем тип из requestStatus
 	};
 	bidsCount: number;
 	createdAt: string;
@@ -52,7 +64,7 @@ export interface RequestDisplayData {
 	daysActive?: number;
 }
 
-// Filter types - no categories, only status
+// Filter types - улучшенная типизация
 export interface RequestFilters {
 	page?: number;
 	perPage?: number;
@@ -71,12 +83,72 @@ export interface SimpleRequestFilters {
 	minBudget?: number;
 	maxBudget?: number;
 	location?: string;
-	status?: 'open' | 'closed' | 'auto-closed' | 'all';
+	status?: RequestStatus | 'all'; // Используем тип из requestStatus
 }
 
-// Status filter for UI
+// Status filter for UI - более строгая типизация
 export interface RequestStatusFilter {
-	value: 'all' | 'open' | 'closed' | 'auto-closed';
+	value: RequestStatus | 'all';
 	label: string;
 	count?: number;
+	icon?: React.ReactNode;
+	description?: string;
+}
+
+// Дополнительные типы для статистики и управления
+export interface RequestStats {
+	total: number;
+	open: number;
+	closed: number;
+	autoGlosed: number;
+}
+
+export interface RequestAction {
+	id: string;
+	type: 'close' | 'reopen' | 'delete' | 'edit';
+	label: string;
+	icon?: React.ReactNode;
+	variant?: 'primary' | 'secondary' | 'danger';
+	disabled?: boolean;
+}
+
+// Типы для сортировки и пагинации
+export type SortField = 'created_at' | 'budget' | 'bids_count' | 'title';
+export type SortOrder = 'asc' | 'desc';
+
+export interface SortOptions {
+	field: SortField;
+	order: SortOrder;
+}
+
+export interface PaginationInfo {
+	currentPage: number;
+	totalPages: number;
+	totalItems: number;
+	itemsPerPage: number;
+	hasNextPage: boolean;
+	hasPrevPage: boolean;
+}
+
+// Типы для форм и валидации
+export interface RequestFormData {
+	title: string;
+	description: string;
+	category: string;
+	location: string;
+	budget: number;
+	preferredStart: string;
+	completionWindow: string;
+	images?: File[];
+}
+
+export interface RequestFormErrors {
+	title?: string;
+	description?: string;
+	category?: string;
+	location?: string;
+	budget?: string;
+	preferredStart?: string;
+	completionWindow?: string;
+	images?: string;
 }
