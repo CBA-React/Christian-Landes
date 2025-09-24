@@ -10,7 +10,7 @@ export const LoadingSpinner = ({
 	};
 
 	return (
-		<div className="flex h-[500px] items-center justify-center">
+		<div className="flex h-[100vh] items-center justify-center">
 			<div
 				className={`animate-spin rounded-full border-2 border-gray-300 border-t-blue-600 ${sizeClasses[size]}`}
 				role="status"

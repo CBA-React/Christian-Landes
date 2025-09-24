@@ -39,39 +39,86 @@ const ACCESS: Record<string, Role[]> = {
 	'/clients': [1, 3],
 };
 
+const PROFILE_ACCESS: Record<string, Role[]> = {
+	'/profile/overview': [1, 2, 3], 
+	'/profile/reviews': [1, 2, 3], 
+	'/profile/edit': [1, 2, 3], 
+	'/profile/available-projects': [2, 3], 
+	'/profile/my-bids': [2, 3],
+	'/profile/pricing-plan': [2, 3], 
+	'/profile/my-requests': [1, 3], 
+	'/profile/contractors': [1, 3], 
+};
+
 export function middleware(request: NextRequest): NextResponse<unknown> {
 	const { pathname } = request.nextUrl;
 
 	const base = Object.keys(ACCESS).find((prefix) =>
 		pathname.startsWith(prefix),
 	);
-	if (!base) return NextResponse.next();
 
-	const token = request.cookies.get('token')?.value;
-	if (!token) {
-		const url = new URL('/login', request.url);
-		url.searchParams.set('next', pathname);
-		return NextResponse.redirect(url);
+	if (base) {
+		const token = request.cookies.get('token')?.value;
+		if (!token) {
+			const url = new URL('/login', request.url);
+			url.searchParams.set('next', pathname);
+			return NextResponse.redirect(url);
+		}
+
+		const payload = decodeJwt(token);
+		if (!payload || isExpired(payload.exp)) {
+			const url = new URL('/login', request.url);
+			url.searchParams.set('next', pathname);
+			return NextResponse.redirect(url);
+		}
+
+		const role = payload.role as Role;
+		const allowed = ACCESS[base];
+
+		if (role === 3 || allowed.includes(role)) {
+			return NextResponse.next();
+		}
+
+		return NextResponse.redirect(new URL('/login', request.url));
 	}
 
-	const payload = decodeJwt(token);
-	if (!payload || isExpired(payload.exp)) {
-		const url = new URL('/login', request.url);
-		url.searchParams.set('next', pathname);
-		return NextResponse.redirect(url);
+	const profileRoute = Object.keys(PROFILE_ACCESS).find(
+		(route) => pathname === route,
+	);
+
+	if (profileRoute) {
+		const token = request.cookies.get('token')?.value;
+		if (!token) {
+			const url = new URL('/login', request.url);
+			url.searchParams.set('next', pathname);
+			return NextResponse.redirect(url);
+		}
+
+		const payload = decodeJwt(token);
+		if (!payload || isExpired(payload.exp)) {
+			const url = new URL('/login', request.url);
+			url.searchParams.set('next', pathname);
+			return NextResponse.redirect(url);
+		}
+
+		const role = payload.role as Role;
+		const allowedRoles = PROFILE_ACCESS[profileRoute];
+
+		if (!allowedRoles.includes(role)) {
+			return NextResponse.redirect(
+				new URL('/profile/overview', request.url),
+			);
+		}
 	}
 
-	const role = payload.role as Role;
-	const allowed = ACCESS[base];
-	console.log(role);
-
-	if (role === 3 || allowed.includes(role)) {
-		return NextResponse.next();
-	}
-
-	return NextResponse.redirect(new URL('/login', request.url));
+	return NextResponse.next();
 }
 
 export const config = {
-	matcher: ['/admin/:path*', '/contractors/:path*', '/clients/:path*'],
+	matcher: [
+		'/admin/:path*',
+		'/contractors/:path*',
+		'/clients/:path*',
+		'/profile/:path*', 
+	],
 };

@@ -12,12 +12,10 @@ import type {
 } from '../types';
 import { PROJECT_STATUS_CONFIG } from '../constants';
 
-
 export class ProfileStatsApi {
 	private static getEndpoint(authRole: AuthRole): string {
 		return API_ENDPOINTS[authRole] || API_ENDPOINTS[1];
 	}
-
 
 	static async getMetrics(authRole: AuthRole): Promise<StatItem[]> {
 		const endpoint = this.getEndpoint(authRole);
@@ -28,7 +26,6 @@ export class ProfileStatsApi {
 
 		return this.transformMetricsData(response.data, authRole);
 	}
-
 
 	static async getProjects(
 		authRole: AuthRole,
@@ -41,7 +38,6 @@ export class ProfileStatsApi {
 		);
 		return response.data;
 	}
-
 
 	private static transformMetricsData(
 		apiData: ContractorMetrics | HomeownerMetrics,
@@ -90,8 +86,10 @@ export class ProfileStatsApi {
 			budget: project.budget?.toString() || '0',
 			description: project.description || '',
 			images:
-				project.images && project.images.length > 0
-					? project.images
+				project.images?.length > 0
+					? project.images.map((img) =>
+							typeof img === 'string' ? img : img.url,
+						)
 					: ['/images/profile/project-placeholder.png'],
 			status: PROJECT_STATUS_CONFIG[project.status as ProjectStatus],
 			bidsCount: project._count?.bids || 0,

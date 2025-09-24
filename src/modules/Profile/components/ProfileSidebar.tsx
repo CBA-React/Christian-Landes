@@ -1,34 +1,36 @@
 'use client';
 
 import { JSX } from 'react';
-import { ProfileSection } from '../constants';
-import { NavigationItem } from '../components/navigationConfig';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { NavigationItem } from '@/modules/Profile/components/navigationConfig';
 
 import ActiveArrow from '../../../../public/icons/profile/sidebar-arrow-right-white.svg';
 
 interface ProfileSidebarProps {
-	activeSection: ProfileSection;
-	onSectionChange: (section: ProfileSection) => void;
 	navigationItems: NavigationItem[];
 }
 
 export const ProfileSidebar = ({
-	activeSection,
-	onSectionChange,
 	navigationItems,
 }: ProfileSidebarProps): JSX.Element => {
+	const pathname = usePathname();
+
 	return (
 		<aside className="w-[240px] flex-shrink-0">
 			<div className="rounded-lg">
 				<nav>
 					<ul className="space-y-1">
 						{navigationItems.map((item) => {
-							const isActive = activeSection === item.id;
+							const isActive =
+								pathname === `/profile/${item.id}` ||
+								(pathname === '/profile' &&
+									item.id === 'overview');
 
 							return (
 								<li key={item.id}>
-									<button
-										onClick={() => onSectionChange(item.id)}
+									<Link
+										href={`/profile/${item.id}`}
 										className={`flex w-full items-center justify-between px-4 py-3 text-left text-[16px] font-[400] transition-colors ${
 											isActive
 												? 'bg-gray-900 text-white'
@@ -42,7 +44,7 @@ export const ProfileSidebar = ({
 											{item.label}
 										</div>
 										{isActive && <ActiveArrow />}
-									</button>
+									</Link>
 								</li>
 							);
 						})}
