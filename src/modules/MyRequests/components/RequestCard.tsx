@@ -54,7 +54,7 @@ export const RequestCard = ({
 				className="w-full cursor-pointer text-left"
 				onClick={handleClick}
 			>
-				<div className="relative h-[225px] w-full md:h-[260px]">
+				<div className="relative h-[250px] w-full md:h-[260px]">
 					<Image
 						src={images[0]}
 						alt={title}

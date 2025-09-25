@@ -52,7 +52,7 @@ export const LogoSection = ({
 			<div className="relative lg:mb-4">
 				<div className="relative h-20 w-20 overflow-hidden rounded-[10px] lg:h-[171px] lg:w-[171px]">
 					<Image
-						src={currentImage}
+						src={currentImage || '/images/Profile/mock-avatar.jpg'}
 						alt="Profile picture"
 						fill
 						className={`object-cover transition-opacity ${

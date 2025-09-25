@@ -234,7 +234,7 @@ export const ProjectsFilter = ({
 	};
 
 	return (
-		<section className={`mb-6 w-full ${className}`}>
+		<section className={`mb-6 w-full md:mb-10 ${className}`}>
 			{isMobile ? (
 				<ProjectsFilterMobile
 					selectedCategory={selectedCategory}

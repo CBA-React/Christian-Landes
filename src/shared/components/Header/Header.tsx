@@ -30,11 +30,10 @@ export const Header = (): JSX.Element => {
 	return (
 		<header className="absolute w-full">
 			<div className="relative z-9999 mx-5 mt-5 flex max-w-[1240px] flex-row items-center justify-center lg:justify-between xl:mx-auto">
-				{isActive ? (
-					<Logo className="hidden lg:block" />
-				) : (
-					<LogoColor className="hidden lg:block" />
-				)}
+				<Link href="/" className="hidden lg:block">
+					{isActive ? <Logo /> : <LogoColor />}
+				</Link>
+
 				<ul
 					className="flex h-[61px] w-full flex-row items-center justify-between gap-6 rounded-[5px] px-6 lg:w-auto lg:justify-start"
 					style={{
@@ -42,13 +41,15 @@ export const Header = (): JSX.Element => {
 						backdropFilter: 'blur(20px)',
 					}}
 				>
-					{isModal ? (
-						<LogoBlackMobile />
-					) : isActive ? (
-						<LogoMobile className="block lg:hidden" />
-					) : (
-						<LogoColorMobile className="block lg:hidden" />
-					)}
+					<Link href="/" className="block lg:hidden">
+						{isModal ? (
+							<LogoBlackMobile />
+						) : isActive ? (
+							<LogoMobile />
+						) : (
+							<LogoColorMobile />
+						)}
+					</Link>
 
 					{MAIN_NAVIGATION.map((item) => (
 						<li

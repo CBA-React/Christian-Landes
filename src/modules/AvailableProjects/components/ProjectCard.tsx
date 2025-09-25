@@ -38,7 +38,7 @@ export const ProjectCard = ({
 			className={`group relative cursor-pointer ${className}`}
 			onClick={handleClick}
 		>
-			<div className="relative h-[225px] w-full md:h-[260px]">
+			<div className="relative h-[250px] w-full md:h-[260px]">
 				<Image
 					src={imageUrl}
 					alt={title}
@@ -64,7 +64,7 @@ export const ProjectCard = ({
 
 			<section className="pt-3">
 				<div>
-					<h3 className="font-chalet-1960 line-clamp-2 text-[20px] leading-[155%] font-medium text-[#242424]">
+					<h3 className="font-chalet-1960 line-clamp-1 text-[20px] leading-[155%] font-medium text-[#242424]">
 						{title}
 					</h3>
 
@@ -76,7 +76,7 @@ export const ProjectCard = ({
 					</div>
 				</div>
 
-				<p className="font-chalet-1960 line-clamp-2 text-[16px] leading-[155%] text-[#242424]/50">
+				<p className="font-chalet-1960 line-clamp-1 text-[16px] leading-[155%] text-[#242424]/50">
 					{description}
 				</p>
 

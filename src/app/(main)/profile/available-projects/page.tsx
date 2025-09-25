@@ -1,4 +1,4 @@
-('use client');
+'use client';
 
 import { JSX, useEffect, useState } from 'react';
 import { ProjectsApi } from '@/modules/AvailableProjects/services/AvailableProjectsApi';

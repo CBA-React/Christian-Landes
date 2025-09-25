@@ -32,7 +32,7 @@ export class ProfileApi {
 			profile_id: apiData.id,
 			name: apiData.full_name,
 			email: apiData.email,
-			avatar: apiData.logo?.url || '/images/Profile/mock-avatar.jpg',
+			avatar: apiData.logo?.url || null,
 			role: authRole === 2 ? 'contractor' : 'client',
 			rating: apiData.avg_reviews || 0,
 			reviewsCount: apiData._count?.reviews || 0,

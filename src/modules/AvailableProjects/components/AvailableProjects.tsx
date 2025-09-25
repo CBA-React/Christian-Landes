@@ -59,7 +59,7 @@ export const AvailableProjects = ({
 	return (
 		<ProfileLayout showHeader={true} showSidebar={true}>
 			<section className="mb-10 w-full max-w-full overflow-hidden">
-				<div className="mb-4 md:mb-6">
+				<div className="mb-6 md:mb-6">
 					<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
 						Available Projects
 					</h1>

@@ -121,7 +121,7 @@ export const StatusFilter = ({
 	};
 
 	return (
-		<div className={`mb-6 w-full ${className}`}>
+		<div className={`mb-6 w-full md:mb-10 ${className}`}>
 			{isMobile ? (
 				<StatusFilterMobile
 					selectedStatus={selectedStatus}

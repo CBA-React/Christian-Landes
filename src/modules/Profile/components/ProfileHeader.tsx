@@ -42,7 +42,10 @@ export const ProfileHeader = ({
 			>
 				<div className="relative h-35 w-35 flex-shrink-0 overflow-hidden rounded-xl shadow-sm">
 					<Image
-						src={profileData.avatar}
+						src={
+							profileData.avatar ||
+							'/images/Profile/mock-avatar.jpg'
+						}
 						alt={`${profileData.name} profile picture`}
 						fill
 						className="object-cover"
@@ -51,11 +54,7 @@ export const ProfileHeader = ({
 				</div>
 
 				<div className="flex flex-1 flex-col items-center gap-2 text-center lg:items-start lg:self-center lg:text-left">
-					<div
-						className="flex items-center gap-2"
-						role="group"
-						aria-label="Rating and reviews"
-					>
+					<div className="flex items-center gap-2">
 						<div className="inline-flex items-center gap-1.5 bg-[#CFEDD9] px-3 py-1">
 							<StarIcon
 								width={14}
@@ -69,13 +68,20 @@ export const ProfileHeader = ({
 						<span className="text-[14px] font-normal text-[#747474]">
 							{profileData.reviewsCount} reviews
 						</span>
+						<Verified
+							className="ml-2 block xl:hidden"
+							aria-label="Verified user"
+						/>
 					</div>
 
-					<div className="flex items-center gap-4 md:gap-1 lg:gap-3">
-						<h1 className="font-chalet-1960 text-[36px] leading-[38px] text-[#242424] lg:text-[48px] lg:leading-[64px]">
+					<div className="flex items-center gap-2">
+						<h1 className="font-chalet-1960 text-[36px] leading-[38px] !break-words text-[#242424] lg:text-[48px] lg:leading-[64px]">
 							{profileData.name}
 						</h1>
-						<Verified aria-label="Verified user" />
+						<Verified
+							className="mt-1 hidden flex-shrink-0 xl:block"
+							aria-label="Verified user"
+						/>
 					</div>
 
 					<p className="text-[16px] font-normal text-[#242424]">
