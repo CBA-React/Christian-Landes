@@ -24,7 +24,10 @@ const editProfileSchema = z.object({
 			/^[\+]?[(]?[\d\s\-\(\)]{7,}$/,
 			'Please enter a valid phone number',
 		),
-	location: z.string().min(2, 'Location is required'),
+	location: z
+		.string()
+		.min(2, 'Location is required')
+		.max(24, 'Location must be less than 24 characters'),
 	about: z.string().optional().default(''),
 	specialities: z.array(z.string()).default([]),
 });
