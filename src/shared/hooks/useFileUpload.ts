@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+
 import { UploadApi } from '@/shared/api/UploadApi';
-import type { UploadFileParams, UploadedFile } from '@/shared/types/upload';
+import type { UploadedFile, UploadFileParams } from '@/shared/types/upload';
 
 interface UseFileUploadOptions {
 	onSuccess?: (uploadedFile: UploadedFile, file: File) => void;
@@ -13,7 +14,15 @@ export function useFileUpload({
 	onSuccess,
 	onError,
 	validateFile = true,
-}: UseFileUploadOptions = {}) {
+}: UseFileUploadOptions = {}): {
+	uploadFile: (file: File, type?: UploadFileParams['type']) => Promise<void>;
+	previewUrl: string | null;
+	clearPreview: () => void;
+	isUploading: boolean;
+	uploadError: any;
+	uploadedFile: UploadedFile | undefined;
+	reset: () => void;
+} {
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
 	const uploadMutation = useMutation({
@@ -22,12 +31,18 @@ export function useFileUpload({
 			onSuccess?.(uploadedFile, variables.file);
 		},
 		onError: (error: any) => {
-			const errorMessage = error?.response?.data?.message || error?.message || 'Upload failed';
+			const errorMessage =
+				error?.response?.data?.message ||
+				error?.message ||
+				'Upload failed';
 			onError?.(errorMessage);
 		},
 	});
 
-	const uploadFile = async (file: File, type: UploadFileParams['type'] = 'image') => {
+	const uploadFile = async (
+		file: File,
+		type: UploadFileParams['type'] = 'image',
+	): Promise<void> => {
 		if (validateFile && type === 'logo') {
 			const validation = UploadApi.validateImageFile(file);
 			if (!validation.isValid) {
@@ -44,7 +59,7 @@ export function useFileUpload({
 		await uploadMutation.mutateAsync({ file, type });
 	};
 
-	const clearPreview = () => {
+	const clearPreview = (): void => {
 		if (previewUrl) {
 			URL.revokeObjectURL(previewUrl);
 			setPreviewUrl(null);
@@ -58,7 +73,7 @@ export function useFileUpload({
 		isUploading: uploadMutation.isPending,
 		uploadError: uploadMutation.error,
 		uploadedFile: uploadMutation.data,
-		reset: () => {
+		reset: (): void => {
 			uploadMutation.reset();
 			clearPreview();
 		},

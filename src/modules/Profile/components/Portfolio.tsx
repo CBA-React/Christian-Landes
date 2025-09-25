@@ -60,7 +60,7 @@ export const Portfolio = (): JSX.Element => {
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6">
 				{portfolioData.map((item) => (
 					<div key={item.id} className="group">
-						<div className="relative h-[180px] w-full cursor-pointer overflow-hidden md:h-[240px] lg:h-[260px]">
+						<div className="relative h-[180px] w-full cursor-pointer overflow-hidden sm:h-[250px] lg:h-[260px]">
 							<Image
 								src={item.imageUrl}
 								alt={item.title}

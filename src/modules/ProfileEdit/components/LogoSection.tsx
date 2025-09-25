@@ -49,7 +49,7 @@ export const LogoSection = ({
 
 	return (
 		<div className="flex flex-row gap-4 lg:flex-col lg:gap-2">
-			<div className="relative lg:mb-4">
+			<div className="relative lg:mb-2">
 				<div className="relative h-20 w-20 overflow-hidden rounded-[10px] lg:h-[171px] lg:w-[171px]">
 					<Image
 						src={currentImage}

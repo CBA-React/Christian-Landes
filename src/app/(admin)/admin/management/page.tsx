@@ -8,6 +8,34 @@ import { ApiUser, UsersApi } from '@/modules/admin/services/UsersApi';
 type RoleNum = 1 | 2 | 3;
 const ROLES = { HOMEOWNER: 1, CONTRACTOR: 2, ADMIN: 3 } as const;
 
+const truncate = (s: string, max: number): string =>
+	s.length <= max ? s : s.slice(0, max - 1) + '…';
+
+const truncateEmail = (email: string, max: number): string => {
+	if (email.length <= max) return email;
+	const at = email.indexOf('@');
+	if (at === -1) return truncate(email, max);
+	const local = email.slice(0, at);
+	const domain = email.slice(at);
+	const room = max - domain.length - 1;
+	if (room <= 0) return truncate(email, max);
+	return local.length <= room ? email : local.slice(0, room) + '…' + domain;
+};
+
+const MAX_SHOW = {
+	name: 24,
+	email: 28,
+	phone: 18,
+	location: 24,
+};
+
+const truncatePhone = (phone: string, max: number): string => {
+	if (phone.length <= max) return phone;
+	const tail = phone.slice(-4);
+	const headRoom = Math.max(0, max - 5);
+	return phone.slice(0, headRoom) + '…' + tail;
+};
+
 const roleLabel = (r: RoleNum): 'Homeowner' | 'Contractor' | 'Admin' =>
 	r === ROLES.CONTRACTOR
 		? 'Contractor'
@@ -257,23 +285,43 @@ export default function ManagementPage(): JSX.Element {
 													alt={u.full_name}
 													className="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-black/5"
 												/>
-												<div className="max-w-[220px] truncate font-medium sm:max-w-none">
-													{u.full_name}
+												<div className="min-w-0 overflow-hidden">
+													<div
+														className="truncate font-medium"
+														title={u.full_name}
+													>
+														{truncate(
+															u.full_name ?? '',
+															MAX_SHOW.name,
+														)}
+													</div>
 												</div>
 											</div>
 										</td>
 										<td className="px-4 py-4 text-neutral-700">
-											<span className="block max-w-[220px] truncate sm:max-w-none">
-												{u.email}
-											</span>
+											<div className="min-w-0 overflow-hidden">
+												<span
+													className="block truncate whitespace-nowrap"
+													title={u.email}
+												>
+													{truncateEmail(
+														u.email ?? '',
+														MAX_SHOW.email,
+													)}
+												</span>
+											</div>
 										</td>
-										<td className="px-4 py-4 whitespace-nowrap">
+										<td className="px-4 py-4">
 											{u.phone ? (
 												<a
-													className="text-[#003BFF] hover:underline"
+													className="block truncate whitespace-nowrap text-[#003BFF] hover:underline"
 													href={`tel:${u.phone}`}
+													title={u.phone}
 												>
-													{u.phone}
+													{truncatePhone(
+														u.phone,
+														MAX_SHOW.phone,
+													)}
 												</a>
 											) : (
 												<span className="text-neutral-400">
@@ -412,13 +460,7 @@ export default function ManagementPage(): JSX.Element {
 					Next
 				</button>
 			</div>
-			<AddUserModal
-				open={addOpen}
-				onClose={() => setAddOpen(false)}
-				onCreated={(u) => {
-					setUsers((prev) => [u, ...prev]);
-				}}
-			/>
+			<AddUserModal open={addOpen} onClose={() => setAddOpen(false)} />
 		</div>
 	);
 }
