@@ -1,10 +1,10 @@
-// pages/profile/requests/page.tsx (или где у тебя роутинг)
+// MyRequests page.tsx
 'use client';
 
 import { JSX, useEffect, useState } from 'react';
-import { RequestsApi } from '../../../../modules/MyRequests/services/RequestsApi';
-import { MyRequests } from '../../../../modules/MyRequests/components/MyRequests';
-import { RequestDisplayData } from '../../../../modules/MyRequests/type';
+import { RequestsApi } from '@/modules/MyRequests/services/RequestsApi';
+import { MyRequests } from '@/modules/MyRequests/components/MyRequests';
+import { RequestDisplayData } from '@/modules/MyRequests/types/type';
 import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
 
 export default function MyRequestsPage(): JSX.Element {
@@ -35,12 +35,14 @@ export default function MyRequestsPage(): JSX.Element {
 	}, []);
 
 	return (
-		<>
+		<main>
 			{isLoading ? (
-				<LoadingSpinner />
+				<section>
+					<LoadingSpinner />
+				</section>
 			) : (
 				<MyRequests initialRequests={requests} />
 			)}
-		</>
+		</main>
 	);
 }

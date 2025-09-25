@@ -1,17 +1,14 @@
-// modules/MyRequests/components/StatusFilter.tsx
 'use client';
 
-import { JSX, useState, useRef, useEffect, useCallback } from 'react';
-import useEmblaCarousel from 'embla-carousel-react';
+import { JSX, useState, useEffect, useCallback } from 'react';
 import {
 	FILTER_STATUS_OPTIONS,
 	STATUS_CONFIG,
-} from '@/shared/constants/requestStatus';
+} from '@/modules/MyRequests/requestStatus';
 
-import AllIcon from '../../../../public/icons/profile/project-categories/all.svg';
-import FilterIcon from '../../../../public/icons/profile/project-categories/filters.svg';
-import ChevronRightIcon from '../../../../public/icons/profile/project-categories/chevron-right-small.svg';
-import ChevronLeft from '../../../../public/icons/profile/project-categories/chevron-left-small.svg';
+import AllIcon from 'public/icons/profile/project-categories/all.svg';
+import FilterIcon from 'public/icons/profile/project-categories/filters.svg';
+
 import { StatusFilterMobile } from './StatusFilterMobile';
 
 interface StatusFilterProps {
@@ -27,19 +24,8 @@ export const StatusFilter = ({
 	onFiltersClick,
 	className = '',
 }: StatusFilterProps): JSX.Element => {
-	const [canScrollLeft, setCanScrollLeft] = useState(false);
-	const [canScrollRight, setCanScrollRight] = useState(false);
-	const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-	const [emblaRef, emblaApi] = useEmblaCarousel({
-		align: 'start',
-		containScroll: 'trimSnaps',
-		dragFree: true,
-	});
-
 	const [isMobile, setIsMobile] = useState(false);
 
-	const SCROLL_AMOUNT = 200;
 	const isAllSelected = selectedStatus === null;
 
 	useEffect(() => {
@@ -52,75 +38,6 @@ export const StatusFilter = ({
 		return () => window.removeEventListener('resize', checkMobile);
 	}, []);
 
-	useEffect(() => {
-		if (!emblaApi) return;
-
-		const updateScrollButtons = () => {
-			setCanScrollLeft(emblaApi.canScrollPrev());
-			setCanScrollRight(emblaApi.canScrollNext());
-		};
-
-		emblaApi.on('select', updateScrollButtons);
-		emblaApi.on('reInit', updateScrollButtons);
-		updateScrollButtons();
-
-		return () => {
-			emblaApi.off('select', updateScrollButtons);
-			emblaApi.off('reInit', updateScrollButtons);
-		};
-	}, [emblaApi]);
-
-	const checkScrollability = useCallback(() => {
-		if (!scrollContainerRef.current || isMobile) return;
-
-		const { scrollLeft, scrollWidth, clientWidth } =
-			scrollContainerRef.current;
-		const maxScroll = scrollWidth - clientWidth;
-
-		setCanScrollLeft(scrollLeft > 5);
-		setCanScrollRight(scrollLeft < maxScroll - 5);
-	}, [isMobile]);
-
-	useEffect(() => {
-		if (!isMobile) {
-			checkScrollability();
-
-			const handleResize = () => {
-				setTimeout(checkScrollability, 10);
-			};
-
-			window.addEventListener('resize', handleResize);
-			return () => window.removeEventListener('resize', handleResize);
-		}
-	}, [checkScrollability, isMobile]);
-
-	const handleScroll = useCallback(
-		(direction: 'left' | 'right') => {
-			if (isMobile && emblaApi) {
-				if (direction === 'left') {
-					emblaApi.scrollPrev();
-				} else {
-					emblaApi.scrollNext();
-				}
-			} else if (!isMobile && scrollContainerRef.current) {
-				const container = scrollContainerRef.current;
-				const currentScroll = container.scrollLeft;
-				const newPosition =
-					direction === 'left'
-						? Math.max(0, currentScroll - SCROLL_AMOUNT)
-						: currentScroll + SCROLL_AMOUNT;
-
-				container.scrollTo({
-					left: newPosition,
-					behavior: 'smooth',
-				});
-
-				setTimeout(checkScrollability, 350);
-			}
-		},
-		[checkScrollability, emblaApi, isMobile],
-	);
-
 	const handleStatusClick = useCallback(
 		(statusSlug: string | null) => {
 			onStatusChange(statusSlug);
@@ -128,16 +45,9 @@ export const StatusFilter = ({
 		[onStatusChange],
 	);
 
-	const handleContainerScroll = useCallback(() => {
-		if (!isMobile) {
-			checkScrollability();
-		}
-	}, [checkScrollability, isMobile]);
-
 	const renderDesktopLayout = () => {
 		return (
 			<>
-				{/* All button */}
 				<button
 					onClick={() => handleStatusClick(null)}
 					className={`flex h-11 flex-shrink-0 items-center justify-center gap-1.5 px-3 transition-all duration-200 ${
@@ -154,8 +64,6 @@ export const StatusFilter = ({
 
 				<div className="relative !mr-10 flex-1 overflow-hidden">
 					<div
-						ref={scrollContainerRef}
-						onScroll={handleContainerScroll}
 						className="scrollbar-hide flex gap-2 overflow-x-auto scroll-smooth pb-0.5"
 						style={{
 							scrollbarWidth: 'none',

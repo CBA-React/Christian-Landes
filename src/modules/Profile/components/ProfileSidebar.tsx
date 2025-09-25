@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavigationItem } from '@/modules/Profile/components/navigationConfig';
 
-import ActiveArrow from '../../../../public/icons/profile/sidebar-arrow-right-white.svg';
+import ActiveArrow from 'public/icons/profile/sidebar-arrow-right-white.svg';
 
 interface ProfileSidebarProps {
 	navigationItems: NavigationItem[];

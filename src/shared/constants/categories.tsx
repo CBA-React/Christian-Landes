@@ -1,12 +1,12 @@
-import HandypersonIcon from '../../../public/icons/categories/categories-handyperson-icon.svg';
-import LandscapingIcon from '../../../public/icons/categories/categories-landscaping-icon.svg';
-import PlumbingIcon from '../../../public/icons/categories/categories-plumbing-icon.svg';
-import RemodelingIcon from '../../../public/icons/categories/categories-remodeling-icon.svg';
-import ElectricalIcon from '../../../public/icons/categories/categories-electrical-icon.svg';
-import PaintingIcon from '../../../public/icons/categories/categories-painting-icon.svg';
-import WindowIcon from '../../../public/icons/categories/categories-window-icon.svg';
-import CleaningIcon from '../../../public/icons/categories/categories-cleaning-icon.svg';
-import ConcreteIcon from '../../../public/icons/categories/categories-concrete-icon.svg';
+import HandypersonIcon from 'public/icons/categories/categories-handyperson-icon.svg';
+import LandscapingIcon from 'public/icons/categories/categories-landscaping-icon.svg';
+import PlumbingIcon from 'public/icons/categories/categories-plumbing-icon.svg';
+import RemodelingIcon from 'public/icons/categories/categories-remodeling-icon.svg';
+import ElectricalIcon from 'public/icons/categories/categories-electrical-icon.svg';
+import PaintingIcon from 'public/icons/categories/categories-painting-icon.svg';
+import WindowIcon from 'public/icons/categories/categories-window-icon.svg';
+import CleaningIcon from 'public/icons/categories/categories-cleaning-icon.svg';
+import ConcreteIcon from 'public/icons/categories/categories-concrete-icon.svg';
 
 export const categoriesData = [
 	{

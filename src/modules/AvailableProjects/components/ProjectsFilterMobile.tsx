@@ -5,10 +5,10 @@ import useEmblaCarousel from 'embla-carousel-react';
 import {
 	PROJECT_CATEGORIES,
 	ProjectCategory,
-} from '../../../shared/constants/projectCategories';
+} from '@/modules/AvailableProjects/projectCategories';
 
-import AllIcon from '../../../../public/icons/profile/project-categories/all.svg';
-import FilterIcon from '../../../../public/icons/profile/project-categories/filters.svg';
+import AllIcon from 'public/icons/profile/project-categories/all.svg';
+import FilterIcon from 'public/icons/profile/project-categories/filters.svg';
 
 interface ProjectsFilterMobileProps {
 	selectedCategory: string | null;
@@ -83,7 +83,7 @@ export const ProjectsFilterMobile = ({
 									}
 									className={`flex h-11 items-center justify-center gap-2 px-3 py-1.5 whitespace-nowrap transition-all duration-200 ${
 										isSelected
-											? 'bg-[#D1FAE5] text-[#059669]'
+											? 'bg-[#D1FAE5] text-[#242424]'
 											: 'bg-white text-[#242424] hover:bg-gray-50'
 									}`}
 								>

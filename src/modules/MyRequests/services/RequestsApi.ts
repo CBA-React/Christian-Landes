@@ -1,16 +1,21 @@
-// modules/MyRequests/services/RequestsApi.ts
 import { axiosInstance } from '@/shared/lib/axiosInstance';
+import {
+	processImages,
+	formatDate,
+	formatBudget,
+} from '@/shared/lib/formatUtils';
 import type {
-	RequestsResponse,
 	ApiRequest,
 	RequestDisplayData,
 	SimpleRequestFilters,
-} from '../type';
+	RequestFilters,
+	RequestsResponse,
+} from '../types/type';
 import {
 	REQUEST_STATUSES,
 	API_STATUS_MAP,
 	STATUS_CONFIG,
-} from '@/shared/constants/requestStatus';
+} from '../requestStatus';
 
 export class RequestsApi {
 	static async getRequests(params: {
@@ -20,29 +25,58 @@ export class RequestsApi {
 	}): Promise<RequestsResponse> {
 		const { page = 1, perPage = 6, filters = {} } = params;
 
-		try {
-			const requestBody = {
-				page,
-				perPage,
-				status:
-					API_STATUS_MAP[
-						filters.status as keyof typeof API_STATUS_MAP
-					] || API_STATUS_MAP.all,
-				search: filters.search || '',
-				location: filters.location || '',
-				minBudget: filters.minBudget || 0,
-				maxBudget: filters.maxBudget || 0,
-			};
+		const hasFilters = Boolean(
+			(filters.status && filters.status !== 'all') ||
+				(filters.search && filters.search) ||
+				(filters.minBudget && filters.minBudget > 0) ||
+				(filters.maxBudget && filters.maxBudget > 0) ||
+				(filters.location && filters.location),
+		);
 
-			const response = await axiosInstance.post(
-				'homeowner/project/getProjects',
-				requestBody,
-			);
+		try {
+			let response;
+
+			if (hasFilters) {
+				const requestBody: RequestFilters = {
+					page,
+					perPage,
+					status:
+						API_STATUS_MAP[
+							filters.status as keyof typeof API_STATUS_MAP
+						] || API_STATUS_MAP.all,
+					search: filters.search || '',
+					location: filters.location || '',
+					budget: {
+						from: filters.minBudget || 0,
+						to: filters.maxBudget || 0,
+					},
+				};
+
+				response = await axiosInstance.post(
+					'homeowner/project/getProjects',
+					requestBody,
+				);
+			} else {
+				const queryParams = `page=${page}&perPage=${perPage}`;
+				response = await axiosInstance.get(
+					`homeowner/project/getProjects?${queryParams}`,
+				);
+			}
 
 			return response.data as RequestsResponse;
 		} catch (error) {
 			console.error('Error fetching requests:', error);
 			throw error;
+		}
+	}
+
+	static async getStatusCounts(): Promise<Record<string, number>> {
+		try {
+			const response = await axiosInstance.get('homeowner/project/stats');
+			return response.data as Record<string, number>;
+		} catch (error) {
+			console.error('Error fetching status counts:', error);
+			return {};
 		}
 	}
 
@@ -64,14 +98,14 @@ export class RequestsApi {
 				category: request.category,
 				location: request.location,
 				budget: request.budget.toString(),
-				budgetFormatted: `$${request.budget.toLocaleString()}`,
+				budgetFormatted: formatBudget(request.budget),
 				description: request.description,
-				images: this.processImages(request.images),
+				images: processImages(request.images),
 				status,
 				statusBadge,
 				bidsCount: request._count.bids,
 				createdAt: request.created_at,
-				postedDate: this.formatDate(request.created_at),
+				postedDate: formatDate(request.created_at),
 				preferredStart: request.preferred_start,
 				completionWindow: request.completion_window,
 				daysActive:
@@ -79,22 +113,6 @@ export class RequestsApi {
 						? this.calculateDaysActive(request.created_at)
 						: undefined,
 			};
-		});
-	}
-
-	private static processImages(images: ApiRequest['images']): string[] {
-		if (!images || !Array.isArray(images) || images.length === 0) {
-			return ['/images/profile/project-placeholder.png'];
-		}
-
-		return images.map((img: any) => {
-			if (typeof img === 'string') {
-				return img;
-			}
-			if (typeof img === 'object' && img.url) {
-				return img.url;
-			}
-			return '/images/profile/project-placeholder.png';
 		});
 	}
 
@@ -127,7 +145,6 @@ export class RequestsApi {
 			const created = new Date(createdAt);
 			const now = new Date();
 
-			// Проверяем валидность даты
 			if (isNaN(created.getTime())) {
 				console.warn('Invalid date string:', createdAt);
 				return 0;
@@ -139,63 +156,6 @@ export class RequestsApi {
 		} catch (error) {
 			console.error('Error calculating days active:', error);
 			return 0;
-		}
-	}
-
-	private static formatDate(dateString: string): string {
-		try {
-			const date = new Date(dateString);
-
-			// Проверяем валидность даты
-			if (isNaN(date.getTime())) {
-				console.warn('Invalid date string:', dateString);
-				return 'N/A';
-			}
-
-			return date.toLocaleDateString('en-US', {
-				month: 'short',
-				day: '2-digit',
-			});
-		} catch (error) {
-			console.error('Error formatting date:', error);
-			return 'N/A';
-		}
-	}
-
-	static async closeRequest(requestId: string): Promise<void> {
-		try {
-			await axiosInstance.post(`homeowner/project/${requestId}/close`);
-		} catch (error) {
-			console.error('Error closing request:', error);
-			throw new Error('Failed to close request. Please try again.');
-		}
-	}
-
-	static async reopenRequest(requestId: string): Promise<void> {
-		try {
-			await axiosInstance.post(`homeowner/project/${requestId}/reopen`);
-		} catch (error) {
-			console.error('Error reopening request:', error);
-			throw new Error('Failed to reopen request. Please try again.');
-		}
-	}
-
-	static async deleteRequest(requestId: string): Promise<void> {
-		try {
-			await axiosInstance.delete(`homeowner/project/${requestId}`);
-		} catch (error) {
-			console.error('Error deleting request:', error);
-			throw new Error('Failed to delete request. Please try again.');
-		}
-	}
-
-	static async getStatusCounts(): Promise<Record<string, number>> {
-		try {
-			const response = await axiosInstance.get('homeowner/project/stats');
-			return response.data as Record<string, number>;
-		} catch (error) {
-			console.error('Error fetching status counts:', error);
-			return {};
 		}
 	}
 }

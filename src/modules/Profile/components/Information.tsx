@@ -4,7 +4,7 @@ import { JSX } from 'react';
 import { ProfileData } from '@/shared/types/profile';
 import { SpecialityTag } from '@/shared/components/SpecialityTag/SpecialityTag';
 
-import ServiceIcon from '../../../../public/icons/profile/service.svg';
+import ServiceIcon from 'public/icons/profile/service.svg';
 
 interface InformationProps {
 	profileData: ProfileData;

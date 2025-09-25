@@ -5,12 +5,12 @@ import useEmblaCarousel from 'embla-carousel-react';
 import {
 	PROJECT_CATEGORIES,
 	ProjectCategory,
-} from '../../../shared/constants/projectCategories';
+} from '@/modules/AvailableProjects/projectCategories';
 
-import AllIcon from '../../../../public/icons/profile/project-categories/all.svg';
-import FilterIcon from '../../../../public/icons/profile/project-categories/filters.svg';
-import ChevronRightIcon from '../../../../public/icons/profile/project-categories/chevron-right-small.svg';
-import ChevronLeft from '../../../../public/icons/profile/project-categories/chevron-left-small.svg';
+import AllIcon from 'public/icons/profile/project-categories/all.svg';
+import FilterIcon from 'public/icons/profile/project-categories/filters.svg';
+import ChevronRightIcon from 'public/icons/profile/project-categories/chevron-right-small.svg';
+import ChevronLeft from 'public/icons/profile/project-categories/chevron-left-small.svg';
 import { ProjectsFilterMobile } from './ProjectsFilterMobile';
 
 interface ProjectsFilterProps {
@@ -234,7 +234,7 @@ export const ProjectsFilter = ({
 	};
 
 	return (
-		<div className={`mb-6 w-full ${className}`}>
+		<section className={`mb-6 w-full ${className}`}>
 			{isMobile ? (
 				<ProjectsFilterMobile
 					selectedCategory={selectedCategory}
@@ -246,6 +246,6 @@ export const ProjectsFilter = ({
 					{renderDesktopLayout()}
 				</div>
 			)}
-		</div>
+		</section>
 	);
 };

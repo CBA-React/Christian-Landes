@@ -1,11 +1,13 @@
-// modules/MyRequests/types/type.ts
+import { PaginatedResponse } from '@/shared/types/paginatedItems';
+import { RequestStatus, RequestStatusVariant } from '../requestStatus';
 
-import {
-	RequestStatus,
-	RequestStatusVariant,
-} from '@/shared/constants/requestStatus';
+export interface ApiImage {
+	id: number;
+	url: string;
+	type: string;
+	created_at: string;
+}
 
-// API response structure based on your actual data
 export interface ApiRequest {
 	id: number;
 	user_id: number;
@@ -16,14 +18,7 @@ export interface ApiRequest {
 	preferred_start: string;
 	completion_window: string;
 	description: string;
-	images:
-		| Array<{
-				id: number;
-				url: string;
-				type: string;
-				created_at: string;
-		  }>
-		| [];
+	images: ApiImage[]; 
 	status: number;
 	created_at: string;
 	_count: {
@@ -31,17 +26,8 @@ export interface ApiRequest {
 	};
 }
 
-export interface RequestsResponse {
-	data: ApiRequest[];
-	pagination: {
-		total: number;
-		page: number;
-		perPage: number;
-		totalPages: number;
-	};
-}
+export type RequestsResponse = PaginatedResponse<ApiRequest>;
 
-// Transformed data for UI display - использует типы из requestStatus
 export interface RequestDisplayData {
 	id: string;
 	title: string;
@@ -50,11 +36,11 @@ export interface RequestDisplayData {
 	budget: string;
 	budgetFormatted: string;
 	description: string;
-	images: string[]; // После трансформации это массив URL строк
-	status: RequestStatus; // Используем тип из requestStatus
+	images: string[];
+	status: RequestStatus;
 	statusBadge: {
 		text: string;
-		variant: RequestStatusVariant; // Используем тип из requestStatus
+		variant: RequestStatusVariant;
 	};
 	bidsCount: number;
 	createdAt: string;
@@ -64,7 +50,6 @@ export interface RequestDisplayData {
 	daysActive?: number;
 }
 
-// Filter types - улучшенная типизация
 export interface RequestFilters {
 	page?: number;
 	perPage?: number;
@@ -83,10 +68,9 @@ export interface SimpleRequestFilters {
 	minBudget?: number;
 	maxBudget?: number;
 	location?: string;
-	status?: RequestStatus | 'all'; // Используем тип из requestStatus
+	status?: RequestStatus | 'all';
 }
 
-// Status filter for UI - более строгая типизация
 export interface RequestStatusFilter {
 	value: RequestStatus | 'all';
 	label: string;
@@ -95,7 +79,6 @@ export interface RequestStatusFilter {
 	description?: string;
 }
 
-// Дополнительные типы для статистики и управления
 export interface RequestStats {
 	total: number;
 	open: number;
@@ -112,7 +95,6 @@ export interface RequestAction {
 	disabled?: boolean;
 }
 
-// Типы для сортировки и пагинации
 export type SortField = 'created_at' | 'budget' | 'bids_count' | 'title';
 export type SortOrder = 'asc' | 'desc';
 
@@ -130,7 +112,6 @@ export interface PaginationInfo {
 	hasPrevPage: boolean;
 }
 
-// Типы для форм и валидации
 export interface RequestFormData {
 	title: string;
 	description: string;

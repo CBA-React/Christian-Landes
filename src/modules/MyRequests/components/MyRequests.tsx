@@ -1,249 +1,197 @@
 'use client';
 
-import { JSX, useState, useEffect, useCallback, useRef } from 'react';
+import { JSX, useCallback } from 'react';
 import { StatusFilter } from './StatusFilter';
 import { RequestCard } from './RequestCard';
-import { RequestDisplayData, SimpleRequestFilters } from '../type';
+import { RequestDisplayData, SimpleRequestFilters } from '../types/type';
 import { RequestsApi } from '../services/RequestsApi';
-import { REQUEST_STATUSES } from '@/shared/constants/requestStatus';
+import { usePaginatedData } from '@/shared/hooks/usePaginatedData';
 import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
 
 interface MyRequestsProps {
 	initialRequests?: RequestDisplayData[];
 }
 
+const LoadingState = () => (
+	<div className="flex justify-center py-20" role="status" aria-live="polite">
+		<div className="flex items-center gap-3">
+			<div
+				className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
+				aria-hidden="true"
+			/>
+			<span className="text-gray-600">Loading requests...</span>
+		</div>
+	</div>
+);
+
+const ErrorState = ({
+	error,
+	onRetry,
+}: {
+	error: string;
+	onRetry: () => void;
+}) => (
+	<section
+		className="flex flex-col items-center justify-center py-12 text-center"
+		role="alert"
+		aria-live="polite"
+	>
+		<h2 className="mb-2 text-lg font-medium text-[#242424]">
+			Error loading requests
+		</h2>
+		<p className="mb-4 text-[#242424]/50">{error}</p>
+		<button
+			onClick={onRetry}
+			className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+		>
+			Try Again
+		</button>
+	</section>
+);
+
+const EmptyState = ({ message }: { message: string }) => (
+	<section
+		className="flex flex-col items-center justify-center py-12 text-center"
+		aria-live="polite"
+	>
+		<div className="mb-4 text-[#242424]/30" aria-hidden="true">
+			<svg
+				className="mx-auto h-16 w-16"
+				fill="none"
+				stroke="currentColor"
+				viewBox="0 0 24 24"
+			>
+				<path
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					strokeWidth={1.5}
+					d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+				/>
+			</svg>
+		</div>
+		<h2 className="mb-2 text-lg font-medium text-[#242424]">
+			No requests found
+		</h2>
+		<p className="text-[#242424]/50">{message}</p>
+	</section>
+);
+
+const RequestsList = ({
+	requests,
+	hasMore,
+	isLoadingMore,
+	onLoadMore,
+	onRequestClick,
+	onCloseRequest,
+}: {
+	requests: RequestDisplayData[];
+	hasMore: boolean;
+	isLoadingMore: boolean;
+	onLoadMore: () => void;
+	onRequestClick: (id: string) => void;
+	onCloseRequest: (id: string) => void;
+}) => (
+	<>
+		<section
+			className="grid grid-cols-1 gap-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3"
+			aria-label="List of requests"
+		>
+			{requests.map((request) => (
+				<article key={request.id}>
+					<RequestCard
+						request={request}
+						onCardClick={onRequestClick}
+						onCloseRequest={onCloseRequest}
+						className="w-full"
+					/>
+				</article>
+			))}
+		</section>
+
+		{hasMore && (
+			<nav
+				className="mt-20 mb-5 flex justify-center md:mb-20"
+				aria-label="Load more requests"
+			>
+				<button
+					onClick={onLoadMore}
+					disabled={isLoadingMore}
+					className="flex cursor-pointer items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					{isLoadingMore ? (
+						<div className="flex items-center gap-3">
+							<div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+							<span className="text-gray-600">
+								Loading requests...
+							</span>
+						</div>
+					) : (
+						<span className="text-[36px] text-[#242424] transition-colors hover:text-blue-600 md:text-[40px]">
+							Load More +
+						</span>
+					)}
+				</button>
+			</nav>
+		)}
+	</>
+);
+
 export const MyRequests = ({
 	initialRequests = [],
 }: MyRequestsProps): JSX.Element => {
-	const [requests, setRequests] =
-		useState<RequestDisplayData[]>(initialRequests);
-	const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-	const [filters, setFilters] = useState<SimpleRequestFilters>({});
-	const [isLoading, setIsLoading] = useState(false);
-	const [isLoadingMore, setIsLoadingMore] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const [currentPage, setCurrentPage] = useState(1);
-	const [hasMore, setHasMore] = useState(true);
-
-	// Refs для управления запросами и компонентом
-	const abortControllerRef = useRef<AbortController | null>(null);
-	const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-	const isComponentMountedRef = useRef(true);
-
-	// Cleanup при размонтировании компонента
-	useEffect(() => {
-		isComponentMountedRef.current = true;
-		return () => {
-			isComponentMountedRef.current = false;
-			if (abortControllerRef.current) {
-				abortControllerRef.current.abort();
-			}
-			if (debounceTimeoutRef.current) {
-				clearTimeout(debounceTimeoutRef.current);
-			}
-		};
-	}, []);
-
-	// Основная функция загрузки заявок
-	const loadRequests = useCallback(
-		async (
-			newFilters: SimpleRequestFilters = {},
-			page: number = 1,
-			isLoadMore: boolean = false,
-			signal?: AbortSignal,
-		) => {
-			// Отменяем предыдущий запрос
-			if (
-				abortControllerRef.current &&
-				!abortControllerRef.current.signal.aborted
-			) {
-				abortControllerRef.current.abort();
-			}
-
-			const controller = signal ? null : new AbortController();
-			if (controller) {
-				abortControllerRef.current = controller;
-			}
-			const requestSignal = signal || controller?.signal;
-
-			// Устанавливаем состояние загрузки
-			if (isLoadMore) {
-				setIsLoadingMore(true);
-			} else {
-				setIsLoading(true);
-			}
-			setError(null);
-
-			try {
-				const response = await RequestsApi.getRequests({
-					page,
-					perPage: 6,
-					filters: newFilters,
-				});
-
-				if (requestSignal?.aborted) {
-					return;
-				}
-
-				if (!isComponentMountedRef.current) {
-					return;
-				}
-
-				const transformedRequests =
-					RequestsApi.transformRequestsForDisplay(response.data);
-
-				if (isLoadMore) {
-					setRequests((prev) => [...prev, ...transformedRequests]);
-					setCurrentPage((prev) => prev + 1);
-				} else {
-					setRequests(transformedRequests);
-					setCurrentPage(1);
-				}
-
-				const totalPages = response.pagination?.totalPages || 1;
-				setHasMore(page < totalPages);
-
-				setError(null);
-			} catch (err: any) {
-				if (err.name === 'AbortError' || requestSignal?.aborted) {
-					return;
-				}
-
-				if (!isComponentMountedRef.current) return;
-
-				// Улучшенная обработка ошибок
-				let errorMessage = 'Failed to load requests. Please try again.';
-
-				if (err.message?.includes('Failed to')) {
-					errorMessage = err.message;
-				} else if (
-					err.code === 'ECONNABORTED' ||
-					err.message?.includes('timeout')
-				) {
-					errorMessage = 'Request timed out. Please try again.';
-				} else if (err.response?.status >= 500) {
-					errorMessage = 'Server error. Please try again later.';
-				} else if (err.response?.status === 429) {
-					errorMessage =
-						'Too many requests. Please wait a moment and try again.';
-				} else if (err.response?.status === 401) {
-					errorMessage =
-						'Authentication required. Please log in again.';
-				} else if (err.response?.status === 403) {
-					errorMessage =
-						'Access denied. You do not have permission to view these requests.';
-				}
-
-				console.error('Error loading requests:', err);
-				setError(errorMessage);
-			} finally {
-				if (isComponentMountedRef.current) {
-					setIsLoading(false);
-					setIsLoadingMore(false);
-				}
-			}
+	const {
+		items: requests,
+		filters,
+		isLoading,
+		isLoadingMore,
+		error,
+		hasMore,
+		handleLoadMore,
+		handleFiltersChange,
+		handleRetry,
+	} = usePaginatedData<RequestDisplayData, SimpleRequestFilters>({
+		apiCall: async ({ page, perPage, filters }) => {
+			const response = await RequestsApi.getRequests({
+				page,
+				perPage,
+				filters,
+			});
+			return {
+				...response,
+				data: RequestsApi.transformRequestsForDisplay(response.data),
+			};
 		},
-		[],
-	);
+		initialData: initialRequests,
+		defaultFilters: { status: 'all' },
+	});
 
-	// Дебоунсинг запросов
-	const debouncedLoadRequests = useCallback(
-		(newFilters: SimpleRequestFilters) => {
-			if (debounceTimeoutRef.current) {
-				clearTimeout(debounceTimeoutRef.current);
-			}
-
-			debounceTimeoutRef.current = setTimeout(() => {
-				loadRequests(newFilters, 1, false);
-			}, 300);
-		},
-		[loadRequests],
-	);
-
-	// Загрузка дополнительных заявок
-	const handleLoadMore = useCallback(() => {
-		if (!isLoadingMore && hasMore) {
-			loadRequests(filters, currentPage + 1, true);
-		}
-	}, [loadRequests, filters, currentPage, isLoadingMore, hasMore]);
-
-	// Обработка изменения статуса
 	const handleStatusChange = useCallback(
-		async (status: string | null) => {
-			setSelectedStatus(status);
-			setCurrentPage(1);
-			setHasMore(true);
-
+		(status: string | null) => {
 			const statusValue = status === null ? 'all' : status;
-
 			const newFilters: SimpleRequestFilters = {
 				...filters,
-				status: statusValue as any,
+				status: statusValue as SimpleRequestFilters['status'],
 			};
-			setFilters(newFilters);
-
-			debouncedLoadRequests(newFilters);
+			handleFiltersChange(newFilters);
 		},
-		[debouncedLoadRequests, filters],
+		[handleFiltersChange, filters],
 	);
 
-	// Клик по карточке заявки
 	const handleRequestClick = useCallback((requestId: string) => {
 		console.log('Request clicked:', requestId);
-		// TODO: Navigate to request details page
-		// router.push(`/profile/requests/${requestId}`);
 	}, []);
 
-	// Закрытие заявки
-	const handleCloseRequest = useCallback(async (requestId: string) => {
-		try {
-			await RequestsApi.closeRequest(requestId);
-
-			// Обновляем статус заявки локально для лучшего UX
-			setRequests((prev) =>
-				prev.map((request) =>
-					request.id === requestId
-						? {
-								...request,
-								status: REQUEST_STATUSES.CLOSED,
-								statusBadge: {
-									text: 'Closed',
-									variant: 'closed',
-								},
-							}
-						: request,
-				),
-			);
-
-			// Опционально перезагружаем данные
-			// loadRequests(filters, 1, false);
-		} catch (error: any) {
-			console.error('Failed to close request:', error);
-			setError(
-				error.message || 'Failed to close request. Please try again.',
-			);
-		}
+	const handleCloseRequest = useCallback((requestId: string) => {
+		console.log('Close request clicked:', requestId);
 	}, []);
 
-	// Открытие фильтров
 	const handleFiltersClick = useCallback(() => {
 		console.log('Filters clicked');
-		// TODO: Open filters modal/sidebar
 	}, []);
 
-	// Повторная попытка загрузки
-	const handleRetry = useCallback(() => {
-		loadRequests(filters, 1, false);
-	}, [loadRequests, filters]);
-
-	// Загрузка при монтировании компонента
-	useEffect(() => {
-		if (initialRequests.length === 0) {
-			loadRequests();
-		}
-	}, [loadRequests, initialRequests.length]);
-
 	const getEmptyMessage = () => {
+		const selectedStatus = filters.status;
 		if (selectedStatus && selectedStatus !== 'all') {
 			const statusLabel =
 				selectedStatus.charAt(0).toUpperCase() +
@@ -253,144 +201,59 @@ export const MyRequests = ({
 		return "You haven't posted any requests yet.";
 	};
 
+	const renderContent = () => {
+		if (isLoading) {
+			return <LoadingState />;
+		}
+
+		if (error) {
+			return <ErrorState error={error} onRetry={handleRetry} />;
+		}
+
+		if (requests.length === 0) {
+			return <EmptyState message={getEmptyMessage()} />;
+		}
+
+		return (
+			<RequestsList
+				requests={requests}
+				hasMore={hasMore}
+				isLoadingMore={isLoadingMore}
+				onLoadMore={handleLoadMore}
+				onRequestClick={handleRequestClick}
+				onCloseRequest={handleCloseRequest}
+			/>
+		);
+	};
+
 	return (
-		<ProfileLayout showHeader={true} showSidebar={true}>
-			<div className="mb-10 w-full max-w-full overflow-hidden">
-				{/* Header */}
-				<div className="mb-6">
-					<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
-						My Requests
-					</h1>
-					<p className="text-[16px] text-[#242424]/60">
-						All your job posts in one place.
-					</p>
-				</div>
-
-				{/* Status Filter */}
-				<div className="mb-10">
-					<StatusFilter
-						selectedStatus={selectedStatus}
-						onStatusChange={handleStatusChange}
-						onFiltersClick={handleFiltersClick}
-					/>
-				</div>
-
-				{/* Loading state */}
-				{isLoading && (
-					<div className="flex justify-center py-20">
-						<div className="flex items-center gap-3">
-							<div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
-							<span className="text-gray-600">
-								Loading requests...
-							</span>
-						</div>
+		<ErrorBoundary>
+			<ProfileLayout showHeader={true} showSidebar={true}>
+				<section className="mb-10 w-full max-w-full overflow-hidden">
+					<div className="mb-6">
+						<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
+							My Requests
+						</h1>
+						<p className="text-[16px] text-[#242424]/60">
+							All your job posts in one place.
+						</p>
 					</div>
-				)}
 
-				{/* Content */}
-				{!isLoading && (
-					<>
-						{error ? (
-							// Error state
-							<div className="flex flex-col items-center justify-center py-12 text-center">
-								<div className="mb-4 text-red-500">
-									<svg
-										className="mx-auto h-16 w-16"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={1.5}
-											d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"
-										/>
-									</svg>
-								</div>
-								<h3 className="mb-2 text-lg font-medium text-[#242424]">
-									Error loading requests
-								</h3>
-								<p className="mb-4 text-[#242424]/50">
-									{error}
-								</p>
-								<button
-									onClick={handleRetry}
-									className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
-								>
-									Try Again
-								</button>
-							</div>
-						) : requests.length > 0 ? (
-							<>
-								{/* Requests grid */}
-								<div className="grid grid-cols-1 gap-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
-									{requests.map((request) => (
-										<RequestCard
-											key={request.id}
-											request={request}
-											onCardClick={handleRequestClick}
-											onCloseRequest={handleCloseRequest}
-											className="w-full"
-										/>
-									))}
-								</div>
+					<nav aria-label="Filter requests by status">
+						<StatusFilter
+							selectedStatus={
+								filters.status === 'all'
+									? null
+									: filters.status || null
+							}
+							onStatusChange={handleStatusChange}
+							onFiltersClick={handleFiltersClick}
+						/>
+					</nav>
 
-								{/* Load More button */}
-								{hasMore && (
-									<div className="mt-20 mb-5 flex justify-center md:mb-20">
-										<button
-											onClick={handleLoadMore}
-											disabled={isLoadingMore}
-											className="flex cursor-pointer items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
-										>
-											{isLoadingMore ? (
-												<div className="flex items-center gap-3">
-													<div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
-													<span className="text-gray-600">
-														Loading requests...
-													</span>
-												</div>
-											) : (
-												<div className="flex items-center gap-2">
-													<span className="text-[36px] text-[#242424] transition-colors hover:text-blue-600 md:text-[40px]">
-														Load More +
-													</span>
-												</div>
-											)}
-										</button>
-									</div>
-								)}
-							</>
-						) : (
-							// Empty state
-							<div className="flex flex-col items-center justify-center py-12 text-center">
-								<div className="mb-4 text-[#242424]/30">
-									<svg
-										className="mx-auto h-16 w-16"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={1.5}
-											d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-										/>
-									</svg>
-								</div>
-								<h3 className="mb-2 text-lg font-medium text-[#242424]">
-									No requests found
-								</h3>
-								<p className="text-[#242424]/50">
-									{getEmptyMessage()}
-								</p>
-							</div>
-						)}
-					</>
-				)}
-			</div>
-		</ProfileLayout>
+					{renderContent()}
+				</section>
+			</ProfileLayout>
+		</ErrorBoundary>
 	);
 };

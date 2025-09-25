@@ -5,8 +5,8 @@ import Image from 'next/image';
 
 import { Button } from '@/shared/components/Button/Button';
 
-import ArrowUp from '../../../../public/icons/profile/arrow-up-large.svg';
-import Plus from '../../../../public/icons/profile/plus-white.svg';
+import ArrowUp from 'public/icons/profile/arrow-up-large.svg';
+import Plus from 'public/icons/profile/plus-white.svg';
 
 const portfolioData = [
 	{

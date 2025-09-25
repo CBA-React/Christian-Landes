@@ -1,9 +1,9 @@
-'use client';
+('use client');
 
 import { JSX, useEffect, useState } from 'react';
-import { ProjectsApi } from '../../../../modules/AvailableProjects/services/AvailableProjectsApi';
-import { AvailableProjects } from '../../../../modules/AvailableProjects/components/AvailableProjects';
-import { ProjectDisplayData } from '../../../../modules/AvailableProjects/types/type';
+import { ProjectsApi } from '@/modules/AvailableProjects/services/AvailableProjectsApi';
+import { AvailableProjects } from '@/modules/AvailableProjects/components/AvailableProjects';
+import { ProjectDisplayData } from '@/modules/AvailableProjects/types/type';
 import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
 
 export default function AvailableProjectsPage(): JSX.Element {
@@ -34,12 +34,14 @@ export default function AvailableProjectsPage(): JSX.Element {
 	}, []);
 
 	return (
-		<>
+		<main>
 			{isLoading ? (
-				<LoadingSpinner />
+				<section>
+					<LoadingSpinner />
+				</section>
 			) : (
 				<AvailableProjects initialProjects={projects} />
 			)}
-		</>
+		</main>
 	);
 }

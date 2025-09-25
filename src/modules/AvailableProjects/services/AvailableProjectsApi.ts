@@ -1,10 +1,15 @@
 import { axiosInstance } from '@/shared/lib/axiosInstance';
+import {
+	processImages,
+	formatDate,
+	formatBudget,
+} from '@/shared/lib/formatUtils';
 import type {
-	ProjectsResponse,
 	ApiProject,
 	ProjectDisplayData,
-	ProjectFilters,
 	SimpleProjectFilters,
+	ProjectFilters,
+	ProjectsResponse,
 } from '../types/type';
 
 export class ProjectsApi {
@@ -54,6 +59,7 @@ export class ProjectsApi {
 
 			return response.data as ProjectsResponse;
 		} catch (error) {
+			console.error('Error fetching projects:', error);
 			throw error;
 		}
 	}
@@ -62,6 +68,7 @@ export class ProjectsApi {
 		projects: ApiProject[],
 	): ProjectDisplayData[] {
 		if (!Array.isArray(projects)) {
+			console.warn('Projects is not an array:', projects);
 			return [];
 		}
 
@@ -71,31 +78,14 @@ export class ProjectsApi {
 			category: project.category,
 			location: project.location,
 			budget: project.budget.toString(),
-			budgetFormatted: `$${project.budget.toLocaleString()}`,
+			budgetFormatted: formatBudget(project.budget),
 			description: project.description,
-			images:
-				project.images?.length > 0
-					? project.images.map((img) =>
-							typeof img === 'string' ? img : img.url,
-						)
-					: ['/images/profile/project-placeholder.png'],
+			images: processImages(project.images),
 			status: project.status === 1 ? 'active' : 'completed',
 			createdAt: project.created_at,
-			postedDate: this.formatDate(project.created_at),
+			postedDate: formatDate(project.created_at),
 			preferredStart: project.preferred_start,
 			completionWindow: project.completion_window,
 		}));
-	}
-
-	private static formatDate(dateString: string): string {
-		try {
-			const date = new Date(dateString);
-			return date.toLocaleDateString('en-US', {
-				month: 'short',
-				day: '2-digit',
-			});
-		} catch {
-			return 'N/A';
-		}
 	}
 }

@@ -1,4 +1,3 @@
-// modules/MyRequests/components/StatusFilterMobile.tsx
 'use client';
 
 import { JSX, useEffect } from 'react';
@@ -6,10 +5,10 @@ import useEmblaCarousel from 'embla-carousel-react';
 import {
 	FILTER_STATUS_OPTIONS,
 	STATUS_CONFIG,
-} from '@/shared/constants/requestStatus';
+} from '@/modules/MyRequests/requestStatus';
 
-import AllIcon from '../../../../public/icons/profile/project-categories/all.svg';
-import FilterIcon from '../../../../public/icons/profile/project-categories/filters.svg';
+import AllIcon from 'public/icons/profile/project-categories/all.svg';
+import FilterIcon from 'public/icons/profile/project-categories/filters.svg';
 
 interface StatusFilterMobileProps {
 	selectedStatus: string | null;
@@ -51,7 +50,6 @@ export const StatusFilterMobile = ({
 				style={{ WebkitOverflowScrolling: 'touch' }}
 			>
 				<div className="embla__container flex gap-2">
-					{/* All button */}
 					<div
 						className="embla__slide flex-shrink-0"
 						style={{ flex: '0 0 auto' }}
@@ -71,7 +69,6 @@ export const StatusFilterMobile = ({
 						</button>
 					</div>
 
-					{/* Status options from FILTER_STATUS_OPTIONS */}
 					{FILTER_STATUS_OPTIONS.filter(
 						(option) => option.id !== 'all',
 					).map((option) => {
@@ -95,10 +92,9 @@ export const StatusFilterMobile = ({
 											: 'bg-white text-[#242424] hover:bg-gray-50'
 									}`}
 								>
-									{/* Используем иконку из конфигурации */}
 									<span className="h-5 w-5 flex-shrink-0">
 										{typeof option.icon === 'string' ? (
-											<AllIcon className="h-5 w-5" /> // fallback для 'grid'
+											<AllIcon className="h-5 w-5" />
 										) : (
 											option.icon || statusConfig?.icon
 										)}

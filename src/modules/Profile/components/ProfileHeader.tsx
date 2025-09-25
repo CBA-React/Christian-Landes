@@ -7,11 +7,11 @@ import { Button } from '@/shared/components/Button/Button';
 
 import { ProfileData } from '@/shared/types/profile';
 
-import StarIcon from '../../../../public/icons/profile/star.svg';
-import DollarIcon from '../../../../public/icons/profile/dollar-for-button.svg';
-import EditIcon from '../../../../public/icons/profile/edit.svg';
-import PostIcon from '../../../../public/icons/profile/plus-white.svg';
-import Verified from '../../../../public/icons/profile/verified.svg';
+import StarIcon from 'public/icons/profile/star.svg';
+import DollarIcon from 'public/icons/profile/dollar-for-button.svg';
+import EditIcon from 'public/icons/profile/edit.svg';
+import PostIcon from 'public/icons/profile/plus-white.svg';
+import Verified from 'public/icons/profile/verified.svg';
 
 interface ProfileHeaderProps {
 	profileData: ProfileData;

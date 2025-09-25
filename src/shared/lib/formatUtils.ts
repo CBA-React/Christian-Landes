@@ -36,5 +36,11 @@ export function formatDate(dateString: string): string {
 }
 
 export function formatBudget(budget: number): string {
-	return `$${budget.toLocaleString()}`;
+	if (budget >= 1000) {
+		const kValue = (budget / 1000).toFixed(1);
+		const formatted = kValue.replace(/\.0$/, '');
+		return `$${formatted}k`;
+	}
+
+	return `$${budget}`;
 }

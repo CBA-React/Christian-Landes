@@ -3,8 +3,8 @@ import Image from 'next/image';
 
 import { CategoryBadge } from './CategoryBadge';
 
-import ArrowUp from '../../../../public/icons/profile/arrow-up-large.svg';
-import Location from '../../../../public/icons/profile/location.svg';
+import ArrowUp from 'public/icons/profile/arrow-up-large.svg';
+import Location from 'public/icons/profile/location.svg';
 
 interface ProjectCardProps {
 	id: string;
@@ -34,7 +34,7 @@ export const ProjectCard = ({
 	};
 
 	return (
-		<div
+		<article
 			className={`group relative cursor-pointer ${className}`}
 			onClick={handleClick}
 		>
@@ -62,16 +62,18 @@ export const ProjectCard = ({
 				</div>
 			</div>
 
-			<div className="pt-3">
-				<h3 className="font-chalet-1960 line-clamp-2 text-[20px] leading-[155%] font-medium text-[#242424]">
-					{title}
-				</h3>
+			<section className="pt-3">
+				<div>
+					<h3 className="font-chalet-1960 line-clamp-2 text-[20px] leading-[155%] font-medium text-[#242424]">
+						{title}
+					</h3>
 
-				<div className="flex items-center gap-2">
-					<Location />
-					<span className="font-chalet-1960 truncate text-[16px] text-[#242424]">
-						{location}
-					</span>
+					<div className="flex items-center gap-2">
+						<Location />
+						<span className="font-chalet-1960 truncate text-[16px] text-[#242424]">
+							{location}
+						</span>
+					</div>
 				</div>
 
 				<p className="font-chalet-1960 line-clamp-2 text-[16px] leading-[155%] text-[#242424]/50">
@@ -90,7 +92,7 @@ export const ProjectCard = ({
 						</span>
 					</div>
 				</div>
-			</div>
-		</div>
+			</section>
+		</article>
 	);
 };

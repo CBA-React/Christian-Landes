@@ -6,7 +6,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { SpecialityTag } from '../../../shared/components/SpecialityTag/SpecialityTag';
+import { SpecialityTag } from '@/shared/components/SpecialityTag/SpecialityTag';
 
 interface SpecialitySelectorProps {
 	selectedSpecialities: string[];
