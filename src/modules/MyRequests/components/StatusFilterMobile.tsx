@@ -3,31 +3,31 @@
 import { JSX, useEffect } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import {
-	PROJECT_CATEGORIES,
-	ProjectCategory,
-} from '@/modules/AvailableProjects/projectCategories';
+	FILTER_STATUS_OPTIONS,
+	STATUS_CONFIG,
+} from '@/modules/MyRequests/requestStatus';
 
 import AllIcon from 'public/icons/profile/project-categories/all.svg';
 import FilterIcon from 'public/icons/profile/project-categories/filters.svg';
 
-interface ProjectsFilterMobileProps {
-	selectedCategory: string | null;
-	onCategoryChange: (category: string | null) => void;
+interface StatusFilterMobileProps {
+	selectedStatus: string | null;
+	onStatusChange: (status: string | null) => void;
 	onFiltersClick?: () => void;
 }
 
-export const ProjectsFilterMobile = ({
-	selectedCategory,
-	onCategoryChange,
+export const StatusFilterMobile = ({
+	selectedStatus,
+	onStatusChange,
 	onFiltersClick,
-}: ProjectsFilterMobileProps): JSX.Element => {
+}: StatusFilterMobileProps): JSX.Element => {
 	const [emblaRef] = useEmblaCarousel({
 		align: 'start',
 		containScroll: 'trimSnaps',
 		dragFree: true,
 	});
 
-	const isAllSelected = selectedCategory === null;
+	const isAllSelected = selectedStatus === null;
 
 	useEffect(() => {}, []);
 
@@ -55,7 +55,7 @@ export const ProjectsFilterMobile = ({
 						style={{ flex: '0 0 auto' }}
 					>
 						<button
-							onClick={() => onCategoryChange(null)}
+							onClick={() => onStatusChange(null)}
 							className={`flex h-11 items-center justify-center gap-1 px-3 transition-all duration-200 ${
 								isAllSelected
 									? 'bg-[#CFEDD9] text-[#242424]'
@@ -69,27 +69,38 @@ export const ProjectsFilterMobile = ({
 						</button>
 					</div>
 
-					{PROJECT_CATEGORIES.map((category: ProjectCategory) => {
-						const isSelected = selectedCategory === category.slug;
+					{FILTER_STATUS_OPTIONS.filter(
+						(option) => option.id !== 'all',
+					).map((option) => {
+						const isSelected = selectedStatus === option.slug;
+						const statusConfig =
+							STATUS_CONFIG[
+								option.slug as keyof typeof STATUS_CONFIG
+							];
+
 						return (
 							<div
-								key={category.id}
+								key={option.id}
 								className="embla__slide flex-shrink-0"
 								style={{ flex: '0 0 auto' }}
 							>
 								<button
-									onClick={() =>
-										onCategoryChange(category.slug)
-									}
+									onClick={() => onStatusChange(option.slug)}
 									className={`flex h-11 items-center justify-center gap-2 px-3 py-1.5 whitespace-nowrap transition-all duration-200 ${
 										isSelected
-											? 'bg-[#D1FAE5] text-[#242424]'
+											? 'bg-[#CFEDD9] text-[#242424]'
 											: 'bg-white text-[#242424] hover:bg-gray-50'
 									}`}
 								>
-									{category.icon}
+									<span className="h-5 w-5 flex-shrink-0">
+										{typeof option.icon === 'string' ? (
+											<AllIcon className="h-5 w-5" />
+										) : (
+											option.icon || statusConfig?.icon
+										)}
+									</span>
 									<span className="font-chalet-1960 text-[16px] font-medium">
-										{category.name}
+										{option.name}
 									</span>
 								</button>
 							</div>

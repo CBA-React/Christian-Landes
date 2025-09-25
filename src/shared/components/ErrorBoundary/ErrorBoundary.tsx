@@ -1,14 +1,15 @@
 'use client';
 
-import { Component, ReactNode } from 'react';
-import { Button } from '@/shared/components/Button/Button';
+import { Component, ReactNode, ErrorInfo } from 'react';
 
 interface Props {
 	children: ReactNode;
+	fallback?: ReactNode;
 }
 
 interface State {
 	hasError: boolean;
+	error?: Error;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
@@ -17,32 +18,52 @@ export class ErrorBoundary extends Component<Props, State> {
 		this.state = { hasError: false };
 	}
 
-	static getDerivedStateFromError(): State {
-		return { hasError: true };
+	static getDerivedStateFromError(error: Error): State {
+		return { hasError: true, error };
 	}
 
-	componentDidCatch(error: Error) {
-		console.error('Profile Error:', error);
+	componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+		console.error('Component Error Boundary caught:', error, errorInfo);
 	}
+
+	handleRetry = () => {
+		this.setState({ hasError: false, error: undefined });
+	};
 
 	render() {
 		if (this.state.hasError) {
+			if (this.props.fallback) {
+				return this.props.fallback;
+			}
+
 			return (
-				<div className="flex min-h-[400px] flex-col items-center justify-center p-8 text-center">
+				<section
+					className="flex min-h-[400px] flex-col items-center justify-center p-8 text-center"
+					role="alert"
+					aria-live="polite"
+				>
 					<h2 className="mb-4 text-xl font-semibold text-red-600">
 						Something went wrong
 					</h2>
 					<p className="mb-6 text-gray-600">
-						Please try refreshing the page
+						{this.state.error?.message ||
+							'Please try refreshing the page'}
 					</p>
-					<Button
-						onClick={() => window.location.reload()}
-						variant="solid"
-						color="primary"
-					>
-						Refresh Page
-					</Button>
-				</div>
+					<div className="flex gap-4">
+						<button
+							onClick={this.handleRetry}
+							className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+						>
+							Try Again
+						</button>
+						<button
+							onClick={() => window.location.reload()}
+							className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+						>
+							Refresh Page
+						</button>
+					</div>
+				</section>
 			);
 		}
 

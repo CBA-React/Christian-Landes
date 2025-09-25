@@ -6,9 +6,9 @@ import Image from 'next/image';
 import { Button } from '@/shared/components/Button/Button';
 import type { ProjectDisplayData } from '../types';
 
-import Check from '../../../../public/icons/profile/symbol-check-small.svg';
-import Plus from '../../../../public/icons/profile/plus-white.svg';
-import Separator from '../../../../public/icons/profile/separator.svg';
+import Check from 'public/icons/profile/symbol-check-small.svg';
+import Plus from 'public/icons/profile/plus-white.svg';
+import Separator from 'public/icons/profile/separator.svg';
 
 interface RecentProjectsProps {
 	projects?: ProjectDisplayData[];

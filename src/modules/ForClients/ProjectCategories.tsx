@@ -8,7 +8,7 @@ import { Button } from '@/shared/components/Button/Button';
 import { CategoryItem } from '@/shared/components/CategoryItem/CategoryItem';
 import { categoriesData } from '@/shared/constants/categories';
 
-import ArrowRightIcon from '../../../public/icons/arrow-up-right-white-big.svg';
+import ArrowRightIcon from 'public/icons/arrow-up-right-white-big.svg';
 
 export const ProjectCategories = (): JSX.Element => {
 	return (
@@ -72,4 +72,3 @@ export const ProjectCategories = (): JSX.Element => {
 		</article>
 	);
 };
-

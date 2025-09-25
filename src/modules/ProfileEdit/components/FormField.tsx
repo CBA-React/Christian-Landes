@@ -1,4 +1,4 @@
-import { ReactNode, JSX, forwardRef } from 'react';
+import { ReactNode, JSX, forwardRef, useState, useEffect } from 'react';
 import { FieldError } from 'react-hook-form';
 
 interface FormFieldProps {
@@ -23,6 +23,9 @@ interface TextareaProps
 	labelIcon?: ReactNode;
 	error?: FieldError;
 	required?: boolean;
+	showCharCount?: boolean;
+	maxCharCount?: number;
+	currentValue?: string;
 }
 
 export const FormField = ({
@@ -66,14 +69,46 @@ export const FormInput = forwardRef<HTMLInputElement, InputProps>(
 FormInput.displayName = 'FormInput';
 
 export const FormTextarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-	({ label, error, required, className, ...props }, ref) => {
+	(
+		{
+			label,
+			error,
+			required,
+			className,
+			showCharCount,
+			maxCharCount,
+			currentValue,
+			...props
+		},
+		ref,
+	) => {
+		const [charCount, setCharCount] = useState(0);
+
+		useEffect(() => {
+			const value = currentValue || '';
+			setCharCount(value.length);
+		}, [currentValue]);
+
+		const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+			setCharCount(e.target.value.length);
+			if (props.onChange) {
+				props.onChange(e);
+			}
+		};
+
 		return (
 			<FormField label={label} error={error} required={required}>
 				<textarea
 					ref={ref}
 					className={`mt-2 w-full resize-none border border-[#242424]/50 px-3 py-3 outline-none focus:border-[#003BFF] ${className}`}
 					{...props}
+					onChange={handleChange}
 				/>
+				{showCharCount && maxCharCount && (
+					<div className="text-right text-sm text-[#242424]/50">
+						{charCount}/{maxCharCount}
+					</div>
+				)}
 			</FormField>
 		);
 	},

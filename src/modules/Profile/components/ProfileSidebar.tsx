@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavigationItem } from '@/modules/Profile/components/navigationConfig';
 
-import ActiveArrow from '../../../../public/icons/profile/sidebar-arrow-right-white.svg';
+import ActiveArrow from 'public/icons/profile/sidebar-arrow-right-white.svg';
 
 interface ProfileSidebarProps {
 	navigationItems: NavigationItem[];
@@ -33,7 +33,7 @@ export const ProfileSidebar = ({
 										href={`/profile/${item.id}`}
 										className={`flex w-full items-center justify-between px-4 py-3 text-left text-[16px] font-[400] transition-colors ${
 											isActive
-												? 'bg-gray-900 text-white'
+												? 'bg-[#242424] text-white'
 												: 'text-[#242424]/50 hover:bg-gray-100'
 										}`}
 									>

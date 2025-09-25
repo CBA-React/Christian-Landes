@@ -1,3 +1,12 @@
+import { PaginatedResponse } from '@/shared/types/paginatedItems';
+
+export interface ApiImage {
+	id: number;
+	url: string;
+	type: string;
+	created_at: string;
+}
+
 export interface ApiProject {
 	id: number;
 	user_id: number;
@@ -8,29 +17,12 @@ export interface ApiProject {
 	preferred_start: string;
 	completion_window: string;
 	description: string;
-	images:
-		| [
-				{
-					id: number;
-					url: string;
-					type: string;
-					created_at: string;
-				},
-		  ]
-		| string[];
+	images: ApiImage[] | string[];
 	status: number;
 	created_at: string;
 }
 
-export interface ProjectsResponse {
-	data: ApiProject[];
-	pagination: {
-		total: number;
-		page: number;
-		perPage: number;
-		totalPages: number;
-	};
-}
+export type ProjectsResponse = PaginatedResponse<ApiProject>;
 
 export interface ProjectDisplayData {
 	id: string;
@@ -57,7 +49,7 @@ export interface ProjectFilters {
 		from?: number | string;
 		to?: number | string;
 	};
-	bids?: string; 
+	bids?: string;
 	search?: string;
 	category?: string;
 }

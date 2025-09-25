@@ -1,6 +1,7 @@
 'use client';
 
 import { JSX } from 'react';
+import { toast } from 'sonner';
 import { FormTextarea } from './FormField';
 import { LogoSection } from './LogoSection';
 import { BasicInfo } from './BasicInfo';
@@ -36,6 +37,7 @@ export const EditProfile = ({
 		form,
 		selectedSpecialities,
 		previewImage,
+		isUploadingImage,
 		handleAddSpeciality,
 		handleRemoveSpeciality,
 		handleImageChange,
@@ -46,22 +48,27 @@ export const EditProfile = ({
 		onSubmit: async (data) => {
 			try {
 				await editProfileMutation.mutateAsync(data);
+				toast.success('Profile updated successfully!');
 				onSuccess();
 			} catch (error) {
 				const errorMsg = getErrorMessage(
 					error,
 					'Failed to update profile',
 				);
-				form.setError('fullName', {
-					type: 'manual',
-					message: errorMsg,
-				});
+				toast.error(errorMsg);
 			}
 		},
 	});
 
 	const isLoading =
-		form.formState.isSubmitting || editProfileMutation.isPending;
+		form.formState.isSubmitting ||
+		editProfileMutation.isPending ||
+		isUploadingImage;
+
+	const handleImageErrorWithToast = (error: string) => {
+		toast.error(error);
+		handleImageError(error);
+	};
 
 	return (
 		<div className="w-full rounded-lg bg-[#F1F3F6] p-6 lg:p-10">
@@ -70,8 +77,9 @@ export const EditProfile = ({
 					<LogoSection
 						currentImage={previewImage}
 						onImageChange={handleImageChange}
-						onError={handleImageError}
+						onError={handleImageErrorWithToast}
 						disabled={isLoading}
+						isUploading={isUploadingImage}
 					/>
 
 					<div className="w-full flex-1 space-y-4 md:space-y-5">
@@ -112,19 +120,29 @@ export const EditProfile = ({
 						/>
 
 						<FormTextarea
-							{...form.register('about')}
+							{...form.register('about', {
+								maxLength: {
+									value: 1000,
+									message:
+										'About section must be less than 1000 characters',
+								},
+							})}
 							rows={4}
 							label="About"
 							placeholder="Write something about you here"
 							error={form.formState.errors.about}
 							disabled={isLoading}
+							maxLength={1000}
+							showCharCount={true}
+							maxCharCount={1000}
+							currentValue={form.watch('about')}
 						/>
-
 						<ProfileFormActions
 							onCancel={onCancel}
 							isSubmitting={form.formState.isSubmitting}
 							isPending={editProfileMutation.isPending}
 							disabled={isLoading}
+							isImageUploading={isUploadingImage}
 						/>
 					</div>
 				</div>

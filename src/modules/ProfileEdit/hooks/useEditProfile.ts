@@ -7,6 +7,7 @@ import { ProfileEditApi } from '../services/ProfileEditApi';
 import type { UpdateProfileFormData } from '../types';
 import { useAppDispatch } from '@/shared/hooks/useStore';
 import { login } from '@/modules/auth/slices/authSlice';
+import { useProfile } from '@/modules/Profile/hooks/useProfile';
 
 export interface UpdateProfileWithImageData extends UpdateProfileFormData {
 	uploadedLogo?: {
@@ -108,15 +109,17 @@ export function useEditProfile(authRole: AuthRole | null) {
 }
 
 export function useProfileForEdit(authRole: AuthRole | null) {
-	const queryClient = useQueryClient();
-
-	const cachedProfile = queryClient.getQueryData<ProfileData>([
-		'profile',
-		authRole,
-	]);
+	const {
+		data: profileData,
+		isLoading,
+		isError,
+		error,
+	} = useProfile(authRole);
 
 	return {
-		profileData: cachedProfile,
-		isLoading: !cachedProfile,
+		profileData,
+		isLoading,
+		isError,
+		error,
 	};
 }

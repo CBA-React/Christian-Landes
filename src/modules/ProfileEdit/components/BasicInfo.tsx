@@ -57,7 +57,7 @@ export const BasicInfo = ({
 					placeholder="Enter your location"
 					labelIcon={
 						isContractor ? (
-							<ServiceIcon className="h-5 w-5" />
+							<ServiceIcon />
 						) : undefined
 					}
 					register={register('location')}

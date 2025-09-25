@@ -21,7 +21,7 @@ export const Input = ({
 	labelIcon,
 }: InputProps): JSX.Element => {
 	return (
-		<div className="flex flex-col gap-[6px] text-[#242424]">
+		<div className="flex flex-col gap-2.5 text-[#242424]">
 			<label className="flex items-center gap-2">
 				{label}
 				{labelIcon && labelIcon}

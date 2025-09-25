@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
 
-import KitchenIcon from '../../../public/icons/profile/project-categories/categories-kitchen-icon.svg';
-import BathroomIcon from '../../../public/icons/profile/project-categories/categories-bathroom-icon.svg';
-import RoofingIcon from '../../../public/icons/profile/project-categories/categories-roofing-icon.svg';
-import RenovationIcon from '../../../public/icons/profile/project-categories/categories-renovation-icon.svg';
-import ElectricalIcon from '../../../public/icons/profile/project-categories/categories-electrical-icon.svg';
+import KitchenIcon from 'public/icons/profile/project-categories/categories-kitchen-icon.svg';
+import BathroomIcon from 'public/icons/profile/project-categories/categories-bathroom-icon.svg';
+import RoofingIcon from 'public/icons/profile/project-categories/categories-roofing-icon.svg';
+import RenovationIcon from 'public/icons/profile/project-categories/categories-renovation-icon.svg';
+import ElectricalIcon from 'public/icons/profile/project-categories/categories-electrical-icon.svg';
 
 export interface ProjectCategory {
 	id: string;

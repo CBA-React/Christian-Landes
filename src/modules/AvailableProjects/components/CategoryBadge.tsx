@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { getCategoryFromMap } from '../../../shared/constants/projectCategories';
+import { getCategoryFromMap } from '@/modules/AvailableProjects/projectCategories';
 
 interface CategoryBadgeProps {
 	categoryName: string;

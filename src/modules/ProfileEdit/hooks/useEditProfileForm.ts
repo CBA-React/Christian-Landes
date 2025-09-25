@@ -8,11 +8,15 @@ import { useFileUpload } from '@/shared/hooks/useFileUpload';
 import type { UpdateProfileWithImageData } from '../hooks/useEditProfile';
 
 const editProfileSchema = z.object({
-	fullName: z.string().min(2, 'Name must be at least 2 characters'),
+	fullName: z
+		.string()
+		.min(2, 'Name must be at least 2 characters')
+		.max(24, 'Name must be less than 23 characters'),
 	email: z
 		.string()
 		.email('Please enter a valid email address')
-		.min(1, 'Email is required'),
+		.min(1, 'Email is required')
+		.max(28, 'Email must be less than 28 characters'),
 	phone: z
 		.string()
 		.min(1, 'Phone number is required')
@@ -20,7 +24,10 @@ const editProfileSchema = z.object({
 			/^[\+]?[(]?[\d\s\-\(\)]{7,}$/,
 			'Please enter a valid phone number',
 		),
-	location: z.string().min(2, 'Location is required'),
+	location: z
+		.string()
+		.min(2, 'Location is required')
+		.max(24, 'Location must be less than 24 characters'),
 	about: z.string().optional().default(''),
 	specialities: z.array(z.string()).default([]),
 });
@@ -159,12 +166,13 @@ export function useEditProfileForm({
 	);
 
 	const currentPreviewUrl = previewUrl || previewImage;
+	const isUploadingImage = isUploading || isImageUploading;
 
 	return {
 		form,
 		selectedSpecialities,
 		previewImage: currentPreviewUrl,
-		isUploadingImage: isUploading || isImageUploading,
+		isUploadingImage,
 		handleAddSpeciality,
 		handleRemoveSpeciality,
 		handleImageChange,
