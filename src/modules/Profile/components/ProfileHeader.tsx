@@ -42,10 +42,7 @@ export const ProfileHeader = ({
 			>
 				<div className="relative h-35 w-35 flex-shrink-0 overflow-hidden rounded-xl shadow-sm">
 					<Image
-						src={
-							profileData.avatar ||
-							'/images/Profile/mock-avatar.jpg'
-						}
+						src={profileData.avatar}
 						alt={`${profileData.name} profile picture`}
 						fill
 						className="object-cover"
