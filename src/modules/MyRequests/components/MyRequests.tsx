@@ -1,17 +1,12 @@
 'use client';
 
-import { JSX, useCallback } from 'react';
+import { JSX, useCallback, useState, useMemo } from 'react';
 import { StatusFilter } from './StatusFilter';
 import { RequestCard } from './RequestCard';
 import { RequestDisplayData, SimpleRequestFilters } from '../types/type';
-import { RequestsApi } from '../services/RequestsApi';
-import { usePaginatedData } from '@/shared/hooks/usePaginatedData';
 import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
-
-interface MyRequestsProps {
-	initialRequests?: RequestDisplayData[];
-}
+import { useMyRequests } from '../hooks/useMyRequests';
 
 const LoadingState = () => (
 	<div className="flex justify-center py-20" role="status" aria-live="polite">
@@ -66,7 +61,7 @@ const EmptyState = ({ message }: { message: string }) => (
 					strokeLinecap="round"
 					strokeLinejoin="round"
 					strokeWidth={1.5}
-					d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+					d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012 2v2M7 7h10"
 				/>
 			</svg>
 		</div>
@@ -137,46 +132,34 @@ const RequestsList = ({
 	</>
 );
 
-export const MyRequests = ({
-	initialRequests = [],
-}: MyRequestsProps): JSX.Element => {
-	const {
-		items: requests,
-		filters,
-		isLoading,
-		isLoadingMore,
-		error,
-		hasMore,
-		handleLoadMore,
-		handleFiltersChange,
-		handleRetry,
-	} = usePaginatedData<RequestDisplayData, SimpleRequestFilters>({
-		apiCall: async ({ page, perPage, filters }) => {
-			const response = await RequestsApi.getRequests({
-				page,
-				perPage,
-				filters,
-			});
-			return {
-				...response,
-				data: RequestsApi.transformRequestsForDisplay(response.data),
-			};
-		},
-		initialData: initialRequests,
-		defaultFilters: { status: 'all' },
-	});
+export const MyRequests = (): JSX.Element => {
+	const [selectedStatus, setSelectedStatus] = useState<string | null>('all');
 
-	const handleStatusChange = useCallback(
-		(status: string | null) => {
-			const statusValue = status === null ? 'all' : status;
-			const newFilters: SimpleRequestFilters = {
-				...filters,
-				status: statusValue as SimpleRequestFilters['status'],
-			};
-			handleFiltersChange(newFilters);
-		},
-		[handleFiltersChange, filters],
+	const filters = useMemo(
+		() => ({
+			status: (selectedStatus === 'all'
+				? 'all'
+				: selectedStatus) as SimpleRequestFilters['status'],
+		}),
+		[selectedStatus],
 	);
+
+	const {
+		data,
+		error,
+		isLoading,
+		isFetching,
+		isFetchingNextPage,
+		hasNextPage,
+		fetchNextPage,
+		refetch,
+	} = useMyRequests(filters);
+
+	const allRequests = data?.pages.flatMap((page) => page.data) || [];
+
+	const handleStatusChange = useCallback((status: string | null) => {
+		setSelectedStatus(status === null ? 'all' : status);
+	}, []);
 
 	const handleRequestClick = useCallback((requestId: string) => {
 		console.log('Request clicked:', requestId);
@@ -191,7 +174,6 @@ export const MyRequests = ({
 	}, []);
 
 	const getEmptyMessage = () => {
-		const selectedStatus = filters.status;
 		if (selectedStatus && selectedStatus !== 'all') {
 			const statusLabel =
 				selectedStatus.charAt(0).toUpperCase() +
@@ -201,30 +183,66 @@ export const MyRequests = ({
 		return "You haven't posted any requests yet.";
 	};
 
-	const renderContent = () => {
-		if (isLoading) {
-			return <LoadingState />;
-		}
-
-		if (error) {
-			return <ErrorState error={error} onRetry={handleRetry} />;
-		}
-
-		if (requests.length === 0) {
-			return <EmptyState message={getEmptyMessage()} />;
-		}
-
+	if (isLoading) {
 		return (
-			<RequestsList
-				requests={requests}
-				hasMore={hasMore}
-				isLoadingMore={isLoadingMore}
-				onLoadMore={handleLoadMore}
-				onRequestClick={handleRequestClick}
-				onCloseRequest={handleCloseRequest}
-			/>
+			<ErrorBoundary>
+				<ProfileLayout showHeader={true} showSidebar={true}>
+					<section className="mb-10 w-full max-w-full overflow-hidden">
+						<div className="mb-6">
+							<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
+								My Requests
+							</h1>
+							<p className="text-[16px] text-[#242424]/60">
+								All your job posts in one place.
+							</p>
+						</div>
+
+						<nav aria-label="Filter requests by status">
+							<StatusFilter
+								selectedStatus={
+									selectedStatus === 'all'
+										? null
+										: selectedStatus
+								}
+								onStatusChange={handleStatusChange}
+								onFiltersClick={handleFiltersClick}
+							/>
+						</nav>
+
+						<LoadingState />
+					</section>
+				</ProfileLayout>
+			</ErrorBoundary>
 		);
-	};
+	}
+
+	if (error) {
+		return (
+			<ErrorBoundary>
+				<ProfileLayout showHeader={true} showSidebar={true}>
+					<section className="mb-10 w-full max-w-full overflow-hidden">
+						<div className="mb-6">
+							<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
+								My Requests
+							</h1>
+							<p className="text-[16px] text-[#242424]/60">
+								All your job posts in one place.
+							</p>
+						</div>
+
+						<ErrorState
+							error={
+								error instanceof Error
+									? error.message
+									: 'Something went wrong'
+							}
+							onRetry={() => refetch()}
+						/>
+					</section>
+				</ProfileLayout>
+			</ErrorBoundary>
+		);
+	}
 
 	return (
 		<ErrorBoundary>
@@ -242,16 +260,38 @@ export const MyRequests = ({
 					<nav aria-label="Filter requests by status">
 						<StatusFilter
 							selectedStatus={
-								filters.status === 'all'
-									? null
-									: filters.status || null
+								selectedStatus === 'all' ? null : selectedStatus
 							}
 							onStatusChange={handleStatusChange}
 							onFiltersClick={handleFiltersClick}
 						/>
 					</nav>
 
-					{renderContent()}
+					{allRequests.length > 0 ? (
+						<>
+							<RequestsList
+								requests={allRequests}
+								hasMore={!!hasNextPage}
+								isLoadingMore={isFetchingNextPage}
+								onLoadMore={() => fetchNextPage()}
+								onRequestClick={handleRequestClick}
+								onCloseRequest={handleCloseRequest}
+							/>
+
+							{isFetching && !isFetchingNextPage && (
+								<div className="flex justify-center py-4">
+									<div className="flex items-center gap-3">
+										<div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+										<span className="text-sm text-gray-600">
+											Updating...
+										</span>
+									</div>
+								</div>
+							)}
+						</>
+					) : (
+						<EmptyState message={getEmptyMessage()} />
+					)}
 				</section>
 			</ProfileLayout>
 		</ErrorBoundary>

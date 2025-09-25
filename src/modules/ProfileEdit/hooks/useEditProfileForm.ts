@@ -11,11 +11,12 @@ const editProfileSchema = z.object({
 	fullName: z
 		.string()
 		.min(2, 'Name must be at least 2 characters')
-		.max(23, 'Name must be less than 23 characters'),
+		.max(24, 'Name must be less than 23 characters'),
 	email: z
 		.string()
 		.email('Please enter a valid email address')
-		.min(1, 'Email is required'),
+		.min(1, 'Email is required')
+		.max(28, 'Email must be less than 28 characters'),
 	phone: z
 		.string()
 		.min(1, 'Phone number is required')

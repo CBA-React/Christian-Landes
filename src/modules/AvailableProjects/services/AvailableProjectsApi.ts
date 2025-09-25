@@ -12,7 +12,7 @@ import type {
 	ProjectsResponse,
 } from '../types/type';
 
-export class ProjectsApi {
+export class AvailableProjectsApi {
 	static async getProjects(params: {
 		page?: number;
 		perPage?: number;

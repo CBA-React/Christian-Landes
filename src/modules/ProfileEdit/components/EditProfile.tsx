@@ -65,7 +65,6 @@ export const EditProfile = ({
 		editProfileMutation.isPending ||
 		isUploadingImage;
 
-	// Обработчик ошибок загрузки изображения
 	const handleImageErrorWithToast = (error: string) => {
 		toast.error(error);
 		handleImageError(error);
