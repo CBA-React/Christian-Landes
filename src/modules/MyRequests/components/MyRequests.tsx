@@ -7,6 +7,7 @@ import { RequestDisplayData, SimpleRequestFilters } from '../types/type';
 import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
 import { useMyRequests } from '../hooks/useMyRequests';
+import { FilterDrawer } from '@/shared/components/FilterDrawer/FilterDrawer';
 
 const LoadingState = () => (
 	<div className="flex justify-center py-20" role="status" aria-live="polite">
@@ -134,6 +135,8 @@ const RequestsList = ({
 
 export const MyRequests = (): JSX.Element => {
 	const [selectedStatus, setSelectedStatus] = useState<string | null>('all');
+	const [isFilterDrawerOpen, setIsFilterDrawerOpen] =
+		useState<boolean>(false);
 
 	const filters = useMemo(
 		() => ({
@@ -170,7 +173,7 @@ export const MyRequests = (): JSX.Element => {
 	}, []);
 
 	const handleFiltersClick = useCallback(() => {
-		console.log('Filters clicked');
+		setIsFilterDrawerOpen(true);
 	}, []);
 
 	const getEmptyMessage = () => {
@@ -294,6 +297,11 @@ export const MyRequests = (): JSX.Element => {
 					)}
 				</section>
 			</ProfileLayout>
+			<FilterDrawer
+				isOpen={isFilterDrawerOpen}
+				onClose={() => setIsFilterDrawerOpen(false)}
+				title="Filter"
+			/>
 		</ErrorBoundary>
 	);
 };
