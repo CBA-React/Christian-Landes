@@ -20,7 +20,7 @@ export const HowItWorks: React.FC = () => {
 						Lorem ipsum dolor sit amet consectetur. Quisque mattis
 						sapien porttitor id nunc sed molestie.
 					</p>
-					<Link className="max-w-[115px]" href="#">
+					<Link className="max-w-[115px]" href="/about">
 						<Button className="mt-2 !h-[43px] !w-max !bg-white !px-6 !py-3 !text-[#242424] md:mt-3">
 							About Us
 						</Button>

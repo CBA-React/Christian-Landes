@@ -1,11 +1,18 @@
+'use client';
 import React from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/shared/components/Button/Button';
+import { useAppSelector } from '@/shared/hooks/useStore';
 
 import ArrowRightIcon from 'public/icons/arrow-up-right-white-big.svg';
 
 export const HomeHero: React.FC = () => {
+	const token = useAppSelector((s) => s.auth.token);
+	const isAuthenticated = !!token;
+
+	const targetUrl = isAuthenticated ? '/profile' : '/login';
+
 	return (
 		<section
 			className="bg-size-[200% auto] flex h-[659px] flex-col gap-4 overflow-hidden bg-no-repeat md:h-[800px] md:justify-between md:gap-[0] md:bg-cover md:!bg-[position:0]"
@@ -36,7 +43,7 @@ export const HomeHero: React.FC = () => {
 			</div>
 			<div className="absolute top-[490px] left-0 h-[170px] w-full bg-[#415969] md:hidden"></div>
 			<div className="z-2 mx-5 flex flex-col justify-center gap-[6] md:flex-row md:gap-[0] xl:mx-auto">
-				<Link href="#">
+				<Link href={targetUrl}>
 					<Button
 						type="button"
 						variant="solid"
@@ -49,7 +56,7 @@ export const HomeHero: React.FC = () => {
 						Post a Project
 					</Button>
 				</Link>
-				<Link href="#">
+				<Link href={targetUrl}>
 					<Button
 						type="button"
 						variant="solid"

@@ -23,7 +23,7 @@ export const HomeContractors: React.FC = () => {
 						className="mb-8 hidden md:relative md:top-0 md:block"
 						aria-label="Call to action"
 					>
-						<Link href="#">
+						<Link href="/sign-up">
 							<Button
 								type="button"
 								variant="solid"
@@ -32,7 +32,7 @@ export const HomeContractors: React.FC = () => {
 								className="!h-[43px] !w-max !bg-[#242424] !px-6 !py-3 !text-[16px] !font-[500]"
 								aria-label="Subscribe as Contractor"
 							>
-								Subscribe Now
+								Register now
 							</Button>
 						</Link>
 					</nav>
@@ -83,4 +83,3 @@ export const HomeContractors: React.FC = () => {
 		</section>
 	);
 };
-
