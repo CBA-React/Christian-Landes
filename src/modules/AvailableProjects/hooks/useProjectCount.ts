@@ -1,19 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { RequestsApi } from '@/modules/MyRequests/services/RequestsApi';
-import { SimpleRequestFilters } from '@/modules/MyRequests/types/type';
+import { AvailableProjectsApi } from '@/modules/AvailableProjects/services/AvailableProjectsApi';
+import { SimpleProjectFilters } from '@/modules/AvailableProjects/types/type';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 
-interface UseRequestsCountResult {
+interface UseProjectsCountResult {
 	totalCount: number;
 	isLoading: boolean;
 	isPending: boolean;
 }
 
-export const useRequestsCount = (
-	filters: SimpleRequestFilters,
+export const useProjectsCount = (
+	filters: SimpleProjectFilters,
 	enabled: boolean = true,
 	debounceDelay: number = 500,
-): UseRequestsCountResult => {
+): UseProjectsCountResult => {
 	const debouncedFilters = useDebounce(filters, debounceDelay);
 
 	const {
@@ -21,9 +21,9 @@ export const useRequestsCount = (
 		isLoading,
 		isFetching,
 	} = useQuery({
-		queryKey: ['requests-count', debouncedFilters],
+		queryKey: ['projects-count', debouncedFilters],
 		queryFn: async () => {
-			const response = await RequestsApi.getRequests({
+			const response = await AvailableProjectsApi.getProjects({
 				page: 1,
 				perPage: 1,
 				filters: debouncedFilters,
