@@ -10,6 +10,7 @@ interface InputProps {
 	error?: FieldError;
 	placeholder?: string;
 	labelIcon?: ReactNode;
+	labelVariant?: 'form' | 'filter';
 }
 
 export const Input = ({
@@ -19,10 +20,16 @@ export const Input = ({
 	error,
 	placeholder,
 	labelIcon,
+	labelVariant = 'form',
 }: InputProps): JSX.Element => {
+	const labelStyles = {
+		form: 'flex items-center gap-2',
+		filter: 'font-chalet-960 text-[18px] font-medium text-[#252525]',
+	};
+
 	return (
 		<div className="flex flex-col gap-2.5 text-[#242424]">
-			<label className="flex items-center gap-2">
+			<label className={labelStyles[labelVariant]}>
 				{label}
 				{labelIcon && labelIcon}
 			</label>

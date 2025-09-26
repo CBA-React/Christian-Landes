@@ -4,7 +4,7 @@ import { SimpleProjectFilters } from '@/modules/AvailableProjects/types/type';
 
 export const useAvailableProjects = (filters: SimpleProjectFilters = {}) => {
 	return useInfiniteQuery({
-		queryKey: ['projects', filters],
+		queryKey: ['available-projects', filters],
 
 		queryFn: async ({ pageParam = 1 }) => {
 			const response = await AvailableProjectsApi.getProjects({

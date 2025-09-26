@@ -25,7 +25,8 @@ export class AvailableProjectsApi {
 				(filters.search && filters.search) ||
 				(filters.minBudget && filters.minBudget > 0) ||
 				(filters.maxBudget && filters.maxBudget > 0) ||
-				(filters.location && filters.location),
+				(filters.location && filters.location) ||
+				(filters.date && filters.date),
 		);
 
 		try {
@@ -36,12 +37,11 @@ export class AvailableProjectsApi {
 					page,
 					perPage,
 					location: filters.location || '',
-					date: '',
+					date: filters.date || '',
 					budget: {
 						from: filters.minBudget || 0,
 						to: filters.maxBudget || 0,
 					},
-					bids: '',
 					search: filters.search || '',
 					category: filters.category || '',
 				};

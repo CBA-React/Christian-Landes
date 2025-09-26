@@ -49,7 +49,6 @@ export interface ProjectFilters {
 		from?: number | string;
 		to?: number | string;
 	};
-	bids?: string;
 	search?: string;
 	category?: string;
 }
@@ -60,4 +59,5 @@ export interface SimpleProjectFilters {
 	minBudget?: number;
 	maxBudget?: number;
 	location?: string;
+	date?: '1d' | '7d' | '30d' | '';
 }
