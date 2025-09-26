@@ -4,6 +4,8 @@ import { JSX, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { UsersApi } from '@/modules/admin/services/UsersApi';
+import { EyeClose } from '@/modules/auth/components/ForgotPassword/EyeClose';
+import { EyeOpen } from '@/modules/auth/components/ForgotPassword/EyeOpen';
 import { Input } from '@/shared/components/Input/Input';
 import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
@@ -40,6 +42,7 @@ export function AddUserModal({
 	const [role, setRole] = useState<RoleNum | null>(null);
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [showPassword, setShowPassword] = useState(false);
 
 	const {
 		register,
@@ -228,23 +231,39 @@ export function AddUserModal({
 						error={errors.phone}
 					/>
 
-					<Input
-						label="Password"
-						type="password"
-						placeholder="Enter password"
-						register={register('password', {
-							required: 'Password is required',
-							minLength: {
-								value: 6,
-								message: 'Min 6 characters',
-							},
-							maxLength: {
-								value: MAX.password,
-								message: `Max ${MAX.password} characters`,
-							},
-						})}
-						error={errors.password}
-					/>
+					<div className="flex flex-col gap-[10px]">
+						<label htmlFor="password">Password</label>
+						<div className="relative">
+							<input
+								{...register('password', {
+									required: 'Password is required',
+									minLength: {
+										value: 6,
+										message: 'Min 6 characters',
+									},
+									maxLength: {
+										value: MAX.password,
+										message: `Max ${MAX.password} characters`,
+									},
+								})}
+								type={showPassword ? 'text' : 'password'}
+								className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none sm:block"
+								placeholder="Create a strong password"
+							/>
+							<button
+								type="button"
+								onClick={() => setShowPassword(!showPassword)}
+								className="absolute top-[50%] right-[18px] -translate-y-1/2"
+							>
+								{showPassword ? <EyeOpen /> : <EyeClose />}
+							</button>
+						</div>
+						{errors.password && (
+							<p className="mt-1 text-sm text-red-600">
+								{errors.password.message}
+							</p>
+						)}
+					</div>
 
 					<div className="mt-2 flex flex-row gap-3 sm:flex-col">
 						<button
@@ -269,7 +288,7 @@ export function AddUserModal({
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
 								>
-									<g clip-path="url(#clip0_0_8210)">
+									<g clipPath="url(#clip0_0_8210)">
 										<path
 											d="M7.46721 0.658267C5.4689 1.3515 3.74556 2.66728 2.55032 4.41233C1.35508 6.15739 0.750946 8.23974 0.826651 10.3535C0.902355 12.4673 1.65391 14.5011 2.97092 16.1562C4.28794 17.8113 6.10099 19.0004 8.14377 19.5489C9.7999 19.9762 11.535 19.995 13.2 19.6036C14.7083 19.2648 16.1028 18.5401 17.2469 17.5005C18.4376 16.3854 19.302 14.9668 19.7469 13.3973C20.2305 11.6906 20.3166 9.89566 19.9985 8.15045H10.6985V12.0083H16.0844C15.9768 12.6236 15.7461 13.2108 15.4062 13.7349C15.0663 14.2589 14.6242 14.7091 14.1063 15.0583C13.4486 15.4933 12.7072 15.786 11.9297 15.9176C11.1499 16.0626 10.3501 16.0626 9.57033 15.9176C8.78 15.7542 8.03236 15.428 7.37502 14.9598C6.319 14.2123 5.52608 13.1503 5.1094 11.9255C4.68567 10.6776 4.68567 9.32484 5.1094 8.07702C5.406 7.20235 5.89632 6.40598 6.54377 5.74733C7.2847 4.97975 8.22273 4.43108 9.25495 4.16151C10.2872 3.89195 11.3737 3.91191 12.3953 4.2192C13.1934 4.46419 13.9232 4.89223 14.5266 5.4692C15.1339 4.86504 15.7401 4.25931 16.3453 3.65202C16.6578 3.32545 16.9985 3.01452 17.3063 2.68014C16.3853 1.82307 15.3042 1.15617 14.125 0.717642C11.9777 -0.0620611 9.62811 -0.0830148 7.46721 0.658267Z"
 											fill="#242424"
@@ -326,7 +345,7 @@ export function AddUserModal({
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
 								>
-									<g clip-path="url(#clip0_0_8219)">
+									<g clipPath="url(#clip0_0_8219)">
 										<path
 											d="M10 0C15.5228 0 20 4.47719 20 10C20 14.9913 16.3431 19.1287 11.5625 19.8789V12.8906H13.8926L14.3359 10H11.5625V8.12402C11.5626 7.38276 11.903 6.65902 12.9688 6.57129C13.04 6.56543 13.1146 6.5625 13.1924 6.5625H14.4531V4.10156C14.4531 4.10156 14.0059 4.025 13.4033 3.96777C13.042 3.93346 12.6249 3.90626 12.2148 3.90625C10.0019 3.90625 8.53105 5.20552 8.44141 7.56543C8.43852 7.64147 8.4375 7.71864 8.4375 7.79688V10H5.89844V12.8906H8.4375V19.8789C3.65688 19.1287 4.65813e-07 14.9912 0 10C0 4.47719 4.47719 0 10 0Z"
 											fill="#242424"
