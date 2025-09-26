@@ -22,12 +22,7 @@ const truncateEmail = (email: string, max: number): string => {
 	return local.length <= room ? email : local.slice(0, room) + '…' + domain;
 };
 
-const MAX_SHOW = {
-	name: 24,
-	email: 28,
-	phone: 18,
-	location: 24,
-};
+const MAX_SHOW = { name: 24, email: 28, phone: 18, location: 24 };
 
 const truncatePhone = (phone: string, max: number): string => {
 	if (phone.length <= max) return phone;
@@ -54,7 +49,9 @@ export default function ManagementPage(): JSX.Element {
 	const [users, setUsers] = useState<ApiUser[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [role, setRole] = useState<RoleNum | ''>('');
-	const [sort, setSort] = useState<'name' | 'date' | 'role'>('date');
+
+	type SortKey = '' | 'name' | 'date' | 'blockedAsc' | 'blockedDesc';
+	const [sort, setSort] = useState<SortKey>('');
 	const [order, setOrder] = useState<'asc' | 'desc'>('desc');
 
 	const [page, setPage] = useState(1);
@@ -63,10 +60,17 @@ export default function ManagementPage(): JSX.Element {
 
 	const [addOpen, setAddOpen] = useState(false);
 
+	const effectiveSort: Exclude<SortKey, ''> = useMemo(
+		() => (sort === '' ? 'date' : sort),
+		[sort],
+	);
+
+	const apiSort: 'name' | 'date' = effectiveSort === 'name' ? 'name' : 'date';
+
 	useEffect(() => {
 		let ignore = false;
 		setLoading(true);
-		UsersApi.getUsers({ page, perPage, role, sort, order })
+		UsersApi.getUsers({ page, perPage, role, sort: apiSort, order })
 			.then((d) => {
 				if (ignore) return;
 				setUsers(d.data ?? []);
@@ -78,13 +82,13 @@ export default function ManagementPage(): JSX.Element {
 		return (): void => {
 			ignore = true;
 		};
-	}, [page, perPage, role, sort, order]);
+	}, [page, perPage, role, apiSort, order]);
 
 	const rows = useMemo(() => {
 		const list = users.slice();
 		list.sort((a, b) => {
 			let cmp = 0;
-			if (sort === 'name') {
+			if (effectiveSort === 'name') {
 				cmp = (a.full_name || '').localeCompare(
 					b.full_name || '',
 					undefined,
@@ -92,8 +96,14 @@ export default function ManagementPage(): JSX.Element {
 						sensitivity: 'base',
 					},
 				);
-			} else if (sort === 'role') {
-				cmp = (a.role ?? 0) - (b.role ?? 0);
+			} else if (
+				effectiveSort === 'blockedAsc' ||
+				effectiveSort === 'blockedDesc'
+			) {
+				const ab = (a.block ?? false) ? 1 : 0;
+				const bb = (b.block ?? false) ? 1 : 0;
+				cmp = ab - bb;
+				if (effectiveSort === 'blockedDesc') cmp = -cmp;
 			} else {
 				cmp =
 					new Date(a.created_at).getTime() -
@@ -102,11 +112,14 @@ export default function ManagementPage(): JSX.Element {
 			return order === 'asc' ? cmp : -cmp;
 		});
 		return list;
-	}, [users, sort, order]);
+	}, [users, effectiveSort, order]);
 
 	const hasPrev = page > 1;
 	const hasNext =
 		total !== undefined ? page * perPage < total : users.length === perPage;
+
+	const orderDisabled =
+		effectiveSort === 'blockedAsc' || effectiveSort === 'blockedDesc';
 
 	return (
 		<div className="space-y-4">
@@ -129,7 +142,7 @@ export default function ManagementPage(): JSX.Element {
 					</h2>
 
 					{/* desktop controls*/}
-					<div className="hidden w-full items-center gap-2 max-[990px]:flex-col min-[990px]:max-w-[330px] sm:flex">
+					<div className="hidden w-full items-center gap-2 max-[990px]:flex-col min-[990px]:max-w-[370px] sm:flex">
 						<select
 							className="h-9 rounded-md border border-neutral-300 bg-white px-3 text-sm max-[990px]:w-full"
 							value={role}
@@ -156,26 +169,30 @@ export default function ManagementPage(): JSX.Element {
 								className="h-9 rounded-md border border-neutral-300 bg-white px-3 text-sm max-[990px]:w-full"
 								value={sort}
 								onChange={(e) =>
-									setSort(
-										e.target.value as
-											| 'role'
-											| 'name'
-											| 'date',
-									)
+									setSort(e.target.value as SortKey)
 								}
 							>
-								<option value="date">Sort By: Date</option>
-								<option value="name">Sort By: Name</option>
-								<option value="role">Sort By: Role</option>
+								<option value="" disabled hidden>
+									Sort by
+								</option>
+								<option value="date">Date</option>
+								<option value="name">Name</option>
+								<option value="blockedDesc">
+									Blocked first
+								</option>
+								<option value="blockedAsc">
+									Unblocked first
+								</option>
 							</select>
 							<button
-								className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
+								className="h-9 rounded-md border border-neutral-300 px-3 text-sm disabled:opacity-40"
 								onClick={() =>
 									setOrder((o) =>
 										o === 'asc' ? 'desc' : 'asc',
 									)
 								}
 								title="Toggle order"
+								disabled={orderDisabled}
 							>
 								{order === 'asc' ? '↑' : '↓'}
 							</button>
@@ -189,15 +206,15 @@ export default function ManagementPage(): JSX.Element {
 						<select
 							className="h-10 flex-1 rounded-md border border-neutral-300 bg-white px-3 text-sm"
 							value={sort}
-							onChange={(e) =>
-								setSort(
-									e.target.value as 'role' | 'name' | 'date',
-								)
-							}
+							onChange={(e) => setSort(e.target.value as SortKey)}
 						>
-							<option value="date">Sort By</option>
+							<option value="" disabled hidden>
+								Sort by
+							</option>
+							<option value="date">Date</option>
 							<option value="name">Name</option>
-							<option value="role">Role</option>
+							<option value="blockedDesc">Blocked first</option>
+							<option value="blockedAsc">Unblocked first</option>
 						</select>
 						<select
 							className="h-10 flex-1 rounded-md border border-neutral-300 bg-white px-3 text-sm"
@@ -221,6 +238,7 @@ export default function ManagementPage(): JSX.Element {
 						</select>
 					</div>
 				</div>
+
 				{/* table (desktop) */}
 				<div className="-mx-5 overflow-x-auto min-[670px]:mx-0">
 					<table className="min-w-[980px] table-fixed border-collapse sm:min-w-full">
@@ -429,6 +447,7 @@ export default function ManagementPage(): JSX.Element {
 					</table>
 				</div>
 			</section>
+
 			<div className="flex items-center gap-2">
 				<label className="text-sm text-neutral-600">Rows:</label>
 				<select
@@ -460,6 +479,7 @@ export default function ManagementPage(): JSX.Element {
 					Next
 				</button>
 			</div>
+
 			<AddUserModal open={addOpen} onClose={() => setAddOpen(false)} />
 		</div>
 	);

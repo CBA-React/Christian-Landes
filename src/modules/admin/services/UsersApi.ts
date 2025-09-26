@@ -39,7 +39,7 @@ export class UsersApi {
 		perPage?: number;
 		role?: UserRole | '';
 		search?: string;
-		sort?: 'name' | 'date' | 'role';
+		sort?: '' | 'name' | 'date' | 'blocked';
 		order?: 'asc' | 'desc';
 	}): Promise<UsersResponse> {
 		const {
