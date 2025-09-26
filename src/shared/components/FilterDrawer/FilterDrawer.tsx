@@ -3,14 +3,12 @@ import React, { useEffect, ReactNode } from 'react';
 interface DrawerProps {
 	isOpen: boolean;
 	onClose: () => void;
-	title?: string;
 	children?: ReactNode;
 }
 
 export const FilterDrawer: React.FC<DrawerProps> = ({
 	isOpen,
 	onClose,
-	title = 'Filter',
 	children,
 }) => {
 	useEffect(() => {
@@ -46,37 +44,37 @@ export const FilterDrawer: React.FC<DrawerProps> = ({
 			/>
 
 			<div
-				className={`fixed top-0 right-0 z-10000 h-full transform bg-white transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} w-full md:w-80 md:rounded-l-2xl md:shadow-lg`}
+				className={`fixed top-0 right-0 z-10000 h-full transform bg-white transition-transform duration-300 ease-in-out sm:!w-[410px] ${isOpen ? 'translate-x-0' : 'translate-x-full'} w-full sm:rounded-l-2xl sm:shadow-lg`}
+				style={{
+					scrollbarWidth: 'none',
+					msOverflowStyle: 'none',
+				}}
 			>
-				<div className="flex h-full flex-col">
-					<div className="flex-shrink-0 p-8 pb-4">
-						<button
-							onClick={onClose}
-							className="absolute top-5 right-7 rounded-full p-2"
-						>
-							<svg
-								className="h-5 w-5"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M6 18L18 6M6 6l12 12"
-								/>
-							</svg>
-						</button>
-						<div className="flex items-center justify-between p-2">
-							<h2 className="text-[36px] font-medium">{title}</h2>
-						</div>
-					</div>
+				<style jsx>{`
+					div::-webkit-scrollbar {
+						display: none; /* Chrome, Safari and Opera */
+					}
+				`}</style>
 
-					<div className="flex-1 overflow-y-auto px-8 pb-6">
-						{children}
-					</div>
-				</div>
+				<button
+					onClick={onClose}
+					className="absolute top-6 right-5 z-10 cursor-pointer rounded-full p-2 sm:right-7"
+				>
+					<svg
+						className="h-6 w-6"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={2}
+							d="M6 18L18 6M6 6l12 12"
+						/>
+					</svg>
+				</button>
+				<div className="flex h-full flex-col">{children}</div>
 			</div>
 		</>
 	);

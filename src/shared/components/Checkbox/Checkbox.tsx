@@ -16,7 +16,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 	return (
 		<input
 			type="checkbox"
-			className={`h-4 w-4 rounded-[20px] border-neutral-300 accent-[#003BFF] ${className}`}
+			className={`h-4 w-4 !rounded-[40px] border-[#242424] accent-[#003BFF] ${className}`}
 			checked={checked}
 			onChange={onChange}
 			disabled={disabled}

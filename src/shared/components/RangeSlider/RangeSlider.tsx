@@ -27,25 +27,41 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
 	const THUMB_SIZE = 20;
 
 	const getPercentage = (value: number) =>
-		((value - min) / (max - min)) * 100;
+		Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
+
 	const getValueFromPosition = (position: number) => {
-		const percentage = position / SLIDER_WIDTH;
+		const trackWidth = SLIDER_WIDTH - THUMB_SIZE;
+		const percentage = Math.max(0, Math.min(1, position / trackWidth));
 		return Math.round(min + percentage * (max - min));
 	};
 
-	const handleMouseDown = (type: 'min' | 'max') => (e: React.MouseEvent) => {
-		e.preventDefault();
-		setIsDragging(type);
+	const getClientX = (e: MouseEvent | TouchEvent): number => {
+		if ('touches' in e) {
+			return e.touches[0]?.clientX || e.changedTouches[0]?.clientX || 0;
+		}
+		return e.clientX;
 	};
 
-	const handleMouseMove = (e: MouseEvent) => {
+	const handleStart =
+		(type: 'min' | 'max') => (e: React.MouseEvent | React.TouchEvent) => {
+			e.preventDefault();
+			setIsDragging(type);
+		};
+
+	const handleMove = (e: MouseEvent | TouchEvent) => {
 		if (!isDragging || !sliderRef.current) return;
 
 		const rect = sliderRef.current.getBoundingClientRect();
+		const clientX = getClientX(e);
+
 		const position = Math.max(
 			0,
-			Math.min(SLIDER_WIDTH, e.clientX - rect.left),
+			Math.min(
+				SLIDER_WIDTH - THUMB_SIZE,
+				clientX - rect.left - THUMB_SIZE / 2,
+			),
 		);
+
 		const newValue = getValueFromPosition(position);
 
 		if (isDragging === 'min') {
@@ -57,28 +73,50 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
 		}
 	};
 
-	const handleMouseUp = () => {
+	const handleEnd = () => {
 		setIsDragging(null);
 	};
 
 	useEffect(() => {
 		if (isDragging) {
-			document.addEventListener('mousemove', handleMouseMove);
-			document.addEventListener('mouseup', handleMouseUp);
+			document.addEventListener('mousemove', handleMove);
+			document.addEventListener('mouseup', handleEnd);
+
+			document.addEventListener('touchmove', handleMove, {
+				passive: false,
+			});
+			document.addEventListener('touchend', handleEnd);
+
 			return () => {
-				document.removeEventListener('mousemove', handleMouseMove);
-				document.removeEventListener('mouseup', handleMouseUp);
+				document.removeEventListener('mousemove', handleMove);
+				document.removeEventListener('mouseup', handleEnd);
+				document.removeEventListener('touchmove', handleMove);
+				document.removeEventListener('touchend', handleEnd);
 			};
 		}
 	}, [isDragging, minValue, maxValue]);
 
-	const minPosition = (getPercentage(minValue) / 100) * SLIDER_WIDTH;
-	const maxPosition = (getPercentage(maxValue) / 100) * SLIDER_WIDTH;
+	const trackWidth = SLIDER_WIDTH - THUMB_SIZE;
+	const minPosition = (getPercentage(minValue) / 100) * trackWidth;
+	const maxPosition = (getPercentage(maxValue) / 100) * trackWidth;
+
+	const getTextPosition = (thumbPosition: number, isMin: boolean) => {
+		const textWidth = 80;
+		const halfTextWidth = textWidth / 2;
+		const thumbCenter = thumbPosition + THUMB_SIZE / 2;
+
+		const minLeft = 0;
+		const maxLeft = SLIDER_WIDTH - halfTextWidth;
+
+		return (
+			Math.max(minLeft, Math.min(maxLeft, thumbCenter)) - halfTextWidth
+		);
+	};
 
 	return (
-		<div className={`space-y-4 ${className}`}>
+		<div className={`space-y-5 ${className}`}>
 			{label && (
-				<h3 className="text-base font-normal text-[#252525]">
+				<h3 className="font-chalet-1960 text-Ñ…18px font-medium text-[#252525]">
 					{label}
 				</h3>
 			)}
@@ -90,7 +128,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
 					style={{ width: SLIDER_WIDTH, height: THUMB_SIZE }}
 				>
 					<div
-						className="absolute bg-[#F0F0F0]"
+						className="absolute rounded-full bg-[#F0F0F0]"
 						style={{
 							top: (THUMB_SIZE - 6) / 2,
 							left: THUMB_SIZE / 2,
@@ -100,7 +138,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
 					/>
 
 					<div
-						className="absolute bg-[#252525]"
+						className="absolute rounded-full bg-[#252525]"
 						style={{
 							top: (THUMB_SIZE - 6) / 2,
 							left: THUMB_SIZE / 2 + minPosition,
@@ -110,33 +148,52 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
 					/>
 
 					<div
-						className="absolute cursor-pointer rounded-full bg-[#252525] transition-colors hover:bg-[#252525]"
+						className="absolute cursor-pointer rounded-full bg-[#252525] transition-colors select-none hover:bg-[#404040]"
 						style={{
 							width: THUMB_SIZE,
 							height: THUMB_SIZE,
 							left: minPosition,
 							top: 0,
+							touchAction: 'none',
 						}}
-						onMouseDown={handleMouseDown('min')}
+						onMouseDown={handleStart('min')}
+						onTouchStart={handleStart('min')}
 					/>
 
 					<div
-						className="absolute cursor-pointer rounded-full bg-[#252525] transition-colors hover:bg-[#252525]"
+						className="absolute cursor-pointer rounded-full bg-[#252525] transition-colors select-none hover:bg-[#404040]"
 						style={{
 							width: THUMB_SIZE,
 							height: THUMB_SIZE,
 							left: maxPosition,
 							top: 0,
+							touchAction: 'none',
 						}}
-						onMouseDown={handleMouseDown('max')}
+						onMouseDown={handleStart('max')}
+						onTouchStart={handleStart('max')}
 					/>
 				</div>
 
-				<div className="mt-4 flex justify-between">
-					<span className="text-base text-[#252525]">
+				<div className="relative mt-4" style={{ height: '20px' }}>
+					<span
+						className="absolute text-base text-[#252525] transition-all duration-150 ease-out select-none"
+						style={{
+							left: getTextPosition(minPosition, true),
+							width: '80px',
+							textAlign: 'center',
+						}}
+					>
 						{formatValue(minValue)}
 					</span>
-					<span className="text-base text-[#252525]">
+
+					<span
+						className="absolute text-base text-[#252525] transition-all duration-150 ease-out select-none"
+						style={{
+							left: getTextPosition(maxPosition, false),
+							width: '80px',
+							textAlign: 'center',
+						}}
+					>
 						{formatValue(maxValue)}
 					</span>
 				</div>

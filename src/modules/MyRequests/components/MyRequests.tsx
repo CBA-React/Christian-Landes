@@ -8,6 +8,7 @@ import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
 import { useMyRequests } from '../hooks/useMyRequests';
 import { FilterDrawer } from '@/shared/components/FilterDrawer/FilterDrawer';
+import { FilterForm, FilterFormData } from './FilterForm';
 
 const LoadingState = () => (
 	<div className="flex justify-center py-20" role="status" aria-live="polite">
@@ -138,13 +139,23 @@ export const MyRequests = (): JSX.Element => {
 	const [isFilterDrawerOpen, setIsFilterDrawerOpen] =
 		useState<boolean>(false);
 
+	const [activeFilters, setActiveFilters] = useState<FilterFormData>({
+		search: '',
+		location: '',
+		date: '',
+		minBudget: 0,
+		maxBudget: 50000,
+		bids: '',
+	});
+
 	const filters = useMemo(
 		() => ({
 			status: (selectedStatus === 'all'
 				? 'all'
 				: selectedStatus) as SimpleRequestFilters['status'],
+			...activeFilters,
 		}),
-		[selectedStatus],
+		[selectedStatus, activeFilters],
 	);
 
 	const {
@@ -174,6 +185,26 @@ export const MyRequests = (): JSX.Element => {
 
 	const handleFiltersClick = useCallback(() => {
 		setIsFilterDrawerOpen(true);
+	}, []);
+
+	const handleFiltersChange = useCallback((newFilters: FilterFormData) => {
+		setActiveFilters(newFilters);
+	}, []);
+
+	const handleApplyFilters = useCallback(() => {
+		setIsFilterDrawerOpen(false);
+	}, []);
+
+	const handleClearFilters = useCallback(() => {
+		const clearedFilters: FilterFormData = {
+			search: '',
+			location: '',
+			date: '',
+			minBudget: 0,
+			maxBudget: 50000,
+			bids: '',
+		};
+		setActiveFilters(clearedFilters);
 	}, []);
 
 	const getEmptyMessage = () => {
@@ -297,11 +328,19 @@ export const MyRequests = (): JSX.Element => {
 					)}
 				</section>
 			</ProfileLayout>
+
 			<FilterDrawer
 				isOpen={isFilterDrawerOpen}
 				onClose={() => setIsFilterDrawerOpen(false)}
-				title="Filter"
-			/>
+			>
+				<FilterForm
+					filters={activeFilters}
+					onFiltersChange={handleFiltersChange}
+					onApply={handleApplyFilters}
+					onClear={handleClearFilters}
+					currentStatus={selectedStatus}
+				/>
+			</FilterDrawer>
 		</ErrorBoundary>
 	);
 };
