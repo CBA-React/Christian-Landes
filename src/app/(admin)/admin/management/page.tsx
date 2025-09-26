@@ -85,16 +85,17 @@ export default function ManagementPage(): JSX.Element {
 	}, [page, perPage, role, apiSort, order]);
 
 	const rows = useMemo(() => {
-		const list = users.slice();
+		const filtered =
+			role === '' ? users : users.filter((u) => u.role === role);
+
+		const list = filtered.slice();
 		list.sort((a, b) => {
 			let cmp = 0;
 			if (effectiveSort === 'name') {
 				cmp = (a.full_name || '').localeCompare(
 					b.full_name || '',
 					undefined,
-					{
-						sensitivity: 'base',
-					},
+					{ sensitivity: 'base' },
 				);
 			} else if (
 				effectiveSort === 'blockedAsc' ||
@@ -112,7 +113,7 @@ export default function ManagementPage(): JSX.Element {
 			return order === 'asc' ? cmp : -cmp;
 		});
 		return list;
-	}, [users, effectiveSort, order]);
+	}, [users, role, effectiveSort, order]);
 
 	const hasPrev = page > 1;
 	const hasNext =
@@ -177,12 +178,8 @@ export default function ManagementPage(): JSX.Element {
 								</option>
 								<option value="date">Date</option>
 								<option value="name">Name</option>
-								<option value="blockedDesc">
-									Blocked first
-								</option>
-								<option value="blockedAsc">
-									Unblocked first
-								</option>
+								<option value="blockedDesc">Unblocked</option>
+								<option value="blockedAsc">Blocked</option>
 							</select>
 							<button
 								className="h-9 rounded-md border border-neutral-300 px-3 text-sm disabled:opacity-40"
