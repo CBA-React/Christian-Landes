@@ -1,33 +1,37 @@
-import { useState, useCallback } from 'react';
-import { useForm } from 'react-hook-form';
+import { useCallback, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { UpdateProfileFormData } from '../types';
-import { ProfileData } from '@/shared/types/profile';
+
+import { MAX, phoneRegex } from '@/shared/constants/authSchema';
 import { useFileUpload } from '@/shared/hooks/useFileUpload';
+import { ProfileData } from '@/shared/types/profile';
 import type { UpdateProfileWithImageData } from '../hooks/useEditProfile';
+import { UpdateProfileFormData } from '../types';
 
 const editProfileSchema = z.object({
 	fullName: z
 		.string()
-		.min(2, 'Name must be at least 2 characters')
-		.max(24, 'Name must be less than 23 characters'),
+		.min(2, 'Full name must be at least 2 characters')
+		.max(MAX.full_name, `Max ${MAX.full_name} characters`),
 	email: z
 		.string()
-		.email('Please enter a valid email address')
-		.min(1, 'Email is required')
-		.max(28, 'Email must be less than 28 characters'),
+		.regex(
+			/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+			'Please enter a valid email',
+		)
+		.max(MAX.email, `Max ${MAX.email} characters`),
 	phone: z
 		.string()
-		.min(1, 'Phone number is required')
-		.regex(
-			/^[\+]?[(]?[\d\s\-\(\)]{7,}$/,
-			'Please enter a valid phone number',
-		),
+		.max(MAX.phone, `Max ${MAX.phone} characters`)
+		.or(z.literal(''))
+		.refine((v) => !v || phoneRegex.test(v), {
+			message: 'Please enter a valid phone number',
+		}),
 	location: z
 		.string()
-		.min(2, 'Location is required')
-		.max(24, 'Location must be less than 24 characters'),
+		.min(2, 'Please enter your city, state, or ZIP code')
+		.max(MAX.location, `Max ${MAX.location} characters`),
 	about: z.string().optional().default(''),
 	specialities: z.array(z.string()).default([]),
 });
