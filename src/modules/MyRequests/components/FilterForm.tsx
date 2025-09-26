@@ -5,7 +5,6 @@ import { Select } from '@/shared/components/Select/Select';
 import { RangeSlider } from '@/shared/components/RangeSlider/RangeSlider';
 import { Checkbox } from '@/shared/components/Checkbox/Checkbox';
 import { Button } from '@/shared/components/Button/Button';
-import { useDebounce } from '../hooks/useDebounce';
 import { useRequestsCount } from '../hooks/useRequestsCount';
 import { SimpleRequestFilters } from '../types/type';
 
@@ -67,8 +66,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
 		[currentStatus, watchedFields],
 	);
 
-	const debouncedFilters = useDebounce(allFiltersForCount, 3000);
-
 	const hasActiveFilters = Boolean(
 		watchedFields.search ||
 			watchedFields.location ||
@@ -79,8 +76,10 @@ export const FilterForm: React.FC<FilterFormProps> = ({
 			(currentStatus && currentStatus !== 'all'),
 	);
 
-	const { data: totalCount = 0, isLoading: isCountLoading } =
-		useRequestsCount(debouncedFilters, hasActiveFilters);
+	const { totalCount, isLoading, isPending } = useRequestsCount(
+		allFiltersForCount,
+		true,
+	);
 
 	const handleApply = () => {
 		onFiltersChange(watchedFields);
@@ -114,14 +113,14 @@ export const FilterForm: React.FC<FilterFormProps> = ({
 			return 'Show Requests';
 		}
 
-		if (isCountLoading) {
+		if (isPending || isLoading) {
 			return 'Counting...';
 		}
 
-		return totalCount > 0
-			? `Show ${totalCount} Request${totalCount !== 1 ? 's' : ''}`
-			: 'Show Requests';
+		return `Show ${totalCount} Request${totalCount !== 1 ? 's' : ''}`;
 	};
+
+	const isButtonDisabled = isPending || isLoading;
 
 	return (
 		<div
@@ -252,17 +251,18 @@ export const FilterForm: React.FC<FilterFormProps> = ({
 					</div>
 				</div>
 
-				{/* Кнопки - теперь в общем потоке, но прилипают к низу */}
 				<div className="mt-auto pt-8">
 					<div className="flex flex-col gap-3">
 						<Button
 							color="primary"
 							variant="solid"
-							className="w-full justify-center !p-3"
+							className={`w-full justify-center !p-3 transition-all duration-200 ${
+								isButtonDisabled ? 'opacity-75' : ''
+							}`}
 							onClick={handleApply}
-							disabled={isCountLoading}
+							disabled={isButtonDisabled}
 						>
-							{getButtonText()}
+							<span>{getButtonText()}</span>
 						</Button>
 
 						<div className="text-center">
