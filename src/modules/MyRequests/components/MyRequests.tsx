@@ -338,6 +338,7 @@ export const MyRequests = (): JSX.Element => {
 					onFiltersChange={handleFiltersChange}
 					onApply={handleApplyFilters}
 					onClear={handleClearFilters}
+					onClose={() => setIsFilterDrawerOpen(false)}
 					currentStatus={selectedStatus}
 				/>
 			</FilterDrawer>

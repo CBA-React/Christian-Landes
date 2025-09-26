@@ -36,6 +36,7 @@ interface ProjectFilterFormProps {
 	onFiltersChange: (filters: ProjectFilterFormData) => void;
 	onApply: () => void;
 	onClear: () => void;
+	onClose?: () => void;
 	currentCategory: string | null;
 }
 
@@ -44,6 +45,7 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 	onFiltersChange,
 	onApply,
 	onClear,
+	onClose,
 	currentCategory,
 }) => {
 	const { register, watch, setValue, reset } = useForm<ProjectFilterFormData>(
@@ -163,12 +165,32 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 				}
 			`}</style>
 
-			<div className="flex min-h-full flex-col px-5 pt-2 pb-5 sm:px-10 sm:pt-7 sm:pb-10">
+			<div className="flex min-h-full flex-col px-5 py-5 sm:px-10 sm:py-10">
 				<div className="flex-shrink-0 pb-2">
-					<div className="flex items-center justify-between pt-2">
+					<div className="flex items-center justify-between">
 						<h2 className="font-chalet-1960 text-[40px] font-medium">
 							Filter
 						</h2>
+						{onClose && (
+							<button
+								onClick={onClose}
+								className="cursor-pointer rounded-full"
+							>
+								<svg
+									className="h-6 w-6"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M6 18L18 6M6 6l12 12"
+									/>
+								</svg>
+							</button>
+						)}
 					</div>
 				</div>
 

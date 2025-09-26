@@ -56,24 +56,6 @@ export const FilterDrawer: React.FC<DrawerProps> = ({
 					}
 				`}</style>
 
-				<button
-					onClick={onClose}
-					className="absolute top-6 right-5 z-10 cursor-pointer rounded-full p-2 sm:right-7"
-				>
-					<svg
-						className="h-6 w-6"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M6 18L18 6M6 6l12 12"
-						/>
-					</svg>
-				</button>
 				<div className="flex h-full flex-col">{children}</div>
 			</div>
 		</>

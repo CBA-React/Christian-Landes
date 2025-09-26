@@ -175,7 +175,6 @@ export const AvailableProjects = (): JSX.Element => {
 
 	const handleCategoryChange = useCallback((category: string | null) => {
 		setSelectedCategory(category);
-		// Синхронизируем с activeFilters
 		setActiveFilters((prev) => ({
 			...prev,
 			category: category || '',
@@ -339,6 +338,7 @@ export const AvailableProjects = (): JSX.Element => {
 					onFiltersChange={handleFiltersChange}
 					onApply={handleApplyFilters}
 					onClear={handleClearFilters}
+					onClose={() => setIsFilterDrawerOpen(false)}
 					currentCategory={selectedCategory}
 				/>
 			</FilterDrawer>
