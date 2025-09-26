@@ -225,13 +225,9 @@ export default function ManagementPage(): JSX.Element {
 							}
 						>
 							<option value="">All</option>
-							<option value={ROLES.HOMEOWNER}>
-								Homeowner (1)
-							</option>
-							<option value={ROLES.CONTRACTOR}>
-								Contractor (2)
-							</option>
-							<option value={ROLES.ADMIN}>Admin (3)</option>
+							<option value={ROLES.HOMEOWNER}>Homeowner</option>
+							<option value={ROLES.CONTRACTOR}>Contractor</option>
+							<option value={ROLES.ADMIN}>Admin</option>
 						</select>
 					</div>
 				</div>
