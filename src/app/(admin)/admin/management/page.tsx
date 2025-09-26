@@ -295,7 +295,7 @@ export default function ManagementPage(): JSX.Element {
 												<img
 													src={
 														u.logo?.url ||
-														'/images/Profile/mock-avatar.jpg'
+														'/images/profile/mock-avatar.jpg'
 													}
 													alt={u.full_name}
 													className="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-black/5"

@@ -36,13 +36,13 @@ export function AdminProfileProvider({
 				setProfile({
 					name: data?.full_name || 'User',
 					avatar:
-						data?.logo?.url || '/images/Profile/mock-avatar.jpg',
+						data?.logo?.url || '/images/profile/mock-avatar.jpg',
 				});
 			} catch (e) {
 				if (!cancel)
 					setProfile({
 						name: 'User',
-						avatar: '/images/Profile/mock-avatar.jpg',
+						avatar: '/images/profile/mock-avatar.jpg',
 					});
 				console.error('Failed to load admin profile', e);
 			}
