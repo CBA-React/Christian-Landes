@@ -83,7 +83,7 @@ export const Select: React.FC<SelectProps> = ({
 				</div>
 
 				{isOpen && (
-					<div className="absolute top-full right-0 left-0 z-50 mt-1 max-h-60 overflow-y-auto border border-[#24242480] bg-white">
+					<div className="absolute top-full right-0 left-0 z-50 max-h-60 overflow-y-auto border border-[#24242480] bg-white">
 						{options.map((option) => (
 							<div
 								key={option.value}
