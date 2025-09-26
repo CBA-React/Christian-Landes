@@ -10,7 +10,6 @@ const ROLES = { HOMEOWNER: 1, CONTRACTOR: 2, ADMIN: 3 } as const;
 
 const truncate = (s: string, max: number): string =>
 	s.length <= max ? s : s.slice(0, max - 1) + '…';
-
 const truncateEmail = (email: string, max: number): string => {
 	if (email.length <= max) return email;
 	const at = email.indexOf('@');
@@ -22,13 +21,7 @@ const truncateEmail = (email: string, max: number): string => {
 	return local.length <= room ? email : local.slice(0, room) + '…' + domain;
 };
 
-const MAX_SHOW = {
-	name: 24,
-	email: 28,
-	phone: 18,
-	location: 24,
-};
-
+const MAX_SHOW = { name: 24, email: 28, phone: 18, location: 24 };
 const truncatePhone = (phone: string, max: number): string => {
 	if (phone.length <= max) return phone;
 	const tail = phone.slice(-4);
@@ -53,9 +46,15 @@ const formatDate = (iso: string): string =>
 export default function ManagementPage(): JSX.Element {
 	const [users, setUsers] = useState<ApiUser[]>([]);
 	const [loading, setLoading] = useState(true);
+
 	const [role, setRole] = useState<RoleNum | ''>('');
-	const [sort, setSort] = useState<'name' | 'date' | 'role'>('date');
+	type SortKey = '' | 'name' | 'date';
+	const [sort, setSort] = useState<SortKey>(''); // тільки локальні варіанти
 	const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+
+	// 👇 новий бекенд-фільтр за статусом
+	type BlockParam = 1 | 2 | '';
+	const [block, setBlock] = useState<BlockParam>(''); // '' — без фільтра; 1 — Blocked; 2 — Unblocked
 
 	const [page, setPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
@@ -63,10 +62,13 @@ export default function ManagementPage(): JSX.Element {
 
 	const [addOpen, setAddOpen] = useState(false);
 
+	const effectiveSort: Exclude<SortKey, ''> = sort === '' ? 'date' : sort;
+	const apiSort: 'name' | 'date' = effectiveSort === 'name' ? 'name' : 'date';
+
 	useEffect(() => {
 		let ignore = false;
 		setLoading(true);
-		UsersApi.getUsers({ page, perPage, role, sort, order })
+		UsersApi.getUsers({ page, perPage, role, sort: apiSort, order, block }) // 👈 передаємо block
 			.then((d) => {
 				if (ignore) return;
 				setUsers(d.data ?? []);
@@ -78,22 +80,23 @@ export default function ManagementPage(): JSX.Element {
 		return (): void => {
 			ignore = true;
 		};
-	}, [page, perPage, role, sort, order]);
+	}, [page, perPage, role, apiSort, order, block]);
 
 	const rows = useMemo(() => {
-		const list = users.slice();
+		// локальний фільтр за роллю (бек теж може фільтрувати роллю — дубль безпечний)
+		const filtered =
+			role === '' ? users : users.filter((u) => u.role === role);
+
+		// локальне сортування Date/Name (статус із бека вже відфільтрований, додатково не сортуємо по blocked)
+		const list = filtered.slice();
 		list.sort((a, b) => {
 			let cmp = 0;
-			if (sort === 'name') {
+			if (effectiveSort === 'name') {
 				cmp = (a.full_name || '').localeCompare(
 					b.full_name || '',
 					undefined,
-					{
-						sensitivity: 'base',
-					},
+					{ sensitivity: 'base' },
 				);
-			} else if (sort === 'role') {
-				cmp = (a.role ?? 0) - (b.role ?? 0);
 			} else {
 				cmp =
 					new Date(a.created_at).getTime() -
@@ -102,11 +105,29 @@ export default function ManagementPage(): JSX.Element {
 			return order === 'asc' ? cmp : -cmp;
 		});
 		return list;
-	}, [users, sort, order]);
+	}, [users, role, effectiveSort, order]);
 
 	const hasPrev = page > 1;
 	const hasNext =
 		total !== undefined ? page * perPage < total : users.length === perPage;
+
+	const handleSortSelect = (value: string): void => {
+		if (value === 'BLOCKED') {
+			setBlock(1);
+			setSort('date');
+			setPage(1);
+			return;
+		}
+		if (value === 'UNBLOCKED') {
+			setBlock(2);
+			setSort('date');
+			setPage(1);
+			return;
+		}
+		setBlock('');
+		setSort(value as SortKey);
+		setPage(1);
+	};
 
 	return (
 		<div className="space-y-4">
@@ -128,8 +149,8 @@ export default function ManagementPage(): JSX.Element {
 						REVENUE INFORMATION
 					</h2>
 
-					{/* desktop controls*/}
-					<div className="hidden w-full items-center gap-2 max-[990px]:flex-col min-[990px]:max-w-[330px] sm:flex">
+					{/* desktop controls */}
+					<div className="hidden w-full items-center gap-2 max-[990px]:flex-col min-[990px]:max-w-[370px] sm:flex">
 						<select
 							className="h-9 rounded-md border border-neutral-300 bg-white px-3 text-sm max-[990px]:w-full"
 							value={role}
@@ -142,31 +163,32 @@ export default function ManagementPage(): JSX.Element {
 							}
 						>
 							<option value="">All Roles</option>
-							<option value={ROLES.HOMEOWNER}>
-								Homeowner (1)
-							</option>
-							<option value={ROLES.CONTRACTOR}>
-								Contractor (2)
-							</option>
-							<option value={ROLES.ADMIN}>Admin (3)</option>
+							<option value={ROLES.HOMEOWNER}>Homeowner</option>
+							<option value={ROLES.CONTRACTOR}>Contractor</option>
+							<option value={ROLES.ADMIN}>Admin</option>
 						</select>
 
 						<div className="flex items-center gap-2 max-[990px]:w-full">
 							<select
 								className="h-9 rounded-md border border-neutral-300 bg-white px-3 text-sm max-[990px]:w-full"
-								value={sort}
+								value={
+									block
+										? block === 1
+											? 'BLOCKED'
+											: 'UNBLOCKED'
+										: sort
+								}
 								onChange={(e) =>
-									setSort(
-										e.target.value as
-											| 'role'
-											| 'name'
-											| 'date',
-									)
+									handleSortSelect(e.target.value)
 								}
 							>
-								<option value="date">Sort By: Date</option>
-								<option value="name">Sort By: Name</option>
-								<option value="role">Sort By: Role</option>
+								<option value="" disabled hidden>
+									Sort by
+								</option>
+								<option value="date">Date</option>
+								<option value="name">Name</option>
+								<option value="BLOCKED">Blocked</option>
+								<option value="UNBLOCKED">Unblocked</option>
 							</select>
 							<button
 								className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
@@ -188,17 +210,24 @@ export default function ManagementPage(): JSX.Element {
 					<div className="flex gap-2">
 						<select
 							className="h-10 flex-1 rounded-md border border-neutral-300 bg-white px-3 text-sm"
-							value={sort}
-							onChange={(e) =>
-								setSort(
-									e.target.value as 'role' | 'name' | 'date',
-								)
+							value={
+								block
+									? block === 1
+										? 'BLOCKED'
+										: 'UNBLOCKED'
+									: sort
 							}
+							onChange={(e) => handleSortSelect(e.target.value)}
 						>
-							<option value="date">Sort By</option>
+							<option value="" disabled hidden>
+								Sort by
+							</option>
+							<option value="date">Date</option>
 							<option value="name">Name</option>
-							<option value="role">Role</option>
+							<option value="BLOCKED">Blocked</option>
+							<option value="UNBLOCKED">Unblocked</option>
 						</select>
+
 						<select
 							className="h-10 flex-1 rounded-md border border-neutral-300 bg-white px-3 text-sm"
 							value={role}
@@ -211,16 +240,13 @@ export default function ManagementPage(): JSX.Element {
 							}
 						>
 							<option value="">All</option>
-							<option value={ROLES.HOMEOWNER}>
-								Homeowner (1)
-							</option>
-							<option value={ROLES.CONTRACTOR}>
-								Contractor (2)
-							</option>
-							<option value={ROLES.ADMIN}>Admin (3)</option>
+							<option value={ROLES.HOMEOWNER}>Homeowner</option>
+							<option value={ROLES.CONTRACTOR}>Contractor</option>
+							<option value={ROLES.ADMIN}>Admin</option>
 						</select>
 					</div>
 				</div>
+
 				{/* table (desktop) */}
 				<div className="-mx-5 overflow-x-auto min-[670px]:mx-0">
 					<table className="min-w-[980px] table-fixed border-collapse sm:min-w-full">
@@ -280,7 +306,7 @@ export default function ManagementPage(): JSX.Element {
 												<img
 													src={
 														u.logo?.url ||
-														'/images/Profile/mock-avatar.jpg'
+														'/images/profile/mock-avatar.jpg'
 													}
 													alt={u.full_name}
 													className="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-black/5"
@@ -338,19 +364,19 @@ export default function ManagementPage(): JSX.Element {
 										<td className="px-4 py-4 whitespace-nowrap">
 											<span
 												className={
-													(u.block ?? false) === true
+													(u.block ?? false)
 														? 'text-orange-500'
 														: 'text-emerald-600'
 												}
 											>
-												{(u.block ?? false) === true
+												{(u.block ?? false)
 													? 'Blocked'
 													: 'Unblocked'}
 											</span>
 										</td>
 										<td className="px-4 py-4">
 											<div className="flex items-center gap-2 whitespace-nowrap">
-												{(u.block ?? false) === true ? (
+												{(u.block ?? false) ? (
 													<button
 														onClick={() =>
 															UsersApi.toggleBlock(
@@ -429,6 +455,7 @@ export default function ManagementPage(): JSX.Element {
 					</table>
 				</div>
 			</section>
+
 			<div className="flex items-center gap-2">
 				<label className="text-sm text-neutral-600">Rows:</label>
 				<select
@@ -460,6 +487,7 @@ export default function ManagementPage(): JSX.Element {
 					Next
 				</button>
 			</div>
+
 			<AddUserModal open={addOpen} onClose={() => setAddOpen(false)} />
 		</div>
 	);

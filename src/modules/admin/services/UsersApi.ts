@@ -39,8 +39,9 @@ export class UsersApi {
 		perPage?: number;
 		role?: UserRole | '';
 		search?: string;
-		sort?: 'name' | 'date' | 'role';
+		sort?: '' | 'name' | 'date' | 'blocked';
 		order?: 'asc' | 'desc';
+		block?: 1 | 2 | '';
 	}): Promise<UsersResponse> {
 		const {
 			page = 1,
@@ -49,12 +50,13 @@ export class UsersApi {
 			search = '',
 			sort = 'date',
 			order = 'desc',
+			block = '',
 		} = params || {};
 		const url = `/admin/users/getUsers?page=${page}&perPage=${perPage}${
 			role ? `&role=${role}` : ''
 		}${search ? `&search=${encodeURIComponent(search)}` : ''}${
 			sort ? `&sort=${sort}&order=${order}` : ''
-		}`;
+		}${block ? `&block=${block}` : ''}`;
 		const res = await axiosInstance.get<UsersResponse>(url);
 		return res.data;
 	}

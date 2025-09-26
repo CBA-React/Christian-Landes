@@ -13,57 +13,13 @@ import { EyeOpen } from '@/modules/auth/components/ForgotPassword/EyeOpen';
 import { AuthApi } from '@/modules/auth/services/AuthApi';
 import { RegisterPayload } from '@/modules/auth/type';
 import { Button } from '@/shared/components/Button/Button';
+import { registrationSchema } from '@/shared/constants/authSchema';
 import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 import { ROLE_BY_PATH } from '../../constats';
 
 import ArrowIcon from 'public/icons/arrow-up-right-white-big.svg';
 import FacebookLogin from 'public/icons/facebook-login.svg';
 import GoogleLogin from 'public/icons/google-login.svg';
-
-const phoneRegex = /^(?:(?:\+)?[0-9\s\-().]{7,})$/;
-
-const passwordSchema = z
-	.string()
-	.min(8, 'Password must be at least 8 characters')
-	.refine((v) => /[A-Z]/.test(v), {
-		message: 'Password must contain at least one uppercase letter',
-	})
-	.refine((v) => /[a-z]/.test(v), {
-		message: 'Password must contain at least one lowercase letter',
-	})
-	.refine((v) => /\d/.test(v), {
-		message: 'Password must contain at least one digit',
-	})
-	.refine((v) => /[^A-Za-z0-9]/.test(v), {
-		message: 'Password must contain at least one special character',
-	});
-
-const registrationSchema = z
-	.object({
-		fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-		email: z
-			.string()
-			.regex(
-				/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-				'Please enter a valid email',
-			),
-		phoneNumber: z
-			.string()
-			.regex(phoneRegex, 'Please enter a valid phone number'),
-		location: z
-			.string()
-			.min(2, 'Please enter your city, state, or ZIP code'),
-		password: passwordSchema,
-		confirmPassword: z.string().min(8, 'Confirm password is required'),
-		termsAccepted: z.boolean().refine((v) => v, {
-			message:
-				'You must agree to the Terms of Service and Privacy Policy',
-		}),
-	})
-	.refine((d) => d.password === d.confirmPassword, {
-		message: "Passwords don't match",
-		path: ['confirmPassword'],
-	});
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>;
 
@@ -186,7 +142,7 @@ export const SignUp = (): JSX.Element => {
 							{...register('password')}
 							type={showPassword ? 'text' : 'password'}
 							className="w-full border border-[#24242480] p-2 placeholder:text-[#24242480] focus:outline-none sm:block"
-							placeholder="Create a strong password (min. 8 characters)"
+							placeholder="Create a strong password"
 						/>
 						<button
 							type="button"

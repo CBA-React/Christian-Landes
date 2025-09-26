@@ -33,7 +33,6 @@ type PasswordForm = {
 };
 
 export default function Settings(): JSX.Element {
-	/** ===================== FETCH PROFILE ===================== */
 	const {
 		data: profile,
 		isLoading: loadingProfile,
@@ -47,7 +46,6 @@ export default function Settings(): JSX.Element {
 		},
 	});
 
-	/** ===================== PROFILE FORM ===================== */
 	const {
 		register,
 		handleSubmit,
@@ -109,13 +107,11 @@ export default function Settings(): JSX.Element {
 			email: values.email.trim(),
 			phone: values.phone.trim(),
 			location: values.location.trim(),
-			// backend очікує logo як об’єкт; якщо новий — кидаємо з upload’у, інакше — не чіпаємо
 			...(uploadedFile ? { logo: uploadedFile } : {}),
 		};
 		await updateProfileMutation.mutateAsync(body);
 	};
 
-	/** ===================== PASSWORD FORM ===================== */
 	const {
 		register: regPwd,
 		handleSubmit: handlePwd,
@@ -131,10 +127,9 @@ export default function Settings(): JSX.Element {
 	const confPwd = watchPwd('confirm_password');
 
 	const changePasswordMutation = useMutation({
-		// якщо у тебе інший ендпоінт — підстав свій
 		mutationFn: async (payload: PasswordForm) => {
 			await axiosInstance.post('auth/recoveryPasswordChangePassword', {
-				email: profile?.email, // або поточний email
+				email: profile?.email,
 				new_password: payload.new_password,
 				confirm_password: payload.confirm_password,
 			});
@@ -148,10 +143,8 @@ export default function Settings(): JSX.Element {
 
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-	/** ===================== UI ===================== */
 	return (
 		<div className="space-y-5">
-			{/* PROFILE MANAGEMENT */}
 			<section className="rounded-[16px] bg-white p-5 shadow-sm ring-1 ring-black/5 sm:p-6">
 				<h2 className="font-chalet-1960 mb-4 text-[18px] font-medium tracking-wide sm:text-[20px]">
 					PROFILE MANAGEMENT
@@ -283,8 +276,6 @@ export default function Settings(): JSX.Element {
 					</div>
 				</form>
 			</section>
-
-			{/* ACCOUNT SECURITY */}
 			<section className="rounded-[16px] bg-white p-5 shadow-sm ring-1 ring-black/5 sm:p-6">
 				<h2 className="font-chalet-1960 mb-4 text-[18px] font-medium tracking-wide sm:text-[20px]">
 					ACCOUNT SECURITY
@@ -319,8 +310,6 @@ export default function Settings(): JSX.Element {
 								</button>
 							</div>
 						</div>
-
-						{/* New */}
 						<div>
 							<label className="mb-[6px] block">
 								New Password
@@ -345,7 +334,6 @@ export default function Settings(): JSX.Element {
 							</div>
 						</div>
 
-						{/* Confirm */}
 						<div>
 							<label className="mb-[6px] block">
 								Confirm Password
@@ -372,8 +360,6 @@ export default function Settings(): JSX.Element {
 							</div>
 						</div>
 					</div>
-
-					{/* Google connect — просто тумблер для UI */}
 					<div className="flex items-center gap-3">
 						<label className="inline-flex cursor-pointer items-center">
 							<input
