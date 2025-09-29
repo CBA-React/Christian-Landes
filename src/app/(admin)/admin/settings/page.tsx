@@ -2,11 +2,12 @@
 
 import { JSX, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { SubmitErrorHandler, useForm } from 'react-hook-form';
 
 import { Input } from '@/shared/components/Input/Input';
 import { useFileUpload } from '@/shared/hooks/useFileUpload';
 import { axiosInstance } from '@/shared/lib/axiosInstance';
+import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 import type { UploadedFile } from '@/shared/types/upload';
 
 type ApiProfile = {
@@ -33,6 +34,8 @@ type PasswordForm = {
 };
 
 export default function Settings(): JSX.Element {
+	const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
 	const {
 		data: profile,
 		isLoading: loadingProfile,
@@ -70,6 +73,10 @@ export default function Settings(): JSX.Element {
 		});
 	}, [profile, reset]);
 
+	useEffect(() => {
+		if (profileDirty) setErrorMsg(null);
+	}, [profileDirty, setErrorMsg]);
+
 	const [avatar, setAvatar] = useState<UploadedFile | null>(null);
 	const previewOrCurrent = useMemo(() => {
 		if (avatar?.url) return avatar.url;
@@ -97,7 +104,17 @@ export default function Settings(): JSX.Element {
 			setAvatar(null);
 			refetch();
 		},
+		onError: (err) => {
+			setErrorMsg(getErrorMessage(err, 'Failed to save profile'));
+		},
 	});
+
+	const onInvalidProfile: SubmitErrorHandler<ProfileForm> = (errs) => {
+		const firstErr = Object.values(errs)[0];
+		setErrorMsg(
+			firstErr?.message ?? 'Please correct the highlighted fields',
+		);
+	};
 
 	const onSubmitProfile = async (values: ProfileForm): Promise<void> => {
 		if (!profile) return;
@@ -135,13 +152,19 @@ export default function Settings(): JSX.Element {
 			});
 		},
 		onSuccess: () => resetPwd(),
+		onError: (err) => {
+			setErrorMsg(getErrorMessage(err, 'Failed to change password'));
+		},
 	});
+
+	const onInvalidPassword: SubmitErrorHandler<PasswordForm> = (errs) => {
+		const firstErr = Object.values(errs)[0];
+		setErrorMsg(firstErr?.message ?? 'Please fix password fields');
+	};
 
 	const onSubmitPassword = async (values: PasswordForm): Promise<void> => {
 		await changePasswordMutation.mutateAsync(values);
 	};
-
-	const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
 	return (
 		<div className="space-y-5">
@@ -151,7 +174,7 @@ export default function Settings(): JSX.Element {
 				</h2>
 
 				<form
-					onSubmit={handleSubmit(onSubmitProfile)}
+					onSubmit={handleSubmit(onSubmitProfile, onInvalidProfile)}
 					className="grid gap-5"
 				>
 					<div className="grid grid-cols-1 gap-5 sm:grid-cols-[auto,1fr]">
@@ -208,9 +231,12 @@ export default function Settings(): JSX.Element {
 								register={register('phone', {
 									pattern: {
 										value: /^[+()0-9-\s]*$/,
-										message: 'Invalid phone',
+										message: 'Invalid phone number',
 									},
-									maxLength: { value: 20, message: 'Max 20' },
+									maxLength: {
+										value: 20,
+										message: 'Max 20 characters',
+									},
 								})}
 								error={errors.phone}
 							/>
@@ -283,7 +309,7 @@ export default function Settings(): JSX.Element {
 
 				<form
 					className="grid gap-4"
-					onSubmit={handlePwd(onSubmitPassword)}
+					onSubmit={handlePwd(onSubmitPassword, onInvalidPassword)}
 				>
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 						{/* Current password */}
