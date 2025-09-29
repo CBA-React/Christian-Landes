@@ -5,8 +5,8 @@ import { Select } from '@/shared/components/Select/Select';
 import { RangeSlider } from '@/shared/components/RangeSlider/RangeSlider';
 import { Checkbox } from '@/shared/components/Checkbox/Checkbox';
 import { Button } from '@/shared/components/Button/Button';
-import { useProjectsCount } from '../hooks/useProjectCount';
-import { PROJECT_CATEGORIES } from '../projectCategories';
+import { useRequestsCount } from '../../hooks/useRequestsCount';
+import { SimpleRequestFilters } from '../../types/type';
 
 const JOB_CATEGORIES = [
 	'Handyperson',
@@ -22,44 +22,42 @@ const JOB_CATEGORIES = [
 	'Concrete',
 ];
 
-export interface ProjectFilterFormData {
+export interface FilterFormData {
 	search?: string;
 	location?: string;
 	date?: '1d' | '7d' | '30d' | '';
 	minBudget?: number;
 	maxBudget?: number;
-	category?: string;
+	bids?: '0' | '1' | '2' | '';
 }
 
-interface ProjectFilterFormProps {
-	filters: ProjectFilterFormData;
-	onFiltersChange: (filters: ProjectFilterFormData) => void;
+interface FilterFormProps {
+	filters: FilterFormData;
+	onFiltersChange: (filters: FilterFormData) => void;
 	onApply: () => void;
 	onClear: () => void;
 	onClose?: () => void;
-	currentCategory: string | null;
+	currentStatus: string | null;
 }
 
-export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
+export const FilterForm: React.FC<FilterFormProps> = ({
 	filters,
 	onFiltersChange,
 	onApply,
 	onClear,
 	onClose,
-	currentCategory,
+	currentStatus,
 }) => {
-	const { register, watch, setValue, reset } = useForm<ProjectFilterFormData>(
-		{
-			defaultValues: {
-				search: filters.search || '',
-				location: filters.location || '',
-				date: filters.date || '',
-				minBudget: filters.minBudget || 0,
-				maxBudget: filters.maxBudget || 50000,
-				category: filters.category || '',
-			},
+	const { register, watch, setValue, reset } = useForm<FilterFormData>({
+		defaultValues: {
+			search: filters.search || '',
+			location: filters.location || '',
+			date: filters.date || '',
+			minBudget: filters.minBudget || 0,
+			maxBudget: filters.maxBudget || 50000,
+			bids: filters.bids || '',
 		},
-	);
+	});
 
 	const watchedFields = watch();
 
@@ -70,16 +68,18 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 			date: filters.date || '',
 			minBudget: filters.minBudget || 0,
 			maxBudget: filters.maxBudget || 50000,
-			category: filters.category || currentCategory || '',
+			bids: filters.bids || '',
 		});
-	}, [filters, currentCategory, reset]);
+	}, [filters, reset]);
 
 	const allFiltersForCount = useMemo(
 		() => ({
-			category: currentCategory || watchedFields.category || '',
+			status: (currentStatus === 'all'
+				? 'all'
+				: currentStatus) as SimpleRequestFilters['status'],
 			...watchedFields,
 		}),
-		[currentCategory, watchedFields],
+		[currentStatus, watchedFields],
 	);
 
 	const hasActiveFilters = Boolean(
@@ -88,11 +88,11 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 			watchedFields.date ||
 			(watchedFields.minBudget && watchedFields.minBudget > 0) ||
 			(watchedFields.maxBudget && watchedFields.maxBudget < 50000) ||
-			watchedFields.category ||
-			currentCategory,
+			watchedFields.bids ||
+			(currentStatus && currentStatus !== 'all'),
 	);
 
-	const { totalCount, isLoading, isPending } = useProjectsCount(
+	const { totalCount, isLoading, isPending } = useRequestsCount(
 		allFiltersForCount,
 		true,
 	);
@@ -103,13 +103,13 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 	};
 
 	const handleClear = () => {
-		const clearedFilters: ProjectFilterFormData = {
+		const clearedFilters: FilterFormData = {
 			search: '',
 			location: '',
 			date: '',
 			minBudget: 0,
 			maxBudget: 50000,
-			category: '',
+			bids: '',
 		};
 		reset(clearedFilters);
 		onFiltersChange(clearedFilters);
@@ -122,10 +122,7 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 		{ value: '30d', label: 'Last 30 days' },
 	];
 
-	const categoryOptions = PROJECT_CATEGORIES.map((category) => ({
-		value: category.slug,
-		label: category.name,
-	}));
+	const currentBids = watch('bids');
 
 	const handleJobCategoryToggle = (category: string) => {
 		const currentSearch = watch('search') || '';
@@ -139,14 +136,14 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 
 	const getButtonText = () => {
 		if (!hasActiveFilters) {
-			return 'Show Projects';
+			return 'Show Requests';
 		}
 
 		if (isPending || isLoading) {
 			return 'Counting...';
 		}
 
-		return `Show ${totalCount} Project${totalCount !== 1 ? 's' : ''}`;
+		return `Show ${totalCount} Request${totalCount !== 1 ? 's' : ''}`;
 	};
 
 	const isButtonDisabled = isPending || isLoading;
@@ -213,7 +210,7 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 							onChange={(value) =>
 								setValue(
 									'date',
-									value as ProjectFilterFormData['date'],
+									value as FilterFormData['date'],
 								)
 							}
 						/>
@@ -237,20 +234,64 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 
 						<hr />
 
-						<Select
-							label="Category"
-							placeholder="Select category"
-							options={categoryOptions}
-							value={watch('category') || ''}
-							onChange={(value) => setValue('category', value)}
-						/>
+						<div className="space-y-3">
+							<h3 className="font-chalet-960 text-[18px] font-medium text-[#252525]">
+								Bids Count
+							</h3>
+							<div className="space-y-2">
+								<label className="flex cursor-pointer items-center gap-3">
+									<Checkbox
+										checked={currentBids === '0'}
+										onChange={() =>
+											setValue(
+												'bids',
+												currentBids === '0' ? '' : '0',
+											)
+										}
+									/>
+									<span className="text-[16px] text-[#252525]/60">
+										0 bids
+									</span>
+								</label>
+
+								<label className="flex cursor-pointer items-center gap-3">
+									<Checkbox
+										checked={currentBids === '1'}
+										onChange={() =>
+											setValue(
+												'bids',
+												currentBids === '1' ? '' : '1',
+											)
+										}
+									/>
+									<span className="text-[16px] text-[#252525]/60">
+										1-5 bids
+									</span>
+								</label>
+
+								<label className="flex cursor-pointer items-center gap-3">
+									<Checkbox
+										checked={currentBids === '2'}
+										onChange={() =>
+											setValue(
+												'bids',
+												currentBids === '2' ? '' : '2',
+											)
+										}
+									/>
+									<span className="text-[16px] text-[#252525]/60">
+										5+ bids
+									</span>
+								</label>
+							</div>
+						</div>
 
 						<hr />
 
 						<Input
-							label="Project Title"
+							label="Job Title"
 							labelVariant="filter"
-							placeholder="Write project title"
+							placeholder="Write job title"
 							register={register('search')}
 						/>
 
@@ -259,7 +300,7 @@ export const ProjectFilterForm: React.FC<ProjectFilterFormProps> = ({
 								{JOB_CATEGORIES.map((category) => {
 									const currentSearch = watch('search') || '';
 									const isSelected =
-										currentSearch.includes(category);
+										currentSearch === category;
 									return (
 										<label
 											key={category}

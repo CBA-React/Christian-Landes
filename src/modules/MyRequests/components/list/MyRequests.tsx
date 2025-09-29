@@ -1,13 +1,14 @@
 'use client';
 
-import { JSX, useState, useMemo, useCallback } from 'react';
-import { ProjectsFilter } from './ProjectsFilter';
-import { ProjectCard } from './ProjectCard';
+import { JSX, useCallback, useState, useMemo } from 'react';
+import { StatusFilter } from './StatusFilter';
+import { RequestCard } from './RequestCard';
+import { RequestDisplayData, SimpleRequestFilters } from '../../types/type';
 import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
-import { useAvailableProjects } from '../hooks/useAvailableProjects';
-import { FilterDrawer } from '@/shared/components/FilterDrawer/FilterDrawer';
-import { ProjectFilterForm, ProjectFilterFormData } from './ProjectFilterForm';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
+import { useMyRequests } from '../../hooks/useMyRequests';
+import { FilterDrawer } from '@/shared/components/FilterDrawer/FilterDrawer';
+import { FilterForm, FilterFormData } from './FilterForm';
 
 const LoadingState = () => (
 	<div className="flex justify-center py-20" role="status" aria-live="polite">
@@ -16,7 +17,7 @@ const LoadingState = () => (
 				className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
 				aria-hidden="true"
 			/>
-			<span className="text-gray-600">Loading projects...</span>
+			<span className="text-gray-600">Loading requests...</span>
 		</div>
 	</div>
 );
@@ -34,7 +35,7 @@ const ErrorState = ({
 		aria-live="polite"
 	>
 		<h2 className="mb-2 text-lg font-medium text-[#242424]">
-			Error loading projects
+			Error loading requests
 		</h2>
 		<p className="mb-4 text-[#242424]/50">{error}</p>
 		<button
@@ -67,41 +68,38 @@ const EmptyState = ({ message }: { message: string }) => (
 			</svg>
 		</div>
 		<h2 className="mb-2 text-lg font-medium text-[#242424]">
-			No projects available
+			No requests found
 		</h2>
 		<p className="text-[#242424]/50">{message}</p>
 	</section>
 );
 
-const ProjectsList = ({
-	projects,
+const RequestsList = ({
+	requests,
 	hasMore,
 	isLoadingMore,
 	onLoadMore,
-	onProjectClick,
+	onRequestClick,
+	onCloseRequest,
 }: {
-	projects: any[];
+	requests: RequestDisplayData[];
 	hasMore: boolean;
 	isLoadingMore: boolean;
 	onLoadMore: () => void;
-	onProjectClick: (id: string) => void;
+	onRequestClick: (id: string) => void;
+	onCloseRequest: (id: string) => void;
 }) => (
 	<>
 		<section
-			className="grid grid-cols-1 gap-6 gap-y-6 md:grid-cols-2 md:gap-y-10 xl:grid-cols-3"
-			aria-label="List of projects"
+			className="grid grid-cols-1 gap-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3"
+			aria-label="List of requests"
 		>
-			{projects.map((project) => (
-				<article key={project.id}>
-					<ProjectCard
-						id={project.id}
-						title={project.title}
-						location={project.location}
-						description={project.description}
-						price={project.budgetFormatted}
-						imageUrl={project.images[0]}
-						category={project.category}
-						onCardClick={onProjectClick}
+			{requests.map((request) => (
+				<article key={request.id}>
+					<RequestCard
+						request={request}
+						onCardClick={onRequestClick}
+						onCloseRequest={onCloseRequest}
 						className="w-full"
 					/>
 				</article>
@@ -111,7 +109,7 @@ const ProjectsList = ({
 		{hasMore && (
 			<nav
 				className="mt-20 mb-5 flex justify-center md:mb-20"
-				aria-label="Load more projects"
+				aria-label="Load more requests"
 			>
 				<button
 					onClick={onLoadMore}
@@ -122,7 +120,7 @@ const ProjectsList = ({
 						<div className="flex items-center gap-3">
 							<div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
 							<span className="text-gray-600">
-								Loading projects...
+								Loading requests...
 							</span>
 						</div>
 					) : (
@@ -136,28 +134,28 @@ const ProjectsList = ({
 	</>
 );
 
-export const AvailableProjects = (): JSX.Element => {
-	const [selectedCategory, setSelectedCategory] = useState<string | null>(
-		null,
-	);
+export const MyRequests = (): JSX.Element => {
+	const [selectedStatus, setSelectedStatus] = useState<string | null>('all');
 	const [isFilterDrawerOpen, setIsFilterDrawerOpen] =
 		useState<boolean>(false);
 
-	const [activeFilters, setActiveFilters] = useState<ProjectFilterFormData>({
+	const [activeFilters, setActiveFilters] = useState<FilterFormData>({
 		search: '',
 		location: '',
 		date: '',
 		minBudget: 0,
 		maxBudget: 50000,
-		category: '',
+		bids: '',
 	});
 
 	const filters = useMemo(
 		() => ({
-			...(selectedCategory && { category: selectedCategory }),
+			status: (selectedStatus === 'all'
+				? 'all'
+				: selectedStatus) as SimpleRequestFilters['status'],
 			...activeFilters,
 		}),
-		[selectedCategory, activeFilters],
+		[selectedStatus, activeFilters],
 	);
 
 	const {
@@ -169,56 +167,54 @@ export const AvailableProjects = (): JSX.Element => {
 		hasNextPage,
 		fetchNextPage,
 		refetch,
-	} = useAvailableProjects(filters);
+	} = useMyRequests(filters);
 
-	const allProjects = data?.pages.flatMap((page) => page.data) || [];
+	const allRequests = data?.pages.flatMap((page) => page.data) || [];
 
-	const handleCategoryChange = useCallback((category: string | null) => {
-		setSelectedCategory(category);
-		setActiveFilters((prev) => ({
-			...prev,
-			category: category || '',
-		}));
+	const handleStatusChange = useCallback((status: string | null) => {
+		setSelectedStatus(status === null ? 'all' : status);
 	}, []);
 
-	const handleProjectClick = useCallback((projectId: string) => {
-		console.log('Project clicked:', projectId);
+	const handleRequestClick = useCallback((requestId: string) => {
+		console.log('Request clicked:', requestId);
+	}, []);
+
+	const handleCloseRequest = useCallback((requestId: string) => {
+		console.log('Close request clicked:', requestId);
 	}, []);
 
 	const handleFiltersClick = useCallback(() => {
 		setIsFilterDrawerOpen(true);
 	}, []);
 
-	const handleFiltersChange = useCallback(
-		(newFilters: ProjectFilterFormData) => {
-			setActiveFilters(newFilters);
-			setSelectedCategory(newFilters.category || null);
-		},
-		[],
-	);
+	const handleFiltersChange = useCallback((newFilters: FilterFormData) => {
+		setActiveFilters(newFilters);
+	}, []);
 
 	const handleApplyFilters = useCallback(() => {
 		setIsFilterDrawerOpen(false);
 	}, []);
 
 	const handleClearFilters = useCallback(() => {
-		const clearedFilters: ProjectFilterFormData = {
+		const clearedFilters: FilterFormData = {
 			search: '',
 			location: '',
 			date: '',
 			minBudget: 0,
 			maxBudget: 50000,
-			category: '',
+			bids: '',
 		};
 		setActiveFilters(clearedFilters);
-		setSelectedCategory(null);
 	}, []);
 
 	const getEmptyMessage = () => {
-		if (selectedCategory) {
-			return `No projects found in "${selectedCategory}" category.`;
+		if (selectedStatus && selectedStatus !== 'all') {
+			const statusLabel =
+				selectedStatus.charAt(0).toUpperCase() +
+				selectedStatus.slice(1);
+			return `No ${statusLabel.toLowerCase()} requests found.`;
 		}
-		return 'Check back later for new opportunities.';
+		return "You haven't posted any requests yet.";
 	};
 
 	if (isLoading) {
@@ -226,20 +222,23 @@ export const AvailableProjects = (): JSX.Element => {
 			<ErrorBoundary>
 				<ProfileLayout showHeader={true} showSidebar={true}>
 					<section className="mb-10 w-full max-w-full overflow-hidden">
-						<div className="mb-6 md:mb-6">
+						<div className="mb-6">
 							<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
-								Available Projects
+								My Requests
 							</h1>
 							<p className="text-[16px] text-[#242424]/60">
-								Find your next opportunity from our available
-								projects
+								All your job posts in one place.
 							</p>
 						</div>
 
-						<nav aria-label="Filter projects by category">
-							<ProjectsFilter
-								selectedCategory={selectedCategory}
-								onCategoryChange={handleCategoryChange}
+						<nav aria-label="Filter requests by status">
+							<StatusFilter
+								selectedStatus={
+									selectedStatus === 'all'
+										? null
+										: selectedStatus
+								}
+								onStatusChange={handleStatusChange}
 								onFiltersClick={handleFiltersClick}
 							/>
 						</nav>
@@ -256,13 +255,12 @@ export const AvailableProjects = (): JSX.Element => {
 			<ErrorBoundary>
 				<ProfileLayout showHeader={true} showSidebar={true}>
 					<section className="mb-10 w-full max-w-full overflow-hidden">
-						<div className="mb-6 md:mb-6">
+						<div className="mb-6">
 							<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
-								Available Projects
+								My Requests
 							</h1>
 							<p className="text-[16px] text-[#242424]/60">
-								Find your next opportunity from our available
-								projects
+								All your job posts in one place.
 							</p>
 						</div>
 
@@ -284,32 +282,34 @@ export const AvailableProjects = (): JSX.Element => {
 		<ErrorBoundary>
 			<ProfileLayout showHeader={true} showSidebar={true}>
 				<section className="mb-10 w-full max-w-full overflow-hidden">
-					<div className="mb-6 md:mb-6">
+					<div className="mb-6">
 						<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
-							Available Projects
+							My Requests
 						</h1>
 						<p className="text-[16px] text-[#242424]/60">
-							Find your next opportunity from our available
-							projects
+							All your job posts in one place.
 						</p>
 					</div>
 
-					<nav aria-label="Filter projects by category">
-						<ProjectsFilter
-							selectedCategory={selectedCategory}
-							onCategoryChange={handleCategoryChange}
+					<nav aria-label="Filter requests by status">
+						<StatusFilter
+							selectedStatus={
+								selectedStatus === 'all' ? null : selectedStatus
+							}
+							onStatusChange={handleStatusChange}
 							onFiltersClick={handleFiltersClick}
 						/>
 					</nav>
 
-					{allProjects.length > 0 ? (
+					{allRequests.length > 0 ? (
 						<>
-							<ProjectsList
-								projects={allProjects}
+							<RequestsList
+								requests={allRequests}
 								hasMore={!!hasNextPage}
 								isLoadingMore={isFetchingNextPage}
 								onLoadMore={() => fetchNextPage()}
-								onProjectClick={handleProjectClick}
+								onRequestClick={handleRequestClick}
+								onCloseRequest={handleCloseRequest}
 							/>
 
 							{isFetching && !isFetchingNextPage && (
@@ -333,13 +333,13 @@ export const AvailableProjects = (): JSX.Element => {
 				isOpen={isFilterDrawerOpen}
 				onClose={() => setIsFilterDrawerOpen(false)}
 			>
-				<ProjectFilterForm
+				<FilterForm
 					filters={activeFilters}
 					onFiltersChange={handleFiltersChange}
 					onApply={handleApplyFilters}
 					onClear={handleClearFilters}
 					onClose={() => setIsFilterDrawerOpen(false)}
-					currentCategory={selectedCategory}
+					currentStatus={selectedStatus}
 				/>
 			</FilterDrawer>
 		</ErrorBoundary>

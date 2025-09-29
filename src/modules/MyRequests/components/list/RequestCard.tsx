@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import Image from 'next/image';
-import { RequestDisplayData } from '../types/type';
+import { RequestDisplayData } from '../../types/type';
 import {
 	STATUS_CONFIG,
 	REQUEST_STATUSES,
