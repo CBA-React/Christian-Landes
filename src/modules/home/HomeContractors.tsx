@@ -1,9 +1,14 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/shared/components/Button/Button';
+import { useAppSelector } from '@/shared/hooks/useStore';
 
 export const HomeContractors: React.FC = () => {
+	const token = useAppSelector((s) => s.auth.token);
+
 	return (
 		<section
 			className="relative mx-auto mt-[56px] flex h-[691px] max-w-[1240px] flex-col px-[20px] md:mt-[120px] md:grid md:h-[647px] md:grid-cols-2 md:px-0"
@@ -23,18 +28,33 @@ export const HomeContractors: React.FC = () => {
 						className="mb-8 hidden md:relative md:top-0 md:block"
 						aria-label="Call to action"
 					>
-						<Link href="/sign-up">
-							<Button
-								type="button"
-								variant="solid"
-								color="dark"
-								iconPosition="right"
-								className="!h-[43px] !w-max !bg-[#242424] !px-6 !py-3 !text-[16px] !font-[500]"
-								aria-label="Subscribe as Contractor"
-							>
-								Register now
-							</Button>
-						</Link>
+						{token ? (
+							<Link href="/profile/pricing-plan">
+								<Button
+									type="button"
+									variant="solid"
+									color="dark"
+									iconPosition="right"
+									className="!h-[43px] !w-max !bg-[#242424] !px-6 !py-3 !text-[16px] !font-[500]"
+									aria-label="Subscribe as Contractor"
+								>
+									Subscribe now
+								</Button>
+							</Link>
+						) : (
+							<Link href="/sign-up">
+								<Button
+									type="button"
+									variant="solid"
+									color="dark"
+									iconPosition="right"
+									className="!h-[43px] !w-max !bg-[#242424] !px-6 !py-3 !text-[16px] !font-[500]"
+									aria-label="Subscribe as Contractor"
+								>
+									Register now
+								</Button>
+							</Link>
+						)}
 					</nav>
 				</div>
 				<ul

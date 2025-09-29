@@ -1,6 +1,7 @@
 'use client';
 
 import { JSX } from 'react';
+
 import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
 
 export default function PricingPlanPage(): JSX.Element {
