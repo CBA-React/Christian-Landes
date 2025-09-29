@@ -4,48 +4,11 @@ import { JSX, useCallback, useState, useMemo } from 'react';
 import { StatusFilter } from './StatusFilter';
 import { RequestCard } from './RequestCard';
 import { RequestDisplayData, SimpleRequestFilters } from '../types/type';
-import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
-import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
 import { useMyRequests } from '../hooks/useMyRequests';
 import { FilterDrawer } from '@/shared/components/FilterDrawer/FilterDrawer';
 import { FilterForm, FilterFormData } from './FilterForm';
-
-const LoadingState = () => (
-	<div className="flex justify-center py-20" role="status" aria-live="polite">
-		<div className="flex items-center gap-3">
-			<div
-				className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
-				aria-hidden="true"
-			/>
-			<span className="text-gray-600">Loading requests...</span>
-		</div>
-	</div>
-);
-
-const ErrorState = ({
-	error,
-	onRetry,
-}: {
-	error: string;
-	onRetry: () => void;
-}) => (
-	<section
-		className="flex flex-col items-center justify-center py-12 text-center"
-		role="alert"
-		aria-live="polite"
-	>
-		<h2 className="mb-2 text-lg font-medium text-[#242424]">
-			Error loading requests
-		</h2>
-		<p className="mb-4 text-[#242424]/50">{error}</p>
-		<button
-			onClick={onRetry}
-			className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-		>
-			Try Again
-		</button>
-	</section>
-);
+import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
+import { ErrorMessage } from '@/shared/components/ErrorMessage/ErrorMessage';
 
 const EmptyState = ({ message }: { message: string }) => (
 	<section
@@ -217,117 +180,65 @@ export const MyRequests = (): JSX.Element => {
 		return "You haven't posted any requests yet.";
 	};
 
-	if (isLoading) {
-		return (
-			<ErrorBoundary>
-				<ProfileLayout showHeader={true} showSidebar={true}>
-					<section className="mb-10 w-full max-w-full overflow-hidden">
-						<div className="mb-6">
-							<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
-								My Requests
-							</h1>
-							<p className="text-[16px] text-[#242424]/60">
-								All your job posts in one place.
-							</p>
-						</div>
-
-						<nav aria-label="Filter requests by status">
-							<StatusFilter
-								selectedStatus={
-									selectedStatus === 'all'
-										? null
-										: selectedStatus
-								}
-								onStatusChange={handleStatusChange}
-								onFiltersClick={handleFiltersClick}
-							/>
-						</nav>
-
-						<LoadingState />
-					</section>
-				</ProfileLayout>
-			</ErrorBoundary>
-		);
+	if (isLoading || (!data && !error)) {
+		return <LoadingSpinner />;
 	}
 
 	if (error) {
 		return (
-			<ErrorBoundary>
-				<ProfileLayout showHeader={true} showSidebar={true}>
-					<section className="mb-10 w-full max-w-full overflow-hidden">
-						<div className="mb-6">
-							<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
-								My Requests
-							</h1>
-							<p className="text-[16px] text-[#242424]/60">
-								All your job posts in one place.
-							</p>
-						</div>
-
-						<ErrorState
-							error={
-								error instanceof Error
-									? error.message
-									: 'Something went wrong'
-							}
-							onRetry={() => refetch()}
-						/>
-					</section>
-				</ProfileLayout>
-			</ErrorBoundary>
+			<ErrorMessage
+				message="Failed to load requests"
+				onRetry={() => refetch()}
+			/>
 		);
 	}
 
 	return (
-		<ErrorBoundary>
-			<ProfileLayout showHeader={true} showSidebar={true}>
-				<section className="mb-10 w-full max-w-full overflow-hidden">
-					<div className="mb-6">
-						<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
-							My Requests
-						</h1>
-						<p className="text-[16px] text-[#242424]/60">
-							All your job posts in one place.
-						</p>
-					</div>
+		<section className="mb-10 w-full max-w-full overflow-hidden">
+			<div className="mb-6">
+				<h1 className="text-[36px] font-medium tracking-[-1px] text-[#242424] lg:text-[40px]">
+					My Requests
+				</h1>
+				<p className="text-[16px] text-[#242424]/60">
+					All your job posts in one place.
+				</p>
+			</div>
 
-					<nav aria-label="Filter requests by status">
-						<StatusFilter
-							selectedStatus={
-								selectedStatus === 'all' ? null : selectedStatus
-							}
-							onStatusChange={handleStatusChange}
-							onFiltersClick={handleFiltersClick}
-						/>
-					</nav>
+			<nav aria-label="Filter requests by status">
+				<StatusFilter
+					selectedStatus={
+						selectedStatus === 'all' ? null : selectedStatus
+					}
+					onStatusChange={handleStatusChange}
+					onFiltersClick={handleFiltersClick}
+				/>
+			</nav>
 
-					{allRequests.length > 0 ? (
-						<>
-							<RequestsList
-								requests={allRequests}
-								hasMore={!!hasNextPage}
-								isLoadingMore={isFetchingNextPage}
-								onLoadMore={() => fetchNextPage()}
-								onRequestClick={handleRequestClick}
-								onCloseRequest={handleCloseRequest}
-							/>
+			{allRequests.length > 0 ? (
+				<>
+					<RequestsList
+						requests={allRequests}
+						hasMore={!!hasNextPage}
+						isLoadingMore={isFetchingNextPage}
+						onLoadMore={() => fetchNextPage()}
+						onRequestClick={handleRequestClick}
+						onCloseRequest={handleCloseRequest}
+					/>
 
-							{isFetching && !isFetchingNextPage && (
-								<div className="flex justify-center py-4">
-									<div className="flex items-center gap-3">
-										<div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
-										<span className="text-sm text-gray-600">
-											Updating...
-										</span>
-									</div>
-								</div>
-							)}
-						</>
-					) : (
-						<EmptyState message={getEmptyMessage()} />
+					{isFetching && !isFetchingNextPage && (
+						<div className="flex justify-center py-4">
+							<div className="flex items-center gap-3">
+								<div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+								<span className="text-sm text-gray-600">
+									Updating...
+								</span>
+							</div>
+						</div>
 					)}
-				</section>
-			</ProfileLayout>
+				</>
+			) : (
+				<EmptyState message={getEmptyMessage()} />
+			)}
 
 			<FilterDrawer
 				isOpen={isFilterDrawerOpen}
@@ -342,6 +253,6 @@ export const MyRequests = (): JSX.Element => {
 					currentStatus={selectedStatus}
 				/>
 			</FilterDrawer>
-		</ErrorBoundary>
+		</section>
 	);
 };
