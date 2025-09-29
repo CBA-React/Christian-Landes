@@ -7,7 +7,7 @@ import { Button } from '@/shared/components/Button/Button';
 import { useAppSelector } from '@/shared/hooks/useStore';
 
 export const HomeContractors: React.FC = () => {
-	const token = useAppSelector((s) => s.auth.token);
+	const { token, role } = useAppSelector((s) => s.auth);
 
 	return (
 		<section
@@ -28,7 +28,7 @@ export const HomeContractors: React.FC = () => {
 						className="mb-8 hidden md:relative md:top-0 md:block"
 						aria-label="Call to action"
 					>
-						{token ? (
+						{token && role === 2 ? (
 							<Link href="/profile/pricing-plan">
 								<Button
 									type="button"
