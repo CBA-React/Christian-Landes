@@ -27,7 +27,7 @@ const COPY: Record<
 		title: 'Delete your account?',
 		text: 'This action cannot be undone. All your data and settings will be permanently removed.',
 		cta: 'Delete Account',
-		ctaClass: 'bg-[#FF6B6B] text-white hover:opacity-90', // мʼякий червоний
+		ctaClass: 'bg-[#FF6B6B] text-white hover:opacity-90',
 	},
 };
 
@@ -64,12 +64,12 @@ export function ConfirmActionModal({
 			/>
 			<div
 				ref={ref}
-				className="relative z-[201] w-full max-w-[420px] rounded-2xl bg-white p-5 shadow-xl ring-1 ring-black/10 sm:p-6"
+				className="relative z-[201] w-full max-w-[335px] rounded-2xl bg-white p-5 shadow-xl ring-1 ring-black/10 sm:p-6"
 			>
 				<button
 					onClick={onClose}
 					aria-label="Close"
-					className="absolute top-3 right-3 rounded-full p-1 text-[#242424] hover:bg-neutral-100"
+					className="absolute top-3 right-3 cursor-pointer rounded-full p-1 px-2 text-[#242424] hover:bg-neutral-100"
 				>
 					✕
 				</button>
@@ -78,10 +78,22 @@ export function ConfirmActionModal({
 					id="confirm-title"
 					className="font-chalet-1960 mb-2 text-center text-[24px] font-medium sm:text-[28px]"
 				>
-					{c.title}
+					{variant === 'logout' ? (
+						<>
+							Log out
+							<br className="hidden sm:block" />
+							of your account?
+						</>
+					) : (
+						<>
+							Delete
+							<br className="hidden sm:block" />
+							your account?
+						</>
+					)}
 				</h3>
 
-				<p className="mx-auto mb-5 max-w-[340px] text-center text-sm text-[#24242480] sm:text-base">
+				<p className="mx-auto mb-5 max-w-[340px] text-center text-sm text-[#242424] sm:text-base">
 					{c.text}
 				</p>
 

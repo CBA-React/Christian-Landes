@@ -156,11 +156,11 @@ export default function Settings(): JSX.Element {
 				>
 					<div className="grid grid-cols-1 gap-5 sm:grid-cols-[auto,1fr]">
 						{/* Avatar */}
-						<div className="flex items-start gap-4">
+						<div className="flex items-center gap-4 sm:gap-6">
 							<img
 								src={previewUrl ?? previewOrCurrent}
 								alt="Avatar"
-								className="h-[64px] w-[64px] rounded-lg object-cover ring-1 ring-black/10 sm:h-[72px] sm:w-[72px]"
+								className="h-[80px] w-[80px] rounded-lg object-cover ring-1 ring-black/10 sm:h-[100px] sm:w-[100px]"
 							/>
 							<div className="flex flex-col gap-2">
 								<label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50">
