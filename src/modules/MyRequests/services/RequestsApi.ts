@@ -30,7 +30,9 @@ export class RequestsApi {
 				(filters.search && filters.search) ||
 				(filters.minBudget && filters.minBudget > 0) ||
 				(filters.maxBudget && filters.maxBudget > 0) ||
-				(filters.location && filters.location),
+				(filters.location && filters.location) ||
+				(filters.date && filters.date) || 
+				(filters.bids && filters.bids),
 		);
 
 		try {
@@ -50,6 +52,8 @@ export class RequestsApi {
 						from: filters.minBudget || 0,
 						to: filters.maxBudget || 0,
 					},
+					date: filters.date || '',
+					bids: filters.bids || '',
 				};
 
 				response = await axiosInstance.post(

@@ -18,7 +18,7 @@ export interface ApiRequest {
 	preferred_start: string;
 	completion_window: string;
 	description: string;
-	images: ApiImage[]; 
+	images: ApiImage[];
 	status: number;
 	created_at: string;
 	_count: {
@@ -54,13 +54,14 @@ export interface RequestFilters {
 	page?: number;
 	perPage?: number;
 	location?: string;
-	date?: string;
+	date?: '1d' | '7d' | '30d' | '';
 	budget?: {
 		from?: number | string;
 		to?: number | string;
 	};
 	status?: string;
 	search?: string;
+	bids?: '0' | '1' | '2' | '';
 }
 
 export interface SimpleRequestFilters {
@@ -69,6 +70,8 @@ export interface SimpleRequestFilters {
 	maxBudget?: number;
 	location?: string;
 	status?: RequestStatus | 'all';
+	date?: '1d' | '7d' | '30d' | '';
+	bids?: '0' | '1' | '2' | '';
 }
 
 export interface RequestStatusFilter {
