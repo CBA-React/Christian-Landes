@@ -86,7 +86,7 @@ export const HomeReviews: React.FC = () => {
 		activeTab === 'clients' ? clientReviews : contractorReviews;
 
 	return (
-		<section className="mx-auto mt-[53px] flex w-full max-w-[1240px] flex-col md:mt-[110px]">
+		<section className="mt-[53px] flex w-full max-w-[1240px] flex-col px-5 md:mt-[110px] xl:mx-auto xl:px-0">
 			<div className="mb-[24px] flex flex-col items-center justify-center md:mb-10">
 				<h3 className="mb-[13px] text-[36px] font-[400] text-[#242424] md:mb-[20px] md:text-[48px] md:font-[500]">
 					What users say
