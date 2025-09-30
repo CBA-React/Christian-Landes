@@ -2,183 +2,191 @@
 
 import { JSX } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
 import { useRequestDetails } from '@/modules/MyRequests/hooks/useRequestDetails';
 import { BidsSection } from '@/modules/MyRequests/components/details/BidsSection';
 import { RequestImageGallery } from '@/modules/MyRequests/components/details/RequestImageGallery';
+import { MobileImageCarousel } from '@/modules/MyRequests/components/details/MobileImageCarousel';
 import { RequestDescription } from '@/modules/MyRequests/components/details/RequestDescription';
 import { RequestDetailsHeader } from '@/modules/MyRequests/components/details/RequestDetailsHeader';
 import { RequestDetailsPanel } from '@/modules/MyRequests/components/details/RequestDetailsPanel';
+import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
+import { LocationSection } from '@/modules/MyRequests/components/details/LocationSection';
+
+const LoadingState = () => (
+	<div className="flex justify-center py-20" role="status" aria-live="polite">
+		<div className="flex items-center gap-3">
+			<div
+				className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
+				aria-hidden="true"
+			/>
+			<span className="text-gray-600">Loading request...</span>
+		</div>
+	</div>
+);
+
+const ErrorState = ({
+	error,
+	onRetry,
+}: {
+	error: string;
+	onRetry: () => void;
+}) => (
+	<section
+		className="flex flex-col items-center justify-center py-12 text-center"
+		role="alert"
+		aria-live="polite"
+	>
+		<h2 className="mb-2 text-lg font-medium text-[#242424]">
+			Error loading request
+		</h2>
+		<p className="mb-4 text-[#242424]/50">{error}</p>
+		<button
+			onClick={onRetry}
+			className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+		>
+			Try Again
+		</button>
+	</section>
+);
 
 export default function RequestDetailsPage(): JSX.Element {
 	const params = useParams();
 	const router = useRouter();
 	const requestId = params.id as string;
 
-	const { data: request, isLoading, error } = useRequestDetails(requestId);
+	const {
+		data: request,
+		isLoading,
+		error,
+		refetch,
+	} = useRequestDetails(requestId);
 
 	if (isLoading) {
 		return (
-			<ProfileLayout showHeader={false} showSidebar={false}>
-				<div className="flex justify-center py-20">
-					<div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-				</div>
-			</ProfileLayout>
+			<ErrorBoundary>
+				<ProfileLayout showHeader={true} showSidebar={true}>
+					<section className="mb-10 w-full max-w-full overflow-hidden">
+						<div className="mb-6">
+							<button
+								onClick={() => router.back()}
+								className="mb-4 text-blue-600 hover:underline"
+							>
+								← Back to My Requests
+							</button>
+						</div>
+
+						<LoadingState />
+					</section>
+				</ProfileLayout>
+			</ErrorBoundary>
 		);
 	}
 
 	if (error || !request) {
 		return (
-			<ProfileLayout showHeader={false} showSidebar={false}>
-				<div className="py-20 text-center">
-					<h2 className="mb-4 text-2xl font-bold">
-						Request not found
-					</h2>
-					<button
-						onClick={() => router.back()}
-						className="text-blue-600 hover:underline"
-					>
-						← Back to My Requests
-					</button>
-				</div>
-			</ProfileLayout>
+			<ErrorBoundary>
+				<ProfileLayout showHeader={true} showSidebar={true}>
+					<section className="mb-10 w-full max-w-full overflow-hidden">
+						<div className="mb-6">
+							<button
+								onClick={() => router.back()}
+								className="mb-4 text-blue-600 hover:underline"
+							>
+								← Back to My Requests
+							</button>
+						</div>
+
+						<ErrorState
+							error={
+								error instanceof Error
+									? error.message
+									: 'Request not found or has been deleted'
+							}
+							onRetry={() => refetch()}
+						/>
+					</section>
+				</ProfileLayout>
+			</ErrorBoundary>
 		);
 	}
 
-	// Prepare details for the panel
 	const projectDetails = [
 		{
-			icon: (
-				<svg
-					className="h-5 w-5"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-					/>
-				</svg>
-			),
-			label: '',
-			value: '1234 Sqft',
-		},
-		{
-			icon: (
-				<svg
-					className="h-5 w-5"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-					/>
-				</svg>
-			),
-			label: '',
-			value: 'Materials already purchased',
-		},
-		{
-			icon: (
-				<svg
-					className="h-5 w-5"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-					/>
-				</svg>
-			),
 			label: 'Desired start:',
 			value: request.preferredStart,
+			type: 'calendar' as const,
 		},
 		{
-			icon: (
-				<svg
-					className="h-5 w-5"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-					/>
-				</svg>
-			),
 			label: '',
 			value: request.completionWindow,
-		},
-		{
-			icon: (
-				<svg
-					className="h-5 w-5"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-					/>
-				</svg>
-			),
-			label: '',
-			value: 'Private house',
+			type: 'clock' as const,
 		},
 	];
 
 	return (
-		<>
-			<div className="h-[380px] bg-[#F1F3F6]"></div>
-			<ProfileLayout showHeader={false} showSidebar={false}>
-				<div className="mx-auto py-6">
-					<RequestDetailsHeader
-						title={request.title}
-						location={request.location}
-						category={request.category}
-						status={request.status}
-						statusBadge={request.statusBadge}
-					/>
+		<ErrorBoundary>
+			<>
+				<div className="block bg-[#F1F3F6] px-5 pt-17 lg:pt-89">
+					<div className="flex items-center justify-center lg:hidden">
+						<RequestDetailsHeader
+							title={request.title}
+							location={request.location}
+							category={request.category}
+							status={request.status}
+							statusBadge={request.statusBadge}
+						/>
+					</div>
+				</div>
 
-					<RequestImageGallery images={request.images} />
+				<div className="mx-auto px-5 lg:mt-[-210px] lg:max-w-[1285px]">
+					<div className="hidden lg:block">
+						<RequestDetailsHeader
+							title={request.title}
+							location={request.location}
+							category={request.category}
+							status={request.status}
+							statusBadge={request.statusBadge}
+						/>
+					</div>
 
-					<div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_400px]">
-						<div className="rounded-lg bg-white p-6">
+					<div className="my-6 block lg:hidden">
+						<MobileImageCarousel images={request.images} />
+					</div>
+
+					<div className="hidden lg:block">
+						<RequestImageGallery images={request.images} />
+					</div>
+
+					<div className="mb-14 grid grid-cols-1 gap-6 lg:mb-30 lg:grid-cols-[1fr_400px] lg:gap-12 lg:px-0">
+						<div className="order-2 md:order-1">
 							<RequestDescription
 								description={request.description}
 								bidsCount={request.bidsCount}
 								postedDate={request.postedDate}
 								budgetFormatted={request.budgetFormatted}
+								status={request.status}
 							/>
 						</div>
 
-						<RequestDetailsPanel details={projectDetails} />
+						<RequestDetailsPanel
+							className="order-1 md:order-2"
+							details={projectDetails}
+						/>
 					</div>
 
-					<BidsSection
-						bidsCount={request.bidsCount}
-						bids={request.bids}
-						status={request.status}
-					/>
+					<div className="">
+						<BidsSection
+							bidsCount={request.bidsCount}
+							bids={request.bids}
+							status={request.status}
+							daysActive={request.daysActive}
+						/>
+
+						<LocationSection location={request.location} />
+					</div>
 				</div>
-			</ProfileLayout>
-		</>
+			</>
+		</ErrorBoundary>
 	);
 }

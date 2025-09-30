@@ -77,7 +77,7 @@ export interface RequestDetailsDisplayData {
 	completionWindow: string;
 	description: string;
 	images: string[];
-	status: 'open' | 'closed';
+	status: 'open' | 'closed' | 'auto-closed';
 	statusBadge: {
 		text: string;
 		variant: string;
@@ -86,4 +86,5 @@ export interface RequestDetailsDisplayData {
 	postedDate: string;
 	bidsCount: number;
 	bids: BidDisplayData[];
+	daysActive?: number;
 }

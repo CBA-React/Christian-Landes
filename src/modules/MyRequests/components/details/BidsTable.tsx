@@ -18,19 +18,21 @@ export const BidsTable = ({ bids }: BidsTableProps): JSX.Element => {
 	}
 
 	return (
-		<div className="overflow-hidden rounded-lg bg-[#F8F9FA]">
-			<div className="grid grid-cols-[1fr_2fr_1.5fr_1fr_1.2fr] gap-4 border-b border-[#E5E7EB] bg-white px-6 py-4 text-sm font-medium text-[#242424]/60">
-				<div>Full Name</div>
-				<div>Email Address</div>
-				<div>Specialization</div>
-				<div>Bid Price</div>
-				<div>Phone Number</div>
-			</div>
+		<div className="overflow-x-auto lg:overflow-x-hidden">
+			<div className="min-w-max lg:min-w-0">
+				<div className="font-chalet-1960 grid min-w-[900px] grid-cols-[200px_220px_180px_120px_140px] gap-4 bg-[#F1F3F6] px-6 py-6 text-[16px] text-[#242424]/70 lg:min-w-0 lg:grid-cols-[2fr_2fr_1.5fr_1fr_1.2fr] lg:px-8 lg:py-8">
+					<div>Full Name</div>
+					<div>Email Address</div>
+					<div>Specialization</div>
+					<div>Bid Price</div>
+					<div>Phone Number</div>
+				</div>
 
-			<div className="divide-y divide-[#E5E7EB]">
-				{bids.map((bid) => (
-					<BidTableRow key={bid.id} bid={bid} />
-				))}
+				<div>
+					{bids.map((bid, index) => (
+						<BidTableRow key={bid.id} bid={bid} index={index} />
+					))}
+				</div>
 			</div>
 		</div>
 	);

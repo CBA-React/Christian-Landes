@@ -162,11 +162,8 @@ export class RequestsApi {
 	static transformRequestDetailsForDisplay(
 		request: ApiRequestDetails,
 	): RequestDetailsDisplayData {
-		const status = request.status === 1 ? 'open' : 'closed';
-		const statusBadge = {
-			text: status === 'open' ? 'Open' : 'Closed',
-			variant: status === 'open' ? 'blue' : 'gray',
-		};
+		const status = this.mapRequestStatus(request.status);
+		const statusBadge = this.getStatusBadge(status);
 
 		const bids = request.bids.map((bid) =>
 			this.transformBidForDisplay(bid),
@@ -189,6 +186,10 @@ export class RequestsApi {
 			postedDate: formatDate(request.created_at),
 			bidsCount: bids.length,
 			bids,
+			daysActive:
+				status === REQUEST_STATUSES.OPEN
+					? this.calculateDaysActive(request.created_at)
+					: undefined,
 		};
 	}
 
