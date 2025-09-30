@@ -11,7 +11,7 @@ export const HomeContractors: React.FC = () => {
 
 	return (
 		<section
-			className="relative mx-auto mt-[56px] flex h-[691px] max-w-[1240px] flex-col px-[20px] md:mt-[120px] md:grid md:h-[647px] md:grid-cols-2 md:px-0"
+			className="relative mx-auto mt-[56px] flex h-[691px] max-w-[1240px] flex-col px-[20px] md:mt-[120px] md:grid md:h-[647px] md:grid-cols-2 xl:px-0"
 			aria-label="For Contractors - Promote your services"
 		>
 			<div className="flex flex-col justify-between rounded-t-[10px] bg-[#CFEDD9] px-[20px] pt-[40px] pb-[25px] md:rounded-t-[0px] md:rounded-l-[10px] md:py-[48px] md:pr-[130px] md:pl-[48px]">
