@@ -1,7 +1,7 @@
 'use client';
 
 import { JSX } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useRequestDetails } from '@/modules/MyRequests/hooks/useRequestDetails';
 import { BidsSection } from '@/modules/MyRequests/components/details/BidsSection';
 import { RequestImageGallery } from '@/modules/MyRequests/components/details/RequestImageGallery';
@@ -9,21 +9,9 @@ import { MobileImageCarousel } from '@/modules/MyRequests/components/details/Mob
 import { RequestDescription } from '@/modules/MyRequests/components/details/RequestDescription';
 import { RequestDetailsHeader } from '@/modules/MyRequests/components/details/RequestDetailsHeader';
 import { RequestDetailsPanel } from '@/modules/MyRequests/components/details/RequestDetailsPanel';
-import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
 import { LocationSection } from '@/modules/MyRequests/components/details/LocationSection';
-
-const LoadingState = () => (
-	<div className="flex justify-center py-20" role="status" aria-live="polite">
-		<div className="flex items-center gap-3">
-			<div
-				className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
-				aria-hidden="true"
-			/>
-			<span className="text-gray-600">Loading request...</span>
-		</div>
-	</div>
-);
+import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
 
 const ErrorState = ({
 	error,
@@ -52,7 +40,6 @@ const ErrorState = ({
 
 export default function RequestDetailsPage(): JSX.Element {
 	const params = useParams();
-	const router = useRouter();
 	const requestId = params.id as string;
 
 	const {
@@ -65,20 +52,9 @@ export default function RequestDetailsPage(): JSX.Element {
 	if (isLoading) {
 		return (
 			<ErrorBoundary>
-				<ProfileLayout showHeader={true} showSidebar={true}>
-					<section className="mb-10 w-full max-w-full overflow-hidden">
-						<div className="mb-6">
-							<button
-								onClick={() => router.back()}
-								className="mb-4 text-blue-600 hover:underline"
-							>
-								← Back to My Requests
-							</button>
-						</div>
-
-						<LoadingState />
-					</section>
-				</ProfileLayout>
+				<section className="mb-10 w-full max-w-full overflow-hidden">
+					<LoadingSpinner />
+				</section>
 			</ErrorBoundary>
 		);
 	}
@@ -86,27 +62,16 @@ export default function RequestDetailsPage(): JSX.Element {
 	if (error || !request) {
 		return (
 			<ErrorBoundary>
-				<ProfileLayout showHeader={true} showSidebar={true}>
-					<section className="mb-10 w-full max-w-full overflow-hidden">
-						<div className="mb-6">
-							<button
-								onClick={() => router.back()}
-								className="mb-4 text-blue-600 hover:underline"
-							>
-								← Back to My Requests
-							</button>
-						</div>
-
-						<ErrorState
-							error={
-								error instanceof Error
-									? error.message
-									: 'Request not found or has been deleted'
-							}
-							onRetry={() => refetch()}
-						/>
-					</section>
-				</ProfileLayout>
+				<section className="mb-10 w-full max-w-full overflow-hidden">
+					<ErrorState
+						error={
+							error instanceof Error
+								? error.message
+								: 'Request not found or has been deleted'
+						}
+						onRetry={() => refetch()}
+					/>
+				</section>
 			</ErrorBoundary>
 		);
 	}

@@ -3,7 +3,7 @@
 import { JSX } from 'react';
 import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
-import { MyRequests } from '@/modules/MyRequests/components/MyRequests';
+import { MyRequests } from '@/modules/MyRequests/components/list/MyRequests';
 
 export default function MyRequestsPage(): JSX.Element {
 	return (

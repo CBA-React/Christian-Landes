@@ -3,7 +3,7 @@
 import { JSX } from 'react';
 import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
-import { AvailableProjects } from '@/modules/AvailableProjects/components/AvailableProjects';
+import { AvailableProjects } from '@/modules/AvailableProjects/components/list/AvailableProjects';
 
 export default function AvailableProjectsPage(): JSX.Element {
 	return (

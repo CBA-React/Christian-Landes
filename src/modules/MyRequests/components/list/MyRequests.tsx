@@ -3,8 +3,8 @@
 import { JSX, useCallback, useState, useMemo } from 'react';
 import { StatusFilter } from './StatusFilter';
 import { RequestCard } from './RequestCard';
-import { RequestDisplayData, SimpleRequestFilters } from '../types/type';
-import { useMyRequests } from '../hooks/useMyRequests';
+import { RequestDisplayData, SimpleRequestFilters } from '../../types/type';
+import { useMyRequests } from '../../hooks/useMyRequests';
 import { FilterDrawer } from '@/shared/components/FilterDrawer/FilterDrawer';
 import { FilterForm, FilterFormData } from './FilterForm';
 import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';

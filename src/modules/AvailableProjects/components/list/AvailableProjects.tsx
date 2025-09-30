@@ -3,7 +3,7 @@
 import { JSX, useState, useMemo, useCallback } from 'react';
 import { ProjectsFilter } from './ProjectsFilter';
 import { ProjectCard } from './ProjectCard';
-import { useAvailableProjects } from '../hooks/useAvailableProjects';
+import { useAvailableProjects } from '../../hooks/useAvailableProjects';
 import { FilterDrawer } from '@/shared/components/FilterDrawer/FilterDrawer';
 import { ProjectFilterForm, ProjectFilterFormData } from './ProjectFilterForm';
 import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
