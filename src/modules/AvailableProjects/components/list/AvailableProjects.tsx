@@ -8,6 +8,7 @@ import { FilterDrawer } from '@/shared/components/FilterDrawer/FilterDrawer';
 import { ProjectFilterForm, ProjectFilterFormData } from './ProjectFilterForm';
 import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
 import { ErrorMessage } from '@/shared/components/ErrorMessage/ErrorMessage';
+import { useRouter } from 'next/navigation';
 
 const EmptyState = ({ message }: { message: string }) => (
 	<section
@@ -103,6 +104,8 @@ export const AvailableProjects = (): JSX.Element => {
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(
 		null,
 	);
+	const router = useRouter();
+
 	const [isFilterDrawerOpen, setIsFilterDrawerOpen] =
 		useState<boolean>(false);
 
@@ -144,9 +147,12 @@ export const AvailableProjects = (): JSX.Element => {
 		}));
 	}, []);
 
-	const handleProjectClick = useCallback((projectId: string) => {
-		console.log('Project clicked:', projectId);
-	}, []);
+	const handleProjectClick = useCallback(
+		(projectId: string) => {
+			router.push(`/profile/available-projects/${projectId}`);
+		},
+		[router],
+	);
 
 	const handleFiltersClick = useCallback(() => {
 		setIsFilterDrawerOpen(true);

@@ -47,7 +47,7 @@ export const RequestDetailsHeader = ({
 				</div>
 			</div>
 
-			<div className="mb-6 hidden items-start justify-between lg:flex">
+			<div className="mb-8 hidden items-start justify-between lg:flex">
 				<div className="flex-1">
 					<h1 className="font-chalet-1960 mb-2 text-[40px] leading-[100%] tracking-[-1px] text-[#242424]">
 						{title}

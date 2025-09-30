@@ -6,7 +6,6 @@ import {
 	REQUEST_STATUSES,
 } from '@/modules/MyRequests/requestStatus';
 import Separator from 'public/icons/profile/separator.svg';
-
 import Location from 'public/icons/profile/location.svg';
 
 interface RequestCardProps {

@@ -123,7 +123,7 @@ export default function RequestDetailsPage(): JSX.Element {
 						<RequestImageGallery images={request.images} />
 					</div>
 
-					<div className="mb-14 grid grid-cols-1 gap-6 lg:mb-30 lg:grid-cols-[1fr_400px] lg:gap-12 lg:px-0">
+					<div className="mb-14 grid grid-cols-1 gap-6 lg:mb-30 lg:grid-cols-[1fr_400px] lg:items-start lg:gap-12 lg:px-0">
 						<div className="order-2 md:order-1">
 							<RequestDescription
 								description={request.description}

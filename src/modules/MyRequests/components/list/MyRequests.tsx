@@ -1,6 +1,7 @@
 'use client';
 
 import { JSX, useCallback, useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { StatusFilter } from './StatusFilter';
 import { RequestCard } from './RequestCard';
 import { RequestDisplayData, SimpleRequestFilters } from '../../types/type';
@@ -98,6 +99,7 @@ const RequestsList = ({
 );
 
 export const MyRequests = (): JSX.Element => {
+	const router = useRouter();
 	const [selectedStatus, setSelectedStatus] = useState<string | null>('all');
 	const [isFilterDrawerOpen, setIsFilterDrawerOpen] =
 		useState<boolean>(false);
@@ -138,9 +140,12 @@ export const MyRequests = (): JSX.Element => {
 		setSelectedStatus(status === null ? 'all' : status);
 	}, []);
 
-	const handleRequestClick = useCallback((requestId: string) => {
-		console.log('Request clicked:', requestId);
-	}, []);
+	const handleRequestClick = useCallback(
+		(requestId: string) => {
+			router.push(`/profile/my-requests/${requestId}`);
+		},
+		[router],
+	);
 
 	const handleCloseRequest = useCallback((requestId: string) => {
 		console.log('Close request clicked:', requestId);

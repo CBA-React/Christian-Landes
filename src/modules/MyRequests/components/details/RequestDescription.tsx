@@ -2,6 +2,8 @@ import { JSX } from 'react';
 import Separator from 'public/icons/profile/separator.svg';
 import LockLargeIcon from 'public/icons/profile/lock-large.svg';
 import ClockLargeIcon from 'public/icons/profile/clock-large.svg';
+import Clock from 'public/icons/profile/clock-white.svg';
+import Lock from 'public/icons/profile/lock-white.svg';
 
 interface RequestDescriptionProps {
 	description: string;
@@ -61,18 +63,20 @@ export const RequestDescription = ({
 			</div>
 
 			{status === 'closed' && (
-				<div className="mt-6 inline-flex items-center gap-3 rounded-md bg-[#6B7280] px-3 py-5 text-white">
-					<LockLargeIcon />
-					<span className="font-chalet-1960 text-[18px]">
+				<div className="mt-6 inline-flex w-full items-center gap-2 rounded-md bg-[#6B7280] px-5 py-5 text-white md:w-fit lg:text-[18px]">
+					<Lock className="md:hidden" />
+					<LockLargeIcon className="hidden md:inline" />
+					<span className="font-chalet-1960 text-center text-[17px]">
 						This Request Was Closed By Client
 					</span>
 				</div>
 			)}
 
 			{status === 'auto-closed' && (
-				<div className="mt-6 inline-flex items-center gap-3 rounded-md bg-[#F97316] px-3 py-5 text-white">
-					<ClockLargeIcon />
-					<span className="font-chalet-1960 text-[18px]">
+				<div className="mt-6 inline-flex w-full items-center gap-2 rounded-md bg-[#F97316] px-5 py-5 text-white md:w-fit">
+					<Clock className="md:hidden" />
+					<ClockLargeIcon className="hidden md:inline" />
+					<span className="font-chalet-1960 text-center text-[17px] lg:text-[18px]">
 						Auto-Closed After 30 Days
 					</span>
 				</div>
