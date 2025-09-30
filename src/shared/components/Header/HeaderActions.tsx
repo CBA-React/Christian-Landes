@@ -4,6 +4,7 @@ import { JSX, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { cn } from '@/lib/utils';
 import { useAppSelector } from '@/shared/hooks/useStore';
 import { Button } from '../Button/Button';
 
@@ -11,7 +12,11 @@ import ArrowIconBlack from 'public/icons/arrow-up-right-black.svg';
 import ArrowIconWhite from 'public/icons/arrow-up-right-white.svg';
 import UserIcon from 'public/icons/user.svg';
 
-export const HeaderActions = (): JSX.Element | null => {
+export const HeaderActions = ({
+	isActive,
+}: {
+	isActive: boolean;
+}): JSX.Element | null => {
 	const router = useRouter();
 
 	const [mounted, setMounted] = useState(false);
@@ -35,7 +40,14 @@ export const HeaderActions = (): JSX.Element | null => {
 			</Button>
 
 			{token ? (
-				<Link href="/profile" aria-label="User Profile" className="p-2">
+				<Link
+					href="/profile"
+					aria-label="User Profile"
+					className={cn(
+						'rounded-full bg-white p-2',
+						!isActive && 'bg-[#F1F3F6]',
+					)}
+				>
 					<UserIcon className="h-4 w-4 transition hover:opacity-80" />
 				</Link>
 			) : (

@@ -4,6 +4,7 @@ import { JSX, ReactNode } from 'react';
 import { useAppSelector } from '@/shared/hooks/useStore';
 import { useProfile } from '@/modules/Profile/hooks/useProfile';
 import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
+import { ErrorMessage } from '@/shared/components/ErrorMessage/ErrorMessage';
 import { ProfileHeader } from '@/modules/Profile/components/ProfileHeader';
 import { ProfileSidebar } from '@/modules/Profile/components/ProfileSidebar';
 import { NAVIGATION_CONFIG } from '@/modules/Profile/components/navigationConfig';
@@ -23,32 +24,14 @@ export default function ProfileLayout({
 	className = '',
 }: ProfileLayoutProps): JSX.Element {
 	const authRole = useAppSelector((state) => state.auth.role);
-
 	const { data: profileData, isLoading, isError } = useProfile(authRole);
 
-	if (showHeader && isLoading) {
+	if (showHeader && (isLoading || (!profileData && !isError))) {
 		return <LoadingSpinner />;
 	}
 
 	if (showHeader && (isError || !profileData)) {
-		return (
-			<div className="flex min-h-screen items-center justify-center p-8 text-center">
-				<div>
-					<h2 className="mb-2 text-xl font-semibold text-red-600">
-						Failed to load profile
-					</h2>
-					<p className="mb-4 text-gray-600">
-						Please try refreshing the page
-					</p>
-					<button
-						onClick={() => window.location.reload()}
-						className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-					>
-						Refresh
-					</button>
-				</div>
-			</div>
-		);
+		return <ErrorMessage message="Failed to load profile" />;
 	}
 
 	const navigationItems = profileData

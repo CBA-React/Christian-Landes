@@ -4,8 +4,8 @@ import { JSX } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/components/Button/Button';
-
 import { ProfileData } from '@/shared/types/profile';
+import { truncateText, TEXT_LIMITS } from '@/shared/lib/textTruncate';
 
 import StarIcon from 'public/icons/profile/star.svg';
 import DollarIcon from 'public/icons/profile/dollar-for-button.svg';
@@ -34,6 +34,9 @@ export const ProfileHeader = ({
 		router.push('/profile/edit');
 	};
 
+	const displayName = truncateText(profileData.name, TEXT_LIMITS.NAME);
+	const displayEmail = truncateText(profileData.email, TEXT_LIMITS.EMAIL);
+
 	return (
 		<div className="flex justify-center bg-[#F1F3F6] pt-28 pb-8 lg:pt-40 lg:pb-20">
 			<section
@@ -50,8 +53,8 @@ export const ProfileHeader = ({
 					/>
 				</div>
 
-				<div className="flex flex-1 flex-col items-center gap-2 text-center lg:items-start lg:self-center lg:text-left">
-					<div className="flex items-center gap-2">
+				<div className="flex flex-1 flex-col items-center gap-2 text-center lg:max-w-[700px] lg:items-start lg:self-center lg:text-left">
+					<div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
 						<div className="inline-flex items-center gap-1.5 bg-[#CFEDD9] px-3 py-1">
 							<StarIcon
 								width={14}
@@ -71,8 +74,16 @@ export const ProfileHeader = ({
 						/>
 					</div>
 
-					<div className="flex items-center gap-2">
-						<h1 className="font-chalet-1960 text-[36px] leading-[38px] !break-words text-[#242424] lg:text-[48px] lg:leading-[64px]">
+					<div className="flex w-full items-start gap-2">
+						<h1
+							className="font-chalet-1960 line-clamp-2 overflow-hidden text-[36px] leading-[38px] break-words text-[#242424] lg:text-[48px] lg:leading-[50px]"
+							style={{
+								wordBreak: 'break-word',
+								overflowWrap: 'break-word',
+								hyphens: 'auto',
+							}}
+							title={profileData.name}
+						>
 							{profileData.name}
 						</h1>
 						<Verified
@@ -81,7 +92,14 @@ export const ProfileHeader = ({
 						/>
 					</div>
 
-					<p className="text-[16px] font-normal text-[#242424]">
+					<p
+						className="line-clamp-1 w-full text-[16px] font-normal break-all text-[#242424]"
+						style={{
+							wordBreak: 'break-all',
+							overflowWrap: 'break-word',
+						}}
+						title={profileData.email}
+					>
 						{profileData.email}
 					</p>
 				</div>

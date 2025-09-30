@@ -80,7 +80,7 @@ export const Header = (): JSX.Element => {
 						)}
 					</div>
 				</ul>
-				<HeaderActions />
+				<HeaderActions isActive={isActive} />
 			</div>
 			{isModal && <MobileHeader isOpen={isModal} onClose={setIsModal} />}
 		</header>

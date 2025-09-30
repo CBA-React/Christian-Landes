@@ -40,13 +40,20 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 			</p>
 
 			<div className="space-y-4 md:flex md:flex-row md:gap-38 md:space-y-0">
-				<div className="space-y-4">
+				<div className="space-y-4 md:flex-1">
 					<div>
 						<label className="font-chalet-1960 block text-[20px] text-[#242424]">
 							{config.nameLabel}
 						</label>
-						<div className="mt-1 text-[16px] text-[#242424]">
-							{config.nameValue}
+						<div
+							className="mt-1 line-clamp-2 text-[16px] break-words text-[#242424]"
+							style={{
+								wordBreak: 'break-word',
+								overflowWrap: 'break-word',
+							}}
+							title={profileData.name}
+						>
+							{profileData.name}
 						</div>
 					</div>
 
@@ -54,19 +61,33 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 						<label className="font-chalet-1960 block text-[20px] text-[#242424]">
 							Email
 						</label>
-						<div className="mt-1 text-[16px] text-[#242424]">
-							{config.email}
+						<div
+							className="mt-1 line-clamp-2 text-[16px] break-all text-[#242424]"
+							style={{
+								wordBreak: 'break-all',
+								overflowWrap: 'break-word',
+							}}
+							title={profileData.email}
+						>
+							{profileData.email}
 						</div>
 					</div>
 				</div>
 
-				<div className="space-y-4">
+				<div className="space-y-4 md:flex-1">
 					<div>
 						<label className="font-chalet-1960 block text-[20px] text-[#242424]">
 							Phone
 						</label>
-						<div className="font-chalet-1960 mt-1 text-[16px] text-[#242424]">
-							{config.phone}
+						<div
+							className="font-chalet-1960 mt-1 text-[16px] break-all text-[#242424]"
+							style={{
+								wordBreak: 'break-all',
+								overflowWrap: 'break-word',
+							}}
+							title={profileData.phone || 'Not specified'}
+						>
+							{profileData.phone || 'Not specified'}
 						</div>
 					</div>
 
@@ -77,8 +98,15 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 								<ServiceIcon className="ml-1 inline" />
 							)}
 						</label>
-						<div className="font-chalet-1960 mt-1 text-[16px] text-[#242424]">
-							{config.locationValue}
+						<div
+							className="font-chalet-1960 mt-1 line-clamp-2 text-[16px] break-words text-[#242424]"
+							style={{
+								wordBreak: 'break-word',
+								overflowWrap: 'break-word',
+							}}
+							title={profileData.location || 'Not specified'}
+						>
+							{profileData.location || 'Not specified'}
 						</div>
 					</div>
 				</div>
@@ -88,8 +116,15 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 					<label className="font-chalet-1960 block text-[20px] text-[#242424]">
 						Email
 					</label>
-					<div className="mt-1 text-[16px] text-[#242424]">
-						{config.email}
+					<div
+						className="mt-1 line-clamp-2 text-[16px] break-all text-[#242424]"
+						style={{
+							wordBreak: 'break-all',
+							overflowWrap: 'break-word',
+						}}
+						title={profileData.email}
+					>
+						{profileData.email}
 					</div>
 				</div>
 
@@ -100,8 +135,15 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 							<ServiceIcon className="ml-1 inline" />
 						)}
 					</label>
-					<div className="font-chalet-1960 mt-1 text-[16px] text-[#242424]">
-						{config.locationValue}
+					<div
+						className="font-chalet-1960 mt-1 line-clamp-2 text-[16px] break-words text-[#242424]"
+						style={{
+							wordBreak: 'break-word',
+							overflowWrap: 'break-word',
+						}}
+						title={profileData.location || 'Not specified'}
+					>
+						{profileData.location || 'Not specified'}
 					</div>
 				</div>
 			</div>
@@ -110,8 +152,15 @@ export const Information = ({ profileData }: InformationProps): JSX.Element => {
 				<label className="font-chalet-1960 block text-[20px] text-[#242424]">
 					About
 				</label>
-				<div className="font-chalet-1960 mt-1 text-[16px] leading-relaxed text-[#242424]">
-					{config.about}
+				<div
+					className="font-chalet-1960 mt-1 text-[16px] leading-relaxed break-words text-[#242424]"
+					style={{
+						wordBreak: 'break-word',
+						overflowWrap: 'break-word',
+					}}
+					title={profileData.about || 'No description provided'}
+				>
+					{profileData.about || 'No description provided'}
 				</div>
 			</div>
 
