@@ -386,22 +386,6 @@ export default function Settings(): JSX.Element {
 							</div>
 						</div>
 					</div>
-					<div className="flex items-center gap-3">
-						<label className="inline-flex cursor-pointer items-center">
-							<input
-								type="checkbox"
-								defaultChecked
-								className="peer sr-only"
-							/>
-							<span className="relative inline-flex h-6 w-11 items-center rounded-full bg-neutral-300 transition-colors peer-checked:bg-[#003BFF]">
-								<span className="pointer-events-none ml-1 inline-block h-5 w-5 translate-x-0 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
-							</span>
-							<span className="ml-3 text-sm text-[#242424]">
-								Google Account – Connect
-							</span>
-						</label>
-					</div>
-
 					<div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
 						<button
 							type="button"
