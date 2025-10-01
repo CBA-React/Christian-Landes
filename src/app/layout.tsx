@@ -3,6 +3,7 @@ import './globals.css';
 import { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
+import Script from 'next/script';
 
 import { AppProvider } from './Provider';
 
@@ -25,6 +26,10 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={dmSans.variable}>
 			<body className="font-sans">
+				<Script
+					src="https://accounts.google.com/gsi/client"
+					strategy="afterInteractive"
+				/>
 				<AppProvider>{children}</AppProvider>
 			</body>
 		</html>

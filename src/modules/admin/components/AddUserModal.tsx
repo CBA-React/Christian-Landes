@@ -1,8 +1,10 @@
 'use client';
 
-import { JSX, useEffect, useState } from 'react';
+import { JSX, useEffect, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { jwtDecode } from 'jwt-decode';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import z from 'zod';
 
 import { UsersApi } from '@/modules/admin/services/UsersApi';
@@ -28,12 +30,18 @@ export function AddUserModal({
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [showPassword, setShowPassword] = useState(false);
+	const roleRef = useRef<RoleNum | null>(null);
+
+	useEffect(() => {
+		roleRef.current = role;
+	}, [role]);
 
 	const {
 		register,
 		handleSubmit,
 		reset,
 		formState: { errors, isValid },
+		getValues,
 	} = useForm<AddUserFormValues>({
 		mode: 'onChange',
 		resolver: zodResolver(addUserSchema),
@@ -63,13 +71,16 @@ export function AddUserModal({
 		window.addEventListener('keydown', onKey);
 		return (): void => window.removeEventListener('keydown', onKey);
 	}, [open, onClose]);
-
 	const onSubmit = async (data: AddUserFormValues): Promise<void> => {
-		if (!role) return;
+		if (!role) {
+			toast.error('Select a role first');
+			return;
+		}
 		setSubmitting(true);
 		setError(null);
 		try {
 			await UsersApi.addUser({ ...data, role });
+			toast.success('User added');
 			onClose();
 			reset();
 			setRole(null);
@@ -80,6 +91,104 @@ export function AddUserModal({
 			setSubmitting(false);
 		}
 	};
+	const gCreateBtnRef = useRef<HTMLDivElement>(null);
+	const gsiInitDoneRef = useRef(false);
+	const gsiButtonRenderedRef = useRef(false);
+
+	useEffect(() => {
+		if (!open) {
+			gsiButtonRenderedRef.current = false;
+			return;
+		}
+		const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+		if (!clientId) {
+			console.error('Missing NEXT_PUBLIC_GOOGLE_CLIENT_ID');
+			return;
+		}
+
+		const isFirefox =
+			typeof navigator !== 'undefined' &&
+			/firefox/i.test(navigator.userAgent);
+
+		const tryInitAndRender = (): boolean => {
+			if (!window.google?.accounts?.id) return false;
+
+			if (!gsiInitDoneRef.current) {
+				window.google.accounts.id.initialize({
+					client_id: clientId,
+					ux_mode: 'popup',
+					auto_select: false,
+					cancel_on_tap_outside: true,
+					use_fedcm_for_prompt: !isFirefox,
+					callback: async ({
+						credential,
+					}: {
+						credential?: string;
+					}) => {
+						if (!credential) {
+							toast.error('No Google credential');
+							return;
+						}
+						const roleCurrent = roleRef.current;
+						if (!roleCurrent) {
+							toast.error('Select a role first');
+							return;
+						}
+						setSubmitting(true);
+						setError(null);
+						try {
+							const { sub } = jwtDecode<{ sub: string }>(
+								credential,
+							);
+							await UsersApi.addUserViaGoogle({
+								google_id: sub,
+								role: roleCurrent,
+							});
+							toast.success('User created via Google');
+							onClose();
+							reset();
+							setRole(null);
+						} catch (e) {
+							setError(
+								getErrorMessage(
+									e,
+									'Failed to create user via Google',
+								),
+							);
+						} finally {
+							setSubmitting(false);
+						}
+					},
+				});
+				window.google.accounts.id.disableAutoSelect?.();
+				gsiInitDoneRef.current = true;
+			}
+
+			if (
+				gCreateBtnRef.current &&
+				window.google.accounts.id.renderButton &&
+				!gsiButtonRenderedRef.current
+			) {
+				window.google.accounts.id.renderButton(gCreateBtnRef.current, {
+					theme: 'filled_blue',
+					size: 'large',
+					text: 'continue_with',
+					shape: 'pill',
+					width: 260,
+				});
+				gsiButtonRenderedRef.current = true;
+			}
+
+			return true;
+		};
+
+		if (!tryInitAndRender()) {
+			const t = setInterval(() => {
+				if (tryInitAndRender()) clearInterval(t);
+			}, 50);
+			return () => clearInterval(t);
+		}
+	}, [open, reset, onClose]);
 
 	if (!open) return null;
 
@@ -111,7 +220,6 @@ export function AddUserModal({
 				<p className="mb-5 text-base text-[#24242480] sm:mb-6">
 					Fill in the details below to create a new user account.
 				</p>
-
 				<fieldset className="mb-4">
 					<legend className="mb-2.5 block text-base font-normal">
 						Role
@@ -148,7 +256,6 @@ export function AddUserModal({
 						))}
 					</div>
 				</fieldset>
-
 				<form className="grid gap-3" onSubmit={handleSubmit(onSubmit)}>
 					<Input
 						label="Name"
@@ -156,7 +263,6 @@ export function AddUserModal({
 						register={register('full_name')}
 						error={errors.full_name}
 					/>
-
 					<Input
 						label="Email"
 						type="email"
@@ -164,22 +270,18 @@ export function AddUserModal({
 						register={register('email')}
 						error={errors.email}
 					/>
-
 					<Input
 						label="Location"
 						placeholder="City, State or ZIP code"
 						register={register('location')}
 						error={errors.location}
 					/>
-
 					<Input
 						label="Phone"
 						placeholder="Write phone number"
 						register={register('phone')}
 						error={errors.phone}
 					/>
-
-					{/* Password */}
 					<div className="flex flex-col gap-[10px]">
 						<label htmlFor="password">Password</label>
 						<div className="relative">
@@ -203,14 +305,13 @@ export function AddUserModal({
 							</p>
 						)}
 					</div>
-
 					{error && (
 						<div className="mt-3 rounded-md bg-rose-50 p-2 text-sm text-rose-700">
 							{error}
 						</div>
 					)}
 
-					<div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
+					<div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between">
 						<button
 							type="button"
 							onClick={onClose}
@@ -218,13 +319,28 @@ export function AddUserModal({
 						>
 							Cancel
 						</button>
-						<button
-							type="submit"
-							disabled={!isValid || !role || submitting}
-							className="h-10 rounded-full bg-[#003BFF] px-6 text-sm font-medium text-white disabled:opacity-50"
-						>
-							{submitting ? 'Adding…' : 'Add User'}
-						</button>
+
+						<div className="flex flex-col gap-2 sm:flex-row">
+							<button
+								type="submit"
+								disabled={!isValid || !role || submitting}
+								className="h-10 rounded-full bg-[#003BFF] px-6 text-sm font-medium text-white disabled:opacity-50"
+							>
+								{submitting ? 'Adding…' : 'Add User'}
+							</button>
+
+							<div className="relative flex flex-col items-center">
+								<div ref={gCreateBtnRef} />
+								{!role && (
+									<div
+										className="pointer-events-auto absolute inset-0 cursor-not-allowed rounded-lg bg-transparent"
+										title="Select a role first"
+										onMouseDown={(e) => e.preventDefault()}
+										onClick={(e) => e.preventDefault()}
+									/>
+								)}
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>

@@ -1,5 +1,10 @@
 import { axiosInstance } from '@/shared/lib/axiosInstance';
-import { LoginPayload, RegisterPayload } from '../type';
+import {
+	LoginPayload,
+	RegisterPayload,
+	SocialLoginPayload,
+	SocialRegisterPayload,
+} from '../type';
 
 type LoginResponse = {
 	access_token: string;
@@ -36,6 +41,18 @@ export class AuthApi {
 			'auth/recoveryPasswordChangePassword',
 			params,
 		);
+	}
+
+	static async registerSocial(data: SocialRegisterPayload): Promise<void> {
+		await axiosInstance.post<void>('auth/register', data);
+	}
+
+	static async socialLogin(data: SocialLoginPayload): Promise<LoginResponse> {
+		const res = await axiosInstance.post<LoginResponse>(
+			'auth/socialLogin',
+			data,
+		);
+		return res.data;
 	}
 
 	static logout(): void {
