@@ -15,6 +15,10 @@ import { AuthApi } from '@/modules/auth/services/AuthApi';
 import { RegisterPayload } from '@/modules/auth/type';
 import { Button } from '@/shared/components/Button/Button';
 import { registrationSchema } from '@/shared/constants/authSchema';
+import {
+	generatePasswordFromNow,
+	generatePhoneFromNow,
+} from '@/shared/lib/generateFromNow';
 import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 import { ROLE_BY_PATH } from '../../constats';
 
@@ -159,21 +163,82 @@ export const SignUp = (): JSX.Element => {
 						toast.error('No Google credential');
 						return;
 					}
+
 					try {
-						const { sub } = jwtDecode<{ sub: string }>(credential);
+						type GoogleJWT = {
+							sub: string;
+							email?: string;
+							name?: string;
+							given_name?: string;
+							family_name?: string;
+							picture?: string;
+						};
+
+						const g = jwtDecode<GoogleJWT>(credential);
+						console.log(g);
 						const seg =
 							pathname.split('/').filter(Boolean).pop() ?? '';
 						const role = ROLE_BY_PATH[seg];
 
-						await AuthApi.registerSocial({ google_id: sub, role });
+						if (!role) {
+							setServerError('Unknown sign-up type');
+							return;
+						}
+
+						const full_name =
+							g.name?.trim() ||
+							[g.given_name, g.family_name]
+								.filter(Boolean)
+								.join(' ')
+								.trim() ||
+							'Google User';
+
+						const email =
+							g.email?.trim() || `${g.sub}@google-user.local`;
+
+						const password = generatePasswordFromNow();
+						const phone = generatePhoneFromNow();
+						const location = 'Set in Profile';
+
+						await AuthApi.register({
+							full_name,
+							email,
+							phone,
+							location,
+							password,
+							role,
+							google_id: g.sub,
+						});
 
 						const { access_token, refresh_token } =
-							await AuthApi.socialLogin({ google_id: sub });
+							await AuthApi.socialLogin({
+								google_id: g.sub,
+							});
+
 						localStorage.setItem('access_token', access_token);
 						localStorage.setItem('refresh_token', refresh_token);
 						router.push('/');
-					} catch (e) {
-						toast.error('Google login failed');
+						toast.success('Account created with Google!');
+					} catch (e: any) {
+						if (e?.response?.status === 409) {
+							const g = jwtDecode<{ sub: string }>(credential);
+							const { access_token, refresh_token } =
+								await AuthApi.socialLogin({
+									google_id: g.sub,
+								});
+							localStorage.setItem('access_token', access_token);
+							localStorage.setItem(
+								'refresh_token',
+								refresh_token,
+							);
+							router.push('/');
+							toast.success('Logged in with Google!');
+							return;
+						}
+
+						toast.error(
+							getErrorMessage(e, 'Google sign-up failed'),
+						);
 						window.google?.accounts?.id?.cancel();
 					}
 				},
