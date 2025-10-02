@@ -88,3 +88,46 @@ export interface RequestDetailsDisplayData {
 	bids: BidDisplayData[];
 	daysActive?: number;
 }
+
+
+export interface CloseRequestFormData {
+	bid_id: string;
+	contractor_id: string;
+	text: string;
+	rating: number;
+}
+
+export interface CloseRequestPayload {
+	project_id: number;
+	bid_id: number;
+	contractor_id: number;
+	text: string;
+	rating: number;
+}
+
+export interface CloseRequestResponse {
+	id: number;
+	user_id: number;
+	title: string;
+	category: string;
+	location: string;
+	budget: number;
+	preferred_start: string;
+	completion_window: string;
+	description: string;
+	images: Array<{
+		id: number;
+		url: string;
+		type: string;
+		created_at: string;
+	}>;
+	status: number;
+	created_at: string;
+	bids: ApiBid[]; 
+}
+
+export interface ContractorOption {
+	value: string;
+	label: string;
+	bidId: string;
+}

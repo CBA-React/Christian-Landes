@@ -96,6 +96,52 @@ export interface ProfileSectionConfig {
 	icon: React.ReactNode;
 }
 
+export interface CreateRequestFormData {
+	title: string;
+	category: string;
+	location: string;
+	budget: string;
+	preferred_start: string;
+	completion_window: string;
+	description: string;
+}
+
+export interface CreateRequestPayload {
+	title: string;
+	category: string;
+	location: string;
+	budget: number;
+	preferred_start: string;
+	completion_window: string;
+	description: string;
+	images: Array<{
+		id: number;
+		url: string;
+		type: string;
+		created_at: string;
+	}>;
+}
+
+export interface CreateRequestResponse {
+	id: number;
+	user_id: number;
+	title: string;
+	category: string;
+	location: string;
+	budget: number;
+	preferred_start: string;
+	completion_window: string;
+	description: string;
+	images: Array<{
+		id: number;
+		url: string;
+		type: string;
+		created_at: string;
+	}>;
+	status: number;
+	created_at: string;
+}
+
 export type {
 	StatItem as Stat,
 	ProjectDisplayData as Project,

@@ -11,6 +11,7 @@ interface InputProps {
 	placeholder?: string;
 	labelIcon?: ReactNode;
 	labelVariant?: 'form' | 'filter';
+	inputIcon?: ReactNode;
 }
 
 export const Input = ({
@@ -21,6 +22,7 @@ export const Input = ({
 	placeholder,
 	labelIcon,
 	labelVariant = 'form',
+	inputIcon,
 }: InputProps): JSX.Element => {
 	const labelStyles = {
 		form: 'flex items-center gap-2',
@@ -33,12 +35,21 @@ export const Input = ({
 				{label}
 				{labelIcon && labelIcon}
 			</label>
-			<input
-				type={type}
-				placeholder={placeholder}
-				className="w-full border border-[#24242480] px-4 py-2.5 placeholder:text-[#24242480] focus:outline-none"
-				{...register}
-			/>
+			<div className="relative w-full">
+				<input
+					type={type}
+					placeholder={placeholder}
+					className={`w-full border border-[#24242480] px-4 py-2.5 placeholder:text-[#24242480] focus:outline-none ${
+						inputIcon ? 'pr-11' : ''
+					}`}
+					{...register}
+				/>
+				{inputIcon && (
+					<div className="absolute top-1/2 right-3 -translate-y-1/2">
+						{inputIcon}
+					</div>
+				)}
+			</div>
 			{error && (
 				<p className="mt-1 text-sm text-red-500">{error.message}</p>
 			)}
