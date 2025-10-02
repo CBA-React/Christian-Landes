@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
 import ArrowRight from 'public/icons/arrow-up-right-white-big.svg';
-import Calendar from 'public/icons/profile/calendar.svg';
 
 import { Input } from '@/shared/components/Input/Input';
 import { FormTextarea } from '@/modules/ProfileEdit/components/FormField';
@@ -16,6 +15,10 @@ import { useFileUpload } from '@/shared/hooks/useFileUpload';
 import { useCreateRequest } from '../hooks/useCreateRequest';
 import { ImageUploader } from './ImageUploader';
 import { LocationAutocomplete } from './LocationAutocomplete';
+import {
+	DatePicker,
+	DateRangePicker,
+} from '@/shared/components/DatePickers/DatePickers';
 import { PROJECT_CATEGORIES } from '@/modules/AvailableProjects/projectCategories';
 import type { CreateRequestFormData, CreateRequestPayload } from '../types';
 import type { UploadedFile } from '@/shared/types/upload';
@@ -190,28 +193,36 @@ export const CreateRequestForm: React.FC<CreateRequestFormProps> = ({
 				</div>
 
 				<div className="md:col-span-1">
-					<Input
-						label="Preferred Start"
-						register={register('preferred_start', {
-							required: 'Preferred start is required',
-						})}
-						type="text"
-						placeholder="1-2 weeks / up to 1 month"
-						error={errors.preferred_start}
-						inputIcon={<Calendar />}
+					<Controller
+						name="preferred_start"
+						control={control}
+						rules={{ required: 'Preferred start date is required' }}
+						render={({ field }) => (
+							<DatePicker
+								label="Preferred Start"
+								value={field.value}
+								onChange={field.onChange}
+								placeholder="Select start date"
+								error={errors.preferred_start}
+							/>
+						)}
 					/>
 				</div>
 
 				<div className="md:col-span-1">
-					<Input
-						label="Completion Window"
-						register={register('completion_window', {
-							required: 'Completion window is required',
-						})}
-						type="text"
-						placeholder="1-2 weeks / up to 1 month"
-						error={errors.completion_window}
-						inputIcon={<Calendar />}
+					<Controller
+						name="completion_window"
+						control={control}
+						rules={{ required: 'Completion window is required' }}
+						render={({ field }) => (
+							<DateRangePicker
+								label="Completion Window"
+								value={field.value}
+								onChange={field.onChange}
+								placeholder="Select date range"
+								error={errors.completion_window}
+							/>
+						)}
 					/>
 				</div>
 			</div>
@@ -240,7 +251,7 @@ export const CreateRequestForm: React.FC<CreateRequestFormProps> = ({
 					<label className="mb-3 block text-[16px] text-[#242424]">
 						Photos
 					</label>
-					<div className="flex-1 rounded border-2 border-dashed border-[#242424]/50 pt-2">
+					<div className="flex-1 rounded border-2 border-dashed border-[#242424]/20 pt-2">
 						<ImageUploader
 							images={uploadedImages}
 							onUpload={handleImageUpload}

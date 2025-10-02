@@ -1,15 +1,17 @@
 'use client';
 
-import { JSX, useCallback, useState, useMemo } from 'react';
+import { JSX, useCallback, useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { StatusFilter } from './StatusFilter';
 import { RequestCard } from './RequestCard';
 import { RequestDisplayData, SimpleRequestFilters } from '../../types/type';
 import { useMyRequests } from '../../hooks/useMyRequests';
+import { useRequestDetails } from '../../hooks/useRequestDetails';
 import { FilterDrawer } from '@/shared/components/FilterDrawer/FilterDrawer';
 import { FilterForm, FilterFormData } from './FilterForm';
 import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
 import { ErrorMessage } from '@/shared/components/ErrorMessage/ErrorMessage';
+import { CloseRequestModal } from '../details/CloseRequestModal';
 
 const EmptyState = ({ message }: { message: string }) => (
 	<section
@@ -101,8 +103,15 @@ const RequestsList = ({
 export const MyRequests = (): JSX.Element => {
 	const router = useRouter();
 	const [selectedStatus, setSelectedStatus] = useState<string | null>('all');
-	const [isFilterDrawerOpen, setIsFilterDrawerOpen] =
-		useState<boolean>(false);
+	const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
+	const [isMobile, setIsMobile] = useState(false);
+	const [closeRequestModalState, setCloseRequestModalState] = useState<{
+		isOpen: boolean;
+		requestId: string | null;
+	}>({
+		isOpen: false,
+		requestId: null,
+	});
 
 	const [activeFilters, setActiveFilters] = useState<FilterFormData>({
 		search: '',
@@ -112,6 +121,17 @@ export const MyRequests = (): JSX.Element => {
 		maxBudget: 50000,
 		bids: '',
 	});
+
+	useEffect(() => {
+		const checkMobile = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+
+		return () => window.removeEventListener('resize', checkMobile);
+	}, []);
 
 	const filters = useMemo(
 		() => ({
@@ -134,6 +154,11 @@ export const MyRequests = (): JSX.Element => {
 		refetch,
 	} = useMyRequests(filters);
 
+	const { data: requestDetailsForModal } = useRequestDetails(
+		closeRequestModalState.requestId || '',
+		{ enabled: !!closeRequestModalState.requestId && !isMobile }
+	);
+
 	const allRequests = data?.pages.flatMap((page) => page.data) || [];
 
 	const handleStatusChange = useCallback((status: string | null) => {
@@ -147,9 +172,27 @@ export const MyRequests = (): JSX.Element => {
 		[router],
 	);
 
-	const handleCloseRequest = useCallback((requestId: string) => {
-		console.log('Close request clicked:', requestId);
-	}, []);
+	const handleCloseRequest = useCallback(
+		(requestId: string) => {
+			if (isMobile) {
+				router.push(`/profile/my-requests/${requestId}/close`);
+			} else {
+				setCloseRequestModalState({
+					isOpen: true,
+					requestId,
+				});
+			}
+		},
+		[isMobile, router],
+	);
+
+	const handleCloseModalSuccess = useCallback(() => {
+		setCloseRequestModalState({
+			isOpen: false,
+			requestId: null,
+		});
+		refetch(); 
+	}, [refetch]);
 
 	const handleFiltersClick = useCallback(() => {
 		setIsFilterDrawerOpen(true);
@@ -258,6 +301,25 @@ export const MyRequests = (): JSX.Element => {
 					currentStatus={selectedStatus}
 				/>
 			</FilterDrawer>
+
+			{/* Модалка закрытия запроса (только для десктопа) */}
+			{!isMobile && 
+			 closeRequestModalState.isOpen && 
+			 closeRequestModalState.requestId && 
+			 requestDetailsForModal && (
+				<CloseRequestModal
+					isOpen={closeRequestModalState.isOpen}
+					onClose={() =>
+						setCloseRequestModalState({
+							isOpen: false,
+							requestId: null,
+						})
+					}
+					requestId={closeRequestModalState.requestId}
+					bids={requestDetailsForModal.bids}
+					onSuccess={handleCloseModalSuccess}
+				/>
+			)}
 		</section>
 	);
 };

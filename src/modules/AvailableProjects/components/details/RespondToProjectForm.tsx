@@ -9,6 +9,10 @@ import ArrowRight from 'public/icons/arrow-up-right-white-big.svg';
 import { Input } from '@/shared/components/Input/Input';
 import { FormTextarea } from '@/modules/ProfileEdit/components/FormField';
 import { Button } from '@/shared/components/Button/Button';
+import {
+	DatePicker,
+	DateRangePicker,
+} from '@/shared/components/DatePickers/DatePickers';
 import { useRespondToProject } from '../../hooks/useRespondToProject';
 import type {
 	RespondToProjectFormData,
@@ -35,6 +39,7 @@ export const RespondToProjectForm: React.FC<RespondToProjectFormProps> = ({
 		handleSubmit,
 		watch,
 		reset,
+		setValue,
 		formState: { errors },
 	} = useForm<RespondToProjectFormData>({
 		defaultValues: {
@@ -46,6 +51,8 @@ export const RespondToProjectForm: React.FC<RespondToProjectFormProps> = ({
 	});
 
 	const messageValue = watch('message') || '';
+	const beginWorkValue = watch('begin_work') || '';
+	const estimateValue = watch('estimate') || '';
 
 	const respondMutation = useRespondToProject();
 
@@ -106,27 +113,41 @@ export const RespondToProjectForm: React.FC<RespondToProjectFormProps> = ({
 
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 				<div className="md:col-span-1">
-					<Input
+					<DatePicker
 						label="When can you begin work?"
-						register={register('begin_work', {
-							required: 'Start time is required',
-						})}
-						type="text"
-						placeholder="Next week"
+						value={beginWorkValue}
+						onChange={(value) =>
+							setValue('begin_work', value, {
+								shouldValidate: true,
+							})
+						}
+						placeholder="Select start date"
 						error={errors.begin_work}
 					/>
+					{errors.begin_work && (
+						<p className="mt-1 text-[14px] text-red-600">
+							{errors.begin_work.message}
+						</p>
+					)}
 				</div>
 
 				<div className="md:col-span-1">
-					<Input
-						label="Estimated Completion Time"
-						register={register('estimate', {
-							required: 'Completion time is required',
-						})}
-						type="text"
-						placeholder="1-2 weeks / up to 1 month"
+					<DateRangePicker
+						label="Estimated Completion Date"
+						value={estimateValue}
+						onChange={(value) =>
+							setValue('estimate', value, {
+								shouldValidate: true,
+							})
+						}
+						placeholder="Select completion date"
 						error={errors.estimate}
 					/>
+					{errors.estimate && (
+						<p className="mt-1 text-[14px] text-red-600">
+							{errors.estimate.message}
+						</p>
+					)}
 				</div>
 			</div>
 
