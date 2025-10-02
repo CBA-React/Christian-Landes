@@ -11,9 +11,7 @@ import Calendar from 'public/icons/profile/calendar.svg';
 import { Button } from '../Button/Button';
 import type { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 
-// ============================================================================
 // UTILITY FUNCTIONS
-// ============================================================================
 
 const getDaysInMonth = (year: number, month: number): number => {
 	return new Date(year, month + 1, 0).getDate();
@@ -30,7 +28,8 @@ const formatDate = (date: Date): string => {
 	return `${day}/${month}/${year}`;
 };
 
-const formatDateForAria = (date: Date): string => {
+const formatDateForAria = (date: Date | undefined): string => {
+	if (!date) return '';
 	const day = date.getDate();
 	const month = MONTHS[date.getMonth()];
 	const year = date.getFullYear();
@@ -45,10 +44,6 @@ const isSameDate = (date1: Date | null, date2: Date | null): boolean => {
 		date1.getFullYear() === date2.getFullYear()
 	);
 };
-
-// ============================================================================
-// CONSTANTS
-// ============================================================================
 
 const MONTHS = [
 	'January',
@@ -68,9 +63,7 @@ const MONTHS = [
 const WEEKDAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'] as const;
 const MOBILE_BREAKPOINT = 1600;
 
-// ============================================================================
 // CUSTOM HOOKS
-// ============================================================================
 
 const useIsMobile = (): boolean => {
 	const [isMobile, setIsMobile] = useState(false);
@@ -163,9 +156,7 @@ const useFocusTrap = (
 	}, [ref, enabled]);
 };
 
-// ============================================================================
 // TYPES
-// ============================================================================
 
 interface DatePickerProps {
 	label: string;
@@ -185,9 +176,7 @@ interface DateRangePickerProps {
 	register?: UseFormRegisterReturn;
 }
 
-// ============================================================================
 // DATE PICKER COMPONENT
-// ============================================================================
 
 export const DatePicker: React.FC<DatePickerProps> = ({
 	label,
@@ -588,7 +577,6 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 				</p>
 			)}
 
-			{/* Live region for screen readers */}
 			<div
 				role="status"
 				aria-live="polite"
@@ -610,9 +598,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 	);
 };
 
-// ============================================================================
 // DATE RANGE PICKER COMPONENT
-// ============================================================================
 
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 	label,
@@ -739,6 +725,15 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 		}
 	}, [nextMonth]);
 
+	const isDateInRange = useCallback(
+		(day: number, month: number, year: number): boolean => {
+			if (!startDate || !endDate) return false;
+			const date = new Date(year, month, day);
+			return date > startDate && date < endDate;
+		},
+		[startDate, endDate],
+	);
+
 	const renderCalendar = useCallback(
 		(month: number, year: number) => {
 			const daysInMonth = getDaysInMonth(year, month);
@@ -747,46 +742,87 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 			const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1;
 
 			for (let i = 0; i < adjustedFirstDay; i++) {
-				days.push(
-					<div
-						key={`empty-${i}`}
-						role="gridcell"
-						aria-hidden="true"
-						className="h-8"
-					/>,
-				);
+				days.push({
+					type: 'empty',
+					key: `empty-${i}`,
+				});
 			}
 
 			for (let day = 1; day <= daysInMonth; day++) {
 				const date = new Date(year, month, day);
 				const selected = isDateSelected(day, month, year);
+				const inRange = isDateInRange(day, month, year);
 
-				days.push(
+				days.push({
+					type: 'day',
+					day,
+					date,
+					selected,
+					inRange,
+					key: day,
+				});
+			}
+
+			return days.map((item, index) => {
+				if (item.type === 'empty') {
+					return (
+						<div
+							key={item.key}
+							role="gridcell"
+							aria-hidden="true"
+							className="h-8"
+						/>
+					);
+				}
+
+				const { day, date, selected, inRange } = item;
+				const col = (index % 7) + 1;
+
+				return (
 					<div
-						key={day}
+						key={item.key}
 						role="gridcell"
 						className="relative flex h-8 items-center justify-center"
+						style={{ gridColumn: col }}
 					>
+						{(inRange || selected) && (
+							<>
+								<div
+									className="absolute inset-y-0 bg-[#E0EBFF]"
+									style={{
+										left:
+											selected === 'start' ? '50%' : '0',
+										right: selected === 'end' ? '50%' : '0',
+									}}
+									aria-hidden="true"
+								/>
+							</>
+						)}
+
 						<button
 							type="button"
-							onClick={() => handleDateClick(day, month, year)}
+							onClick={() => {
+								if (day !== undefined) {
+									handleDateClick(day, month, year);
+								}
+							}}
 							aria-label={formatDateForAria(date)}
 							aria-pressed={!!selected}
 							className={`relative z-10 h-8 w-8 rounded-full text-[15px] font-normal transition-colors ${
 								selected === 'start' || selected === 'end'
 									? 'bg-[#003BFF] font-medium text-white'
-									: 'text-[#1F2937] hover:bg-gray-100'
+									: inRange
+										? 'text-[#1F2937]'
+										: 'text-[#1F2937] hover:bg-gray-100'
 							}`}
 						>
 							{day}
 						</button>
-					</div>,
+					</div>
 				);
-			}
-
-			return days;
+			});
 		},
-		[isDateSelected, handleDateClick],
+		[isDateSelected, isDateInRange, handleDateClick],
 	);
 
 	const renderDesktopCalendar = () => (
@@ -867,7 +903,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 							))}
 						</div>
 
-						<div className="grid grid-cols-7 gap-2">
+						<div className="grid grid-cols-7 gap-y-2">
 							{renderCalendar(currentMonth, currentYear)}
 						</div>
 					</div>
@@ -930,7 +966,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 							))}
 						</div>
 
-						<div className="grid grid-cols-7 gap-2 pb-4">
+						<div className="grid grid-cols-7 gap-y-2 pb-4">
 							{renderCalendar(nextMonth, nextYear)}
 						</div>
 					</div>
@@ -1077,7 +1113,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 							))}
 						</div>
 
-						<div className="grid grid-cols-7 gap-2">
+						<div className="grid grid-cols-7 gap-y-2">
 							{renderCalendar(currentMonth, currentYear)}
 						</div>
 					</div>
@@ -1198,7 +1234,6 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 				</p>
 			)}
 
-			{/* Live region for screen readers */}
 			<div
 				role="status"
 				aria-live="polite"
