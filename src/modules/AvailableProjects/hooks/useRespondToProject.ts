@@ -15,6 +15,10 @@ export function useRespondToProject() {
 			queryClient.invalidateQueries({
 				queryKey: ['available-projects'],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ['my-bids'],
+				exact: false,
+			});
 		},
 	});
 }

@@ -80,13 +80,13 @@ export const RequestCard = ({
 				{/* Card content */}
 				<section className="pt-3">
 					<div>
-						<h3 className="font-chalet-1960 line-clamp-2 text-[20px] leading-[155%] font-medium text-[#242424]">
+						<h3 className="font-chalet-1960 truncate text-[20px] leading-[155%] font-medium text-[#242424]">
 							{title}
 						</h3>
 
 						<div className="flex items-center gap-2">
 							<Location />
-							<span className="font-chalet-1960 truncate text-[16px] text-[#242424]">
+							<span className="font-chalet-1960 line-clamp-2 text-[16px] text-[#242424]">
 								{location}
 							</span>
 						</div>
