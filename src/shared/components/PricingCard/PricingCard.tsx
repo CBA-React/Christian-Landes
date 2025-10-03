@@ -1,13 +1,14 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
-import { cn } from '@/lib/utils';
+import { Button } from '../Button/Button';
 
 type ButtonCfg = {
 	label: string;
-	href?: string;
-	color: 'primary' | 'dark';
+	href: string;
+	color?: 'primary' | 'dark';
 	className?: string;
-	onClick?: () => void;
+	onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
 type PricingCardProps = {
@@ -97,27 +98,21 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 			</ul>
 
 			{button ? (
-				button.onClick ? (
-					<button
+				<Link
+					href={button.href}
+					aria-label={button.label}
+					className="w-full"
+					onClick={button.onClick}
+				>
+					<Button
 						type="button"
-						onClick={button.onClick}
-						disabled={!button.onClick}
-						className={cn(
-							'btn-base',
-							button.className,
-							!button.onClick && 'cursor-not-allowed opacity-60',
-						)}
+						variant="solid"
+						color={button.color ?? 'dark'}
+						className={`!h-[43px] !w-full justify-center !px-6 !py-3 !text-[16px] !font-[400] md:!text-[20px] ${button.className ?? ''}`}
 					>
 						{button.label}
-					</button>
-				) : (
-					<a
-						href={button.href}
-						className={`btn ${button.color === 'primary' ? 'btn-primary' : 'btn-dark'} ${button.className ?? ''}`}
-					>
-						{button.label}
-					</a>
-				)
+					</Button>
+				</Link>
 			) : null}
 
 			{footerNote ? (

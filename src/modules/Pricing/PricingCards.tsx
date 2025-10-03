@@ -27,6 +27,8 @@ export const PricingCards: React.FC = () => {
 		window.location.href = url;
 	};
 
+	const alignToItems = ['self-end', 'self-center', 'self-start'];
+
 	const marketing = useMemo(
 		() => [
 			{
@@ -160,17 +162,17 @@ export const PricingCards: React.FC = () => {
 									: 'Coming soon'
 								: 'Choose plan',
 							href: '#',
-							color:
-								p.type === 2
-									? ('primary' as const)
-									: ('dark' as const),
+							color: p.type === 2 ? 'primary' : 'dark',
 							className:
 								p.type === 2
 									? '!bg-white !text-[#242424]'
 									: undefined,
 							onClick: disabled
 								? undefined
-								: (): Promise<void> => onChoose(p.id),
+								: (e: any): void => {
+										e.preventDefault();
+										void onChoose(p.id);
+									},
 						},
 			};
 		});
@@ -202,7 +204,7 @@ export const PricingCards: React.FC = () => {
 					).map((card: any, idx: number) => (
 						<div
 							key={card?.id ?? idx}
-							className="embla__slide_contractors h-[453px] self-end md:h-[542px]"
+							className={`embla__slide_contractors flex h-[453px] md:h-[542px] ${alignToItems[idx]}`}
 						>
 							<PricingCard
 								id={card.id}
