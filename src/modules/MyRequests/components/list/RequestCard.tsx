@@ -139,7 +139,7 @@ export const RequestCard = ({
 					<>
 						<button
 							onClick={handleCloseRequest}
-							className="w-full bg-[#003BFF] px-4 py-2.5 text-[16px] text-white"
+							className="w-full cursor-pointer bg-[#003BFF] px-4 py-2.5 text-[16px] text-white"
 						>
 							Close Request
 						</button>

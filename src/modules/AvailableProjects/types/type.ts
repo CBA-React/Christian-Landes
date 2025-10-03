@@ -61,3 +61,30 @@ export interface SimpleProjectFilters {
 	location?: string;
 	date?: '1d' | '7d' | '30d' | '';
 }
+
+export interface RespondToProjectFormData {
+	bid: string;
+	begin_work: string;
+	estimate: string;
+	message: string;
+}
+
+export interface RespondToProjectPayload {
+	project_id: number;
+	bid: number;
+	begin_work: string;
+	estimate: string;
+	message: string;
+}
+
+export interface RespondToProjectResponse {
+	id: number;
+	bid: number;
+	user_id: number;
+	project_id: number;
+	begin_work: string;
+	estimate: string;
+	message: string;
+	status: number;
+	created_at: string;
+}

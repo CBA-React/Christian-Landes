@@ -2,7 +2,6 @@ import { JSX } from 'react';
 import { CategoryBadge } from '@/modules/AvailableProjects/components/list/CategoryBadge';
 import Location from 'public/icons/profile/location.svg';
 import Arrow from 'public/icons/arrow-up-right-white-big.svg';
-
 import { Button } from '@/shared/components/Button/Button';
 
 interface ProjectDetailsHeaderProps {

@@ -54,8 +54,8 @@ export const Select: React.FC<SelectProps> = ({
 	const displayText = selectedOption ? selectedOption.label : placeholder;
 
 	return (
-		<div className={`flex flex-col gap-2.5 text-[#252525] ${className}`}>
-			<label className="font-chalet-1960 flex items-center gap-2 text-[18px]">
+		<div className={`flex flex-col gap-2.5 text-[#242424] ${className}`}>
+			<label className="flex items-center gap-2 text-[16px]">
 				{label}
 				{labelIcon && labelIcon}
 			</label>

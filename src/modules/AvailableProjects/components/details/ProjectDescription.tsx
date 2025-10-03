@@ -27,7 +27,7 @@ export const ProjectDescription = ({
 				<span className="font-chalet-1960 text-[20px] leading-[155%] font-medium text-[#242424]">
 					{budgetFormatted}
 				</span>
-				<span className="font-chalet-1960 text-[20px]  font-medium text-blue-600">
+				<span className="font-chalet-1960 text-[20px] font-medium text-blue-600">
 					open to bids
 				</span>
 			</div>
