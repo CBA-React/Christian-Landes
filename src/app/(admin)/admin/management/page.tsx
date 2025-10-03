@@ -49,12 +49,11 @@ export default function ManagementPage(): JSX.Element {
 
 	const [role, setRole] = useState<RoleNum | ''>('');
 	type SortKey = '' | 'name' | 'date';
-	const [sort, setSort] = useState<SortKey>(''); // тільки локальні варіанти
+	const [sort, setSort] = useState<SortKey>('');
 	const [order, setOrder] = useState<'asc' | 'desc'>('desc');
 
-	// 👇 новий бекенд-фільтр за статусом
 	type BlockParam = 1 | 2 | '';
-	const [block, setBlock] = useState<BlockParam>(''); // '' — без фільтра; 1 — Blocked; 2 — Unblocked
+	const [block, setBlock] = useState<BlockParam>('');
 
 	const [page, setPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
@@ -68,7 +67,7 @@ export default function ManagementPage(): JSX.Element {
 	useEffect(() => {
 		let ignore = false;
 		setLoading(true);
-		UsersApi.getUsers({ page, perPage, role, sort: apiSort, order, block }) // 👈 передаємо block
+		UsersApi.getUsers({ page, perPage, role, sort: apiSort, order, block })
 			.then((d) => {
 				if (ignore) return;
 				setUsers(d.data ?? []);
@@ -83,11 +82,9 @@ export default function ManagementPage(): JSX.Element {
 	}, [page, perPage, role, apiSort, order, block]);
 
 	const rows = useMemo(() => {
-		// локальний фільтр за роллю (бек теж може фільтрувати роллю — дубль безпечний)
 		const filtered =
 			role === '' ? users : users.filter((u) => u.role === role);
 
-		// локальне сортування Date/Name (статус із бека вже відфільтрований, додатково не сортуємо по blocked)
 		const list = filtered.slice();
 		list.sort((a, b) => {
 			let cmp = 0;

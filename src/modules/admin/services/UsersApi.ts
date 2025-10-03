@@ -26,10 +26,11 @@ export type AddUserPayload = {
 	phone?: string;
 	location?: string;
 	password: string;
-	google_id?: string;
-	facebook_id?: string;
-	apple_id?: string;
-	windows_id?: string;
+	role: UserRole;
+};
+
+export type AddUserViaGooglePayload = {
+	google_id: string;
 	role: UserRole;
 };
 
@@ -62,6 +63,16 @@ export class UsersApi {
 	}
 
 	static async addUser(payload: AddUserPayload): Promise<ApiUser> {
+		const res = await axiosInstance.post<ApiUser>(
+			'/admin/users/addUser',
+			payload,
+		);
+		return res.data;
+	}
+
+	static async addUserViaGoogle(
+		payload: AddUserViaGooglePayload,
+	): Promise<ApiUser> {
 		const res = await axiosInstance.post<ApiUser>(
 			'/admin/users/addUser',
 			payload,

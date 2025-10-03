@@ -1,7 +1,8 @@
 'use client';
 
-import { JSX, useState } from 'react';
+import { JSX, useEffect, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { jwtDecode } from 'jwt-decode';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -14,19 +15,90 @@ import { AuthApi } from '@/modules/auth/services/AuthApi';
 import { RegisterPayload } from '@/modules/auth/type';
 import { Button } from '@/shared/components/Button/Button';
 import { registrationSchema } from '@/shared/constants/authSchema';
+import {
+	generatePasswordFromNow,
+	generatePhoneFromNow,
+} from '@/shared/lib/generateFromNow';
 import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 import { ROLE_BY_PATH } from '../../constats';
 
 import ArrowIcon from 'public/icons/arrow-up-right-white-big.svg';
 import FacebookLogin from 'public/icons/facebook-login.svg';
-import GoogleLogin from 'public/icons/google-login.svg';
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>;
+
+declare global {
+	interface Window {
+		google?: {
+			accounts: {
+				id: {
+					initialize: (config: any) => void;
+					prompt: (cb?: (notif: any) => void) => void;
+					cancel: () => void;
+					renderButton?: (el: HTMLElement, opts: any) => void;
+					disableAutoSelect?: () => void;
+				};
+			};
+		};
+		FB: any;
+	}
+}
 
 export const SignUp = (): JSX.Element => {
 	const [serverError, setServerError] = useState<string | null>(null);
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+	const pathname = usePathname();
+	const router = useRouter();
+
+	const gBtnRef = useRef<HTMLDivElement>(null);
+	const gsiInitialized = useRef(false);
+
+	const handleFacebookRegister = (): void => {
+		const seg = pathname.split('/').filter(Boolean).pop() ?? '';
+		const role = ROLE_BY_PATH[seg];
+
+		window.FB.login(
+			async (resp: any) => {
+				if (resp.status !== 'connected') {
+					toast.error('Facebook auth was cancelled');
+					return;
+				}
+				window.FB.api('/me', { fields: 'id' }, async (me: any) => {
+					try {
+						await AuthApi.registerSocial({
+							facebook_id: me.id,
+							role,
+						});
+						const { access_token, refresh_token } =
+							await AuthApi.socialLogin({ facebook_id: me.id });
+						localStorage.setItem('access_token', access_token);
+						localStorage.setItem('refresh_token', refresh_token);
+						router.push('/');
+					} catch (e: any) {
+						if (e?.response?.status === 409) {
+							const { access_token, refresh_token } =
+								await AuthApi.socialLogin({
+									facebook_id: me.id,
+								});
+							localStorage.setItem('access_token', access_token);
+							localStorage.setItem(
+								'refresh_token',
+								refresh_token,
+							);
+							router.push('/');
+							return;
+						}
+						toast.error(
+							getErrorMessage(e, 'Facebook sign-up failed'),
+						);
+					}
+				});
+			},
+			{ scope: 'public_profile' },
+		);
+	};
 
 	const {
 		register,
@@ -35,9 +107,6 @@ export const SignUp = (): JSX.Element => {
 	} = useForm<RegistrationFormValues>({
 		resolver: zodResolver(registrationSchema),
 	});
-
-	const pathname = usePathname();
-	const router = useRouter();
 
 	const onSubmit = async (data: RegistrationFormValues): Promise<void> => {
 		setServerError(null);
@@ -68,6 +137,136 @@ export const SignUp = (): JSX.Element => {
 		}
 	};
 
+	useEffect(() => {
+		const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+		if (!clientId) {
+			console.error('Missing NEXT_PUBLIC_GOOGLE_CLIENT_ID');
+			return;
+		}
+		if (gsiInitialized.current) return;
+
+		const isFirefox =
+			typeof navigator !== 'undefined' &&
+			/firefox/i.test(navigator.userAgent);
+
+		const init = (): boolean => {
+			if (!window.google?.accounts?.id) return false;
+
+			window.google.accounts.id.initialize({
+				client_id: clientId,
+				ux_mode: 'popup',
+				auto_select: false,
+				cancel_on_tap_outside: true,
+				use_fedcm_for_prompt: !isFirefox,
+				callback: async ({ credential }: { credential?: string }) => {
+					if (!credential) {
+						toast.error('No Google credential');
+						return;
+					}
+
+					try {
+						type GoogleJWT = {
+							sub: string;
+							email?: string;
+							name?: string;
+							given_name?: string;
+							family_name?: string;
+							picture?: string;
+						};
+
+						const g = jwtDecode<GoogleJWT>(credential);
+						console.log(g);
+						const seg =
+							pathname.split('/').filter(Boolean).pop() ?? '';
+						const role = ROLE_BY_PATH[seg];
+
+						if (!role) {
+							setServerError('Unknown sign-up type');
+							return;
+						}
+
+						const full_name =
+							g.name?.trim() ||
+							[g.given_name, g.family_name]
+								.filter(Boolean)
+								.join(' ')
+								.trim() ||
+							'Google User';
+
+						const email =
+							g.email?.trim() || `${g.sub}@google-user.local`;
+
+						const password = generatePasswordFromNow();
+						const phone = generatePhoneFromNow();
+						const location = 'Set in Profile';
+
+						await AuthApi.register({
+							full_name,
+							email,
+							phone,
+							location,
+							password,
+							role,
+							google_id: g.sub,
+						});
+
+						const { access_token, refresh_token } =
+							await AuthApi.socialLogin({
+								google_id: g.sub,
+							});
+
+						localStorage.setItem('access_token', access_token);
+						localStorage.setItem('refresh_token', refresh_token);
+						router.push('/');
+						toast.success('Account created with Google!');
+					} catch (e: any) {
+						if (e?.response?.status === 409) {
+							const g = jwtDecode<{ sub: string }>(credential);
+							const { access_token, refresh_token } =
+								await AuthApi.socialLogin({
+									google_id: g.sub,
+								});
+							localStorage.setItem('access_token', access_token);
+							localStorage.setItem(
+								'refresh_token',
+								refresh_token,
+							);
+							router.push('/');
+							toast.success('Logged in with Google!');
+							return;
+						}
+
+						toast.error(
+							getErrorMessage(e, 'Google sign-up failed'),
+						);
+						window.google?.accounts?.id?.cancel();
+					}
+				},
+			});
+
+			if (gBtnRef.current && window.google.accounts.id.renderButton) {
+				window.google.accounts.id.renderButton(gBtnRef.current, {
+					theme: 'filled_blue',
+					size: 'large',
+					text: 'continue_with',
+					shape: 'pill',
+					width: 260,
+				});
+			}
+
+			window.google.accounts.id.disableAutoSelect?.();
+			gsiInitialized.current = true;
+			return true;
+		};
+
+		if (!init()) {
+			const t = setInterval(() => {
+				if (init()) clearInterval(t);
+			}, 50);
+			return (): void => clearInterval(t);
+		}
+	}, [pathname, router]);
+
 	return (
 		<>
 			<form
@@ -79,6 +278,7 @@ export const SignUp = (): JSX.Element => {
 						{serverError}
 					</div>
 				)}
+
 				<div className="flex flex-col gap-[10px]">
 					<label htmlFor="fullName">Full Name</label>
 					<input
@@ -93,6 +293,7 @@ export const SignUp = (): JSX.Element => {
 						</p>
 					)}
 				</div>
+
 				<div className="flex flex-col gap-[10px]">
 					<label htmlFor="email">Email</label>
 					<input
@@ -107,6 +308,7 @@ export const SignUp = (): JSX.Element => {
 						</p>
 					)}
 				</div>
+
 				<div className="flex flex-col gap-[10px]">
 					<label htmlFor="phoneNumber">Phone Number</label>
 					<input
@@ -121,6 +323,7 @@ export const SignUp = (): JSX.Element => {
 						</p>
 					)}
 				</div>
+
 				<div className="flex flex-col gap-[10px]">
 					<label htmlFor="location">Location</label>
 					<input
@@ -135,6 +338,7 @@ export const SignUp = (): JSX.Element => {
 						</p>
 					)}
 				</div>
+
 				<div className="flex flex-col gap-[10px]">
 					<label htmlFor="password">Password</label>
 					<div className="relative">
@@ -158,6 +362,7 @@ export const SignUp = (): JSX.Element => {
 						</p>
 					)}
 				</div>
+
 				<div className="flex flex-col gap-[10px]">
 					<label htmlFor="confirmPassword">Confirm Password</label>
 					<div className="relative">
@@ -183,6 +388,7 @@ export const SignUp = (): JSX.Element => {
 						</p>
 					)}
 				</div>
+
 				<div className="flex items-center gap-3">
 					<input
 						type="checkbox"
@@ -219,20 +425,19 @@ export const SignUp = (): JSX.Element => {
 					</Button>
 				</div>
 			</form>
+
 			<article className="mt-[20px] flex flex-col gap-5">
 				<div className="flex items-center gap-5">
 					<div className="h-[1px] w-full bg-[#24242433]"></div>
 					<p className="text-sm text-[#242424]">Or</p>
 					<div className="h-[1px] w-full bg-[#24242433]"></div>
 				</div>
-				<div className="flex flex-row items-center justify-center gap-7">
-					<Link href="#">
-						<GoogleLogin />
-					</Link>
-					<Link href="#">
-						<FacebookLogin />
-					</Link>
+
+				<div className="flex flex-col items-center justify-center gap-7">
+					<div ref={gBtnRef} />
+					<FacebookLogin onClick={handleFacebookRegister} />
 				</div>
+
 				<p className="text-center text-sm text-[#242424]">
 					Already have an account?{' '}
 					<Link className="font-semibold" href="/login">

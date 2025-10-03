@@ -3,9 +3,24 @@ export interface LoginPayload {
 	password: string;
 }
 
-export interface RegisterPayload extends LoginPayload {
+export type RegisterPayload = {
 	full_name: string;
-	phone: string;
-	location: string;
-	role: '1' | '2' | '3';
-}
+	email: string;
+	phone?: string;
+	location?: string;
+	password: string;
+	role: 1 | 2 | 3;
+	google_id?: string;
+	facebook_id?: string;
+};
+
+export type SocialRegisterPayload = {
+	google_id?: string;
+	facebook_id?: string;
+	role: 1 | 2 | 3;
+};
+
+export type SocialLoginPayload = {
+	google_id?: string;
+	facebook_id?: string;
+};

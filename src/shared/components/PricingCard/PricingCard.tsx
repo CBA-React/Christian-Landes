@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Button } from '@/shared/components/Button/Button';
+import { Button } from '../Button/Button';
 
 type ButtonCfg = {
 	label: string;
 	href: string;
+	color?: 'primary' | 'dark';
 	className?: string;
-	color?: 'dark' | 'primary';
+	onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
 type PricingCardProps = {
@@ -25,6 +26,7 @@ type PricingCardProps = {
 
 	button: ButtonCfg;
 	className?: string;
+	footerNote?: string;
 };
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -39,6 +41,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 	alignSelf = 'start',
 	dividerClass = 'bg-[#2424241A]',
 	button,
+	footerNote,
 	className = '',
 }) => {
 	const selfClass =
@@ -80,7 +83,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 				className={`space-y-1 text-[16px] font-[400] ${textClass}`}
 				aria-label="Plan features"
 			>
-				{features.map((f, i) => (
+				{features?.map((f, i) => (
 					<li key={i} className="flex items-start gap-2">
 						<Image
 							src={checkIconSrc}
@@ -94,21 +97,29 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 				))}
 			</ul>
 
-			<Link
-				href={button.href}
-				aria-label={button.label}
-				className="w-full"
-			>
-				<Button
-					type="button"
-					variant="solid"
-					color={button.color ?? 'dark'}
-					className={`!h-[43px] !w-full justify-center !px-6 !py-3 !text-[16px] !font-[400] md:!text-[20px] ${button.className ?? ''}`}
+			{button ? (
+				<Link
+					href={button.href}
+					aria-label={button.label}
+					className="w-full"
+					onClick={button.onClick}
 				>
-					{button.label}
-				</Button>
-			</Link>
+					<Button
+						type="button"
+						variant="solid"
+						color={button.color ?? 'dark'}
+						className={`!h-[43px] !w-full justify-center !px-6 !py-3 !text-[16px] !font-[400] md:!text-[20px] ${button.className ?? ''}`}
+					>
+						{button.label}
+					</Button>
+				</Link>
+			) : null}
+
+			{footerNote ? (
+				<div className="mt-3 rounded-md bg-black/5 px-3 py-2 text-center text-sm opacity-80">
+					{footerNote}
+				</div>
+			) : null}
 		</article>
 	);
 };
-
