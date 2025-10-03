@@ -10,6 +10,7 @@ export function useCreateRequest() {
 			CreateRequestApi.CreateRequest(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['profile-projects'] });
+			queryClient.invalidateQueries({ queryKey: ['my-requests'] });
 		},
 	});
 }

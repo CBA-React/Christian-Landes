@@ -9,10 +9,8 @@ import ArrowRight from 'public/icons/arrow-up-right-white-big.svg';
 import { Input } from '@/shared/components/Input/Input';
 import { FormTextarea } from '@/modules/ProfileEdit/components/FormField';
 import { Button } from '@/shared/components/Button/Button';
-import {
-	DatePicker,
-	DateRangePicker,
-} from '@/shared/components/DatePickers/DatePickers';
+import { DatePicker } from '@/shared/components/DatePickers/DatePickers';
+import { DateRangePicker } from '@/shared/components/DateRangePicker/DateRangePicker';
 import { useRespondToProject } from '../../hooks/useRespondToProject';
 import type {
 	RespondToProjectFormData,

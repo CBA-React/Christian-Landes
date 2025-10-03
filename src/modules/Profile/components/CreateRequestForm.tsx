@@ -15,10 +15,8 @@ import { useFileUpload } from '@/shared/hooks/useFileUpload';
 import { useCreateRequest } from '../hooks/useCreateRequest';
 import { ImageUploader } from './ImageUploader';
 import { LocationAutocomplete } from './LocationAutocomplete';
-import {
-	DatePicker,
-	DateRangePicker,
-} from '@/shared/components/DatePickers/DatePickers';
+import { DatePicker } from '@/shared/components/DatePickers/DatePickers';
+import { DateRangePicker } from '@/shared/components/DateRangePicker/DateRangePicker';
 import { PROJECT_CATEGORIES } from '@/modules/AvailableProjects/projectCategories';
 import type { CreateRequestFormData, CreateRequestPayload } from '../types';
 import type { UploadedFile } from '@/shared/types/upload';
