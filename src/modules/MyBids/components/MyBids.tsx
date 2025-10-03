@@ -1,6 +1,7 @@
 'use client';
 
 import { JSX, useCallback, useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { BidStatusFilter } from './BidStatusFilter';
 import { BidCard } from './BidCard';
 import { BidDisplayData, SimpleBidFilters } from '../bidTypes';
@@ -46,7 +47,7 @@ const BidsList = ({
 	hasMore: boolean;
 	isLoadingMore: boolean;
 	onLoadMore: () => void;
-	onBidClick: (id: string) => void;
+	onBidClick: (projectId: string) => void;
 }) => (
 	<>
 		<section
@@ -93,6 +94,7 @@ const BidsList = ({
 );
 
 export const MyBids = (): JSX.Element => {
+	const router = useRouter();
 	const [selectedStatus, setSelectedStatus] = useState<string | null>('all');
 
 	const filters = useMemo(
@@ -121,9 +123,12 @@ export const MyBids = (): JSX.Element => {
 		setSelectedStatus(status === null ? 'all' : status);
 	}, []);
 
-	const handleBidClick = useCallback((bidId: string) => {
-		console.log('Bid clicked:', bidId);
-	}, []);
+	const handleBidClick = useCallback(
+		(projectId: string) => {
+			router.push(`/profile/available-projects/${projectId}`);
+		},
+		[router],
+	);
 
 	const getEmptyMessage = () => {
 		if (selectedStatus && selectedStatus !== 'all') {

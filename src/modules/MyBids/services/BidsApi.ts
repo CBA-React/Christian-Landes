@@ -30,7 +30,6 @@ export class BidsApi {
 				perPage: perPage.toString(),
 			});
 
-			// Add status filter if provided and not 'all'
 			if (filters.status && filters.status !== 'all') {
 				const statusCode =
 					API_BID_STATUS_MAP[
@@ -60,7 +59,6 @@ export class BidsApi {
 			return [];
 		}
 
-		// Flatten the structure: extract bids from each project and combine with project info
 		const flattenedBids: BidDisplayData[] = [];
 
 		projects.forEach((project) => {
@@ -69,12 +67,10 @@ export class BidsApi {
 			}
 
 			project.bids.forEach((bid) => {
-				// Use PROJECT status, not bid status
 				const bidStatus = this.mapBidStatus(project.status);
 				const bidStatusBadge = this.getStatusBadge(bidStatus);
 
 				flattenedBids.push({
-					// Bid info
 					id: bid.id.toString(),
 					bidAmount: bid.bid,
 					bidAmountFormatted: formatBudget(bid.bid),
@@ -86,7 +82,6 @@ export class BidsApi {
 					createdAt: bid.created_at,
 					postedDate: formatDate(bid.created_at),
 
-					// Project info
 					projectId: project.id.toString(),
 					projectTitle: project.title,
 					projectCategory: project.category,

@@ -8,7 +8,7 @@ import ArrowUp from 'public/icons/profile/arrow-up-large.svg';
 
 interface BidCardProps {
 	bid: BidDisplayData;
-	onCardClick?: (id: string) => void;
+	onCardClick?: (projectId: string) => void;
 	className?: string;
 }
 
@@ -18,7 +18,7 @@ export const BidCard = ({
 	className = '',
 }: BidCardProps): JSX.Element => {
 	const {
-		id,
+		projectId,
 		projectTitle,
 		projectLocation,
 		projectImages,
@@ -29,7 +29,7 @@ export const BidCard = ({
 	} = bid;
 
 	const handleClick = () => {
-		onCardClick?.(id);
+		onCardClick?.(projectId);
 	};
 
 	const statusConfig =
@@ -69,7 +69,7 @@ export const BidCard = ({
 							</span>
 						</div>
 
-						<ArrowUp className="absolute top-5 right-5 " />
+						<ArrowUp className="absolute top-5 right-5" />
 					</div>
 
 					{/* Content Container */}
@@ -110,7 +110,7 @@ export const BidCard = ({
 
 							{/* Status Badge */}
 							<span
-								className={`hidden flex-shrink-0 items-center justify-center px-4 py-1.5 text-[14px] md:flex ${statusConfig?.bgColor} ${statusConfig?.textColor}`}
+								className={`hidden flex-shrink-0 items-center justify-center px-3 py-1.5 text-[14px] md:flex ${statusConfig?.bgColor} ${statusConfig?.textColor}`}
 							>
 								{statusConfig?.icon && (
 									<span className="mr-1.5">

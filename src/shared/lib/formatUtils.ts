@@ -36,6 +36,18 @@ export function formatDate(dateString: string): string {
 }
 
 export function formatBudget(budget: number): string {
+	if (budget >= 1000000000) {
+		const bValue = (budget / 1000000000).toFixed(1);
+		const formatted = bValue.replace(/\.0$/, '');
+		return `$${formatted}b`;
+	}
+
+	if (budget >= 1000000) {
+		const mValue = (budget / 1000000).toFixed(1);
+		const formatted = mValue.replace(/\.0$/, '');
+		return `$${formatted}m`;
+	}
+
 	if (budget >= 1000) {
 		const kValue = (budget / 1000).toFixed(1);
 		const formatted = kValue.replace(/\.0$/, '');
