@@ -1,11 +1,11 @@
 'use client';
 
-import { JSX } from 'react';
+import { JSX, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/components/Button/Button';
 import { ProfileData } from '@/shared/types/profile';
-import { truncateText, TEXT_LIMITS } from '@/shared/lib/textTruncate';
+import { CreateRequestModal } from './CreateRequestModal';
 
 import StarIcon from 'public/icons/profile/star.svg';
 import DollarIcon from 'public/icons/profile/dollar-for-button.svg';
@@ -21,21 +21,35 @@ export const ProfileHeader = ({
 	profileData,
 }: ProfileHeaderProps): JSX.Element => {
 	const router = useRouter();
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isMobile, setIsMobile] = useState(false);
+
+	useEffect(() => {
+		const checkMobile = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+		
+		return () => window.removeEventListener('resize', checkMobile);
+	}, []);
 
 	const handleViewEarnings = () => {
 		console.log('View Earnings clicked');
 	};
 
 	const handlePostRequest = () => {
-		console.log('Post New Request clicked');
+		if (isMobile) {
+			router.push('/profile/create-request');
+		} else {
+			setIsModalOpen(true);
+		}
 	};
 
 	const handleEditProfile = () => {
 		router.push('/profile/edit');
 	};
-
-	const displayName = truncateText(profileData.name, TEXT_LIMITS.NAME);
-	const displayEmail = truncateText(profileData.email, TEXT_LIMITS.EMAIL);
 
 	return (
 		<div className="flex justify-center bg-[#F1F3F6] pt-28 pb-8 lg:pt-40 lg:pb-20">
@@ -148,6 +162,16 @@ export const ProfileHeader = ({
 					</Button>
 				</div>
 			</section>
+			
+			{!isMobile && (
+				<CreateRequestModal
+					isOpen={isModalOpen}
+					onClose={() => setIsModalOpen(false)}
+					onSuccess={() => {
+						console.log('Project created successfully!');
+					}}
+				/>
+			)}
 		</div>
 	);
 };

@@ -1,7 +1,7 @@
 'use client';
 
-import { JSX } from 'react';
-import { useParams } from 'next/navigation';
+import { JSX, useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { useProjectDetails } from '@/modules/AvailableProjects/hooks/useProjectDetails';
 import { RequestImageGallery } from '@/modules/MyRequests/components/details/RequestImageGallery';
 import { MobileImageCarousel } from '@/modules/MyRequests/components/details/MobileImageCarousel';
@@ -9,6 +9,7 @@ import { ProjectDescription } from '@/modules/AvailableProjects/components/detai
 import { ProjectDetailsHeader } from '@/modules/AvailableProjects/components/details/ProjectDetailsHeader';
 import { RequestDetailsPanel } from '@/modules/MyRequests/components/details/RequestDetailsPanel';
 import { LocationSection } from '@/modules/MyRequests/components/details/LocationSection';
+import { RespondToProjectModal } from '@/modules/AvailableProjects/components/details/RespondToProjectModal';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
 import { LoadingSpinner } from '@/shared/components/Loading/LoadingSpinner';
 
@@ -30,6 +31,7 @@ const ErrorState = ({
 		<p className="mb-4 text-[#242424]/50">{error}</p>
 		<button
 			onClick={onRetry}
+			type="button"
 			className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
 		>
 			Try Again
@@ -39,7 +41,11 @@ const ErrorState = ({
 
 export default function ProjectDetailsPage(): JSX.Element {
 	const params = useParams();
+	const router = useRouter();
 	const projectId = params.id as string;
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isMobile, setIsMobile] = useState(false);
 
 	const {
 		data: project,
@@ -48,8 +54,23 @@ export default function ProjectDetailsPage(): JSX.Element {
 		refetch,
 	} = useProjectDetails(projectId);
 
+	useEffect(() => {
+		const checkMobile = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+
+		return () => window.removeEventListener('resize', checkMobile);
+	}, []);
+
 	const handleApplyClick = () => {
-		console.log('Apply to project:', projectId);
+		if (isMobile) {
+			router.push(`/profile/available-projects/${projectId}/create-respond`);
+		} else {
+			setIsModalOpen(true);
+		}
 	};
 
 	if (isLoading) {
@@ -143,6 +164,17 @@ export default function ProjectDetailsPage(): JSX.Element {
 						<LocationSection location={project.location} />
 					</div>
 				</div>
+
+				{!isMobile && (
+					<RespondToProjectModal
+						isOpen={isModalOpen}
+						onClose={() => setIsModalOpen(false)}
+						projectId={projectId}
+						onSuccess={() => {
+							console.log('Offer sent successfully!');
+						}}
+					/>
+				)}
 			</>
 		</ErrorBoundary>
 	);
