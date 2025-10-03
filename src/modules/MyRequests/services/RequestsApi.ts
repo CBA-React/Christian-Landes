@@ -17,6 +17,13 @@ import {
 	STATUS_CONFIG,
 } from '../requestStatus';
 
+import type {
+	ApiRequestDetails,
+	RequestDetailsDisplayData,
+	BidDisplayData,
+	ApiBid,
+} from '../types/requestDetails';
+
 export class RequestsApi {
 	static async getRequests(params: {
 		page?: number;
@@ -31,7 +38,7 @@ export class RequestsApi {
 				(filters.minBudget && filters.minBudget > 0) ||
 				(filters.maxBudget && filters.maxBudget > 0) ||
 				(filters.location && filters.location) ||
-				(filters.date && filters.date) || 
+				(filters.date && filters.date) ||
 				(filters.bids && filters.bids),
 		);
 
@@ -118,6 +125,72 @@ export class RequestsApi {
 						: undefined,
 			};
 		});
+	}
+
+	static async getRequestById(id: string): Promise<ApiRequestDetails> {
+		try {
+			const response = await axiosInstance.get<ApiRequestDetails>(
+				`homeowner/project/${id}`,
+			);
+			return response.data;
+		} catch (error) {
+			console.error('Error fetching request details:', error);
+			throw error;
+		}
+	}
+
+	static transformBidForDisplay(bid: ApiBid): BidDisplayData {
+		return {
+			id: bid.id.toString(),
+			amount: bid.bid,
+			amountFormatted: formatBudget(bid.bid),
+			contractorId: bid.user.id.toString(),
+			contractorName: bid.user.full_name,
+			contractorEmail: bid.user.email,
+			contractorPhone: bid.user.phone,
+			contractorLogo: bid.user.logo?.url || null,
+			specialities: bid.user.speciality.map((s) => s.value),
+			beginWork: bid.begin_work,
+			estimate: bid.estimate,
+			message: bid.message,
+			status: bid.status,
+			createdAt: bid.created_at,
+			postedDate: formatDate(bid.created_at),
+		};
+	}
+
+	static transformRequestDetailsForDisplay(
+		request: ApiRequestDetails,
+	): RequestDetailsDisplayData {
+		const status = this.mapRequestStatus(request.status);
+		const statusBadge = this.getStatusBadge(status);
+
+		const bids = request.bids.map((bid) =>
+			this.transformBidForDisplay(bid),
+		);
+
+		return {
+			id: request.id.toString(),
+			title: request.title,
+			category: request.category,
+			location: request.location,
+			budget: request.budget,
+			budgetFormatted: formatBudget(request.budget),
+			preferredStart: request.preferred_start,
+			completionWindow: request.completion_window,
+			description: request.description,
+			images: processImages(request.images),
+			status,
+			statusBadge,
+			createdAt: request.created_at,
+			postedDate: formatDate(request.created_at),
+			bidsCount: bids.length,
+			bids,
+			daysActive:
+				status === REQUEST_STATUSES.OPEN
+					? this.calculateDaysActive(request.created_at)
+					: undefined,
+		};
 	}
 
 	private static mapRequestStatus(

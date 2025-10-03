@@ -11,6 +11,10 @@ import type {
 	ProjectFilters,
 	ProjectsResponse,
 } from '../types/type';
+import type {
+	ApiProjectDetails,
+	ProjectDetailsDisplayData,
+} from '../types/projectDetails';
 
 export class AvailableProjectsApi {
 	static async getProjects(params: {
@@ -62,6 +66,39 @@ export class AvailableProjectsApi {
 			console.error('Error fetching projects:', error);
 			throw error;
 		}
+	}
+
+	static async getProjectById(id: string): Promise<ApiProjectDetails> {
+		try {
+			const response = await axiosInstance.get<ApiProjectDetails>(
+				`contractor/project/${id}`,
+			);
+			return response.data;
+		} catch (error) {
+			console.error('Error fetching project details:', error);
+			throw error;
+		}
+	}
+
+	static transformProjectDetailsForDisplay(
+		project: ApiProjectDetails,
+	): ProjectDetailsDisplayData {
+		return {
+			id: project.id.toString(),
+			title: project.title,
+			category: project.category,
+			location: project.location,
+			budget: project.budget,
+			budgetFormatted: formatBudget(project.budget),
+			preferredStart: project.preferred_start,
+			completionWindow: project.completion_window,
+			description: project.description,
+			images: processImages(project.images),
+			status: project.status === 1 ? 'active' : 'completed',
+			createdAt: project.created_at,
+			postedDate: formatDate(project.created_at),
+			bidsCount: project.bids?.length || 0,
+		};
 	}
 
 	static transformProjectsForDisplay(
