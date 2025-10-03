@@ -1,13 +1,13 @@
 import Image from 'next/image';
-import Link from 'next/link';
 
-import { Button } from '@/shared/components/Button/Button';
+import { cn } from '@/lib/utils';
 
 type ButtonCfg = {
 	label: string;
-	href: string;
+	href?: string;
+	color: 'primary' | 'dark';
 	className?: string;
-	color?: 'dark' | 'primary';
+	onClick?: () => void;
 };
 
 type PricingCardProps = {
@@ -25,6 +25,7 @@ type PricingCardProps = {
 
 	button: ButtonCfg;
 	className?: string;
+	footerNote?: string;
 };
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -39,6 +40,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 	alignSelf = 'start',
 	dividerClass = 'bg-[#2424241A]',
 	button,
+	footerNote,
 	className = '',
 }) => {
 	const selfClass =
@@ -80,7 +82,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 				className={`space-y-1 text-[16px] font-[400] ${textClass}`}
 				aria-label="Plan features"
 			>
-				{features.map((f, i) => (
+				{features?.map((f, i) => (
 					<li key={i} className="flex items-start gap-2">
 						<Image
 							src={checkIconSrc}
@@ -94,21 +96,35 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 				))}
 			</ul>
 
-			<Link
-				href={button.href}
-				aria-label={button.label}
-				className="w-full"
-			>
-				<Button
-					type="button"
-					variant="solid"
-					color={button.color ?? 'dark'}
-					className={`!h-[43px] !w-full justify-center !px-6 !py-3 !text-[16px] !font-[400] md:!text-[20px] ${button.className ?? ''}`}
-				>
-					{button.label}
-				</Button>
-			</Link>
+			{button ? (
+				button.onClick ? (
+					<button
+						type="button"
+						onClick={button.onClick}
+						disabled={!button.onClick}
+						className={cn(
+							'btn-base',
+							button.className,
+							!button.onClick && 'cursor-not-allowed opacity-60',
+						)}
+					>
+						{button.label}
+					</button>
+				) : (
+					<a
+						href={button.href}
+						className={`btn ${button.color === 'primary' ? 'btn-primary' : 'btn-dark'} ${button.className ?? ''}`}
+					>
+						{button.label}
+					</a>
+				)
+			) : null}
+
+			{footerNote ? (
+				<div className="mt-3 rounded-md bg-black/5 px-3 py-2 text-center text-sm opacity-80">
+					{footerNote}
+				</div>
+			) : null}
 		</article>
 	);
 };
-

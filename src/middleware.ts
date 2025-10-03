@@ -40,14 +40,15 @@ const ACCESS: Record<string, Role[]> = {
 };
 
 const PROFILE_ACCESS: Record<string, Role[]> = {
-	'/profile/overview': [1, 2, 3], 
-	'/profile/reviews': [1, 2, 3], 
-	'/profile/edit': [1, 2, 3], 
-	'/profile/available-projects': [2, 3], 
+	'/profile/overview': [1, 2, 3],
+	'/profile/reviews': [1, 2, 3],
+	'/profile/edit': [1, 2, 3],
+	'/profile/available-projects': [2, 3],
 	'/profile/my-bids': [2, 3],
-	'/profile/pricing-plan': [2, 3], 
-	'/profile/my-requests': [1, 3], 
-	'/profile/contractors': [1, 3], 
+	'/profile/pricing-plan': [2, 3],
+	'/profile/pricing-plan/upgrade-plan': [2, 3],
+	'/profile/my-requests': [1, 3],
+	'/profile/contractors': [1, 3],
 };
 
 export function middleware(request: NextRequest): NextResponse<unknown> {
@@ -119,6 +120,6 @@ export const config = {
 		'/admin/:path*',
 		'/contractors/:path*',
 		'/clients/:path*',
-		'/profile/:path*', 
+		'/profile/:path*',
 	],
 };
