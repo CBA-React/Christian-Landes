@@ -5,9 +5,13 @@ import Link from 'next/link';
 
 import { useMyPlan } from '@/modules/Pricing/hooks/usePlans';
 import ProfileLayout from '@/shared/components/ProfileLayout/ProfileLayout';
+import { useProfile } from '@/shared/hooks/useProfile';
 
 export default function PricingPlanPage(): JSX.Element {
 	const { data, isLoading, isError } = useMyPlan();
+	const { data: profile } = useProfile(2);
+
+	const displayEmail = profile?.email ?? '—';
 
 	return (
 		<ProfileLayout showHeader={true} showSidebar={true}>
@@ -93,13 +97,13 @@ export default function PricingPlanPage(): JSX.Element {
 						history.
 					</p>
 
-					<div className="flex items-center justify-between rounded-[10px] bg-[#F1F3F6] lg:p-6">
+					<div className="flex items-center justify-between rounded-[10px] bg-[#F1F3F6] px-5 py-4 lg:p-6">
 						<div>
 							<p className="text-[15px] font-medium text-[#242424]">
-								Mark Stevens
+								{profile?.name}
 							</p>
 							<p className="text-sm text-[#242424]/70">
-								email@gmail.com
+								{displayEmail}
 							</p>
 						</div>
 						<button
